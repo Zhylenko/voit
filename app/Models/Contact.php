@@ -7,7 +7,7 @@ use App\Http\Requests\ContactRequest;
 
 class Contact extends Model
 {
-    public function new(ContactRequest $request)
+    public function create(ContactRequest $request)
     {
         $this->name = $request->name;
         $this->surname = $request->surname;

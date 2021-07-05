@@ -343,7 +343,7 @@ function validatorForm(form, formReq, filePhp) {
                             console.log(response.message);
                             contactForm.classList.remove('_sending');
                             contactForm.classList.add('active');
-                            Reset(contactForm);
+                            //Reset(contactForm);
                     } else {                       
                             alert('Ошибка');
                             contactForm.classList.remove('_sending');

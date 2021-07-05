@@ -13,17 +13,17 @@ use App\Mail\ContactMail;
 
 class ContactController extends Controller
 {
-    public function index(Request $request)
-    {
-        //Contact page
-    }
+    // public function index(Request $request)
+    // {
+    //     //Contact page
+    // }
 
     public function send(ContactRequest $request)
     {
         $contact = new Contact;
-        $contact->new($request);
+        $contact->create($request);
 
-        Mail::to('zhylenko.vlad@gmail.com')
+        Mail::to(config('personal.mail.to'))
                 ->send(new ContactMail($request));
     }
 }
