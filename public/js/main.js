@@ -9,8 +9,12 @@ window.addEventListener('DOMContentLoaded', ()=>{
         registerModal('register-btn','.popup__reg', '.popup__login');
         mobileMenu('.menu-hamburger', '.menu', '.menu__link');
         login('login-form', '._login-req', 'any.php');
-        // validatorForm('first-page', '.form-reg-mail', "../sendCode.php");
 });
+
+let token = 0;
+if(document.querySelector('meta[name="csrf-token"]') !== null) {
+        token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
 
 $(function(){
 
@@ -24,13 +28,15 @@ $(function(){
                             $('.empty').addClass('active');  
                         } else {
                                 $('.header__top.fix').addClass('fixed'); 
-                                $('.header__content.fix').addClass('active');
+                                $('.fullback.fix').addClass('active');
+                                $('.article-offer.fix').addClass('active');
                         }
                 } else {
                         $('.empty').removeClass('active');
                         $('.mobile-menu.fix').removeClass('fixed');  
                         $('.header__top.fix').removeClass('fixed');
-                        $('.header__content.fix').removeClass('active');
+                        $('.fullback.fix').removeClass('active');
+                        $('.article-offer.fix').removeClass('active');
                 }
         });
         
@@ -105,16 +111,18 @@ function login(formID, reqsInputs, phpFile) {
         async function formSend(e) {
                 e.preventDefault();
 
-                let errorCount = validator(form, inputs);
-
-                if(errorCount === 0) {
                         let dataForm = new FormData();
                         dataForm.set('email', inputs[0].value);
                         dataForm.set('password', inputs[1].value);
                        
                         let response = await fetch(phpFile, {
                                 method: 'POST',
-                                body: dataForm
+                                body: dataForm,
+                                headers: new Headers({
+                                        'Content-Type': 'application/json',
+                                        'Accept': 'application/json',
+                                        'X-CSRF-TOKEN': token
+                                })
                         });
     
                         if(response.ok) {
@@ -124,7 +132,6 @@ function login(formID, reqsInputs, phpFile) {
                         } else {                       
                                 alert('Ошибка');
                         }
-                }
         }
 }
 
@@ -136,9 +143,7 @@ function accrodionMenu() {
         for (let i=0; i<items.length; i++) {
                 items[i].addEventListener('click', ()=>{
 
-                        if(items[i].classList.contains('active')) {
-                                items[i].classList.remove('active');
-                        } else {
+                        if(!(items[i].classList.contains('active'))) {
                                 let activeNode = null;
                                 try{
                                         activeNode = document.querySelector('.about__accordion .active');
@@ -162,21 +167,23 @@ function programmMenu() {
         let items = document.querySelectorAll('.programm__menu-item');
         let btn = document.querySelectorAll('.programm__menu-btn');
 
-        if(media.matches) items[0].classList.remove('active');
-
         for (let i=0; i<btn.length; i++) {
                 btn[i].addEventListener('click', ()=>{
                         
                         if(items[i].classList.contains('active')) {
-                                if(media.matches) items[i].classList.remove('active');
+                                if(!(media.matches)) {
+                                        items[i].classList.remove('active');
+                                }  
                         } else {
                                 let activeNode = null;
                                 try{
                                         activeNode = document.querySelector('.programm__menu .active');
+                                        activeButton = document.querySelector('.programm__menu .up');
                                 } catch(msg) {}
 
                                 if (media.matches) {
                                         items[i].classList.add('active');
+                                        btn[i].classList.add('up');
                                 } else {
                                         setTimeout(()=>{
                                                 items[i].classList.add('active');
@@ -185,6 +192,10 @@ function programmMenu() {
 
                                 if(activeNode) {
                                         activeNode.classList.remove('active');
+                                }
+
+                                if(activeButton) {
+                                        activeButton.classList.remove('up');
                                 }
                         }
                 })
@@ -200,6 +211,7 @@ function modal(popup, button, closeButton, displayModal) {
               displayPopup = document.querySelector(displayModal);
 
         const header = document.querySelector('article');
+        const header_top = document.querySelector('.header__top');
         const styleHeader = getComputedStyle(header);
         const scroll = calcScroll();
         const media = window.matchMedia('(max-width: 769px)');
@@ -317,8 +329,6 @@ function validatorForm(form, formReq, filePhp) {
     async function formSend(e) {
             e.preventDefault();
 
-            /*let errorCount = validator(contactForm, contactReq);*/
-
             if(contactForm.id !== 'contact-form') {
                 regRoad[0].style.display = 'none';
                 regRoad[1].style.display = 'block'; 
@@ -326,31 +336,29 @@ function validatorForm(form, formReq, filePhp) {
 
             let formData = new FormData(contactForm);
             
-            if(1) {
                     contactForm.classList.add('_sending');
-                        let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
                     let response = await fetch(filePhp, {
                             method: 'POST',
+                            body: formData,
                             headers: new Headers({
+                                'Content-Type': 'application/json',
                                 'Accept': 'application/json',
                                 'X-CSRF-TOKEN': token
-                            }),
-                            body: formData
+                        })
                     });
 
                     if(response.ok) {
-                            //let result = await response.json();
-                            console.log(response.message);
+                            let result = await response.json();
+                            console.log(result.message);
                             contactForm.classList.remove('_sending');
                             contactForm.classList.add('active');
-                            //Reset(contactForm);
+                            Reset(contactForm);
                     } else {                       
                             alert('Ошибка');
                             contactForm.classList.remove('_sending');
                     }
-                        let result = await response.json();
-                        console.log(result);
-            }
+
 
 
     }
@@ -361,63 +369,6 @@ function validatorForm(form, formReq, filePhp) {
 function Reset(form) {
         form.reset();
 }
-
-// VALIDATOR
-function validator(form, req) {
-        let errorCount = 0;
-        const checkbox = document.querySelector('.form-checkstyle');
-
-        for(i=0;i<req.length;i++) {
-            const input = req[i];
-
-            formRemoveError(input);
-            
-            if(checkbox !== null)
-                checkbox.classList.remove('_error');
-
-            if(input.classList.contains('_name') || input.classList.contains('_surname')) {
-                if(nameTest(input)) {
-                        formAddError(input);
-                        errorCount++;
-                }
-
-            } else if(input.classList.contains('_email') || input.classList.contains('_login-email')){
-                if(emailTest(input)) {
-                        formAddError(input);
-                        errorCount++;
-                }
-            } else if(input.getAttribute("type") === 'checkbox' && input.checked === false) {
-                formAddError(input);
-                checkbox.classList.add('_error');
-                errorCount++;
-            } else {
-                    if(input.value === '') {
-                            formAddError(input);
-                            errorCount++;
-                    }
-            }
-        }
-
-        return errorCount;
-}
-
-
-function formAddError(input) {
-        input.classList.add('_error');
-}
-
-function formRemoveError(input) {
-        input.classList.remove('_error');
-}
-
-function nameTest(input) {
-        return !/^[аАбБвВгГдДеЕёЁжЖзЗиИйЙкКлЛмМнНоОпПрРсСтТуУфФхХцЦчЧшШщЩъЪыЫьЬэЭюЮяЯєЄїЇіІ]+$/.test(input.value);
-}
-
-function emailTest(input) {
-        return !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,8})+$/.test(input.value);
-}
-
 
 // Register Function
 function register(formID, inputsReqClass) {
@@ -433,17 +384,18 @@ function register(formID, inputsReqClass) {
 
     async function formSend(e) {
             e.preventDefault();
-
-            let errorCount = miniValidator(inputs);
-
-            if(errorCount === 0) {
         
                 let dataForm = new FormData();
                 dataForm.set('register-mail', inputs[0].value);
 
                 let response = await fetch('sendCode.php', {
                         method: 'POST',
-                        body: dataForm
+                        body: dataForm,
+                        headers: new Headers({
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': token
+                        })
                 });
 
                 if(response.ok) {
@@ -458,8 +410,6 @@ function register(formID, inputsReqClass) {
                 } else {                       
                         alert('Ошибка');
                 }
-               
-            }
 
     }
 }
@@ -504,29 +454,5 @@ function countdown() {
         clearInterval(interval);
       } 
   }, 1000);
-
-}
-
-function miniValidator(inputs) {
-    let errors = 0;
-
-    for(let index = 0; index < inputs.length; index++) {
-        
-        const input = inputs[index];
-
-        formRemoveError(input);
-        if(input.classList.contains('_login-mail')) {
-            
-              if(emailTest(input)) {
-                      formAddError(input);
-                      errors++;
-              } else if (input.value === '') {
-                      formAddError(input);
-                      errors++;
-              }
-        }
-    }
-
-    return errors;
 
 }

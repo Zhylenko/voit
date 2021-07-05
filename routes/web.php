@@ -25,7 +25,10 @@ Route::get('/offer', 'HomeController@index')
 Route::get('/account', 'HomeController@index')
     ->name('account');
 
-
 //Send contact data
 Route::post('/contact/send', 'ContactController@send')
         ->name('contact-send');
+
+//Account page
+Route::get('/logout', 'HomeController@index')
+    ->name('account-logout');

@@ -19,6 +19,17 @@ html{
     margin: 0 auto;
 }
 
+.fullback,
+.article-offer{
+    margin-top: -151px;
+    padding-top: 65px;
+}
+
+.fullback.active,
+.article-offer.active{
+    margin-top: -30px;
+}
+
 .container-main{
     max-width: 1168px;
     margin: 0 auto;
@@ -44,6 +55,11 @@ html{
 
 /* ----- HEADER ----- */
 .header{
+    position: relative;
+    padding-top: 31px;
+}
+
+.home{
     min-height: 1082px;
     background-repeat: no-repeat;
     background-position: top center;
@@ -142,10 +158,6 @@ html{
 .header__content{
     padding-top: 65px;
     display: flex;
-}
-
-.header__content.active{
-    padding-top: 180px;
 }
 
 .content__left{
@@ -280,10 +292,10 @@ html{
 /* ----- ABOUT ----- */
 .about{
     position: relative;
-    min-height: 1294px;
+    min-height: 1300px;
     background-repeat: no-repeat;
     background-position: top center;
-    margin-top: -95px;
+    margin-top: -150px;
 
     &__inner{
         display: flex;
@@ -383,6 +395,15 @@ html{
         }
     }
 }
+
+.log-in{
+    display: block;
+}
+
+.log-out{
+    display: none;
+}
+
 
 .btn-shadow{
     position: absolute;
@@ -659,6 +680,18 @@ html{
         background-color: transparent;
         cursor: pointer;
         outline: none;
+        
+        img{
+            transform: rotate(90deg);
+            transition: .5s all;
+        }
+        
+    }
+
+    &-btn.up{
+        img{
+            transform: rotate(-90deg);
+        }
     }
 
     &-block{
@@ -1379,16 +1412,21 @@ textarea {
     padding-top: 25px;
 
     &-btn{
-        color: #fff;
+        color: #414141;
+        font-weight: 700;
         font-size: 18px;
         text-transform: uppercase;
         border: none;
-        background: linear-gradient(130.29deg, #203269 10.99%, #2275AB 100.9%);
+        // background: linear-gradient(130.29deg, #203269 10.99%, #2275AB 100.9%);
+        background-color: #fff;
         border-radius: 23px;
         cursor: pointer;
-        box-shadow: 0px 15px 45px 3px rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 15px 45px 3px rgba(0, 0, 0, 0.4);
         width: 218px;
         height: 62px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
     }
 
     &-btn + &-btn{
@@ -1730,5 +1768,9 @@ textarea {
     border: 1px solid rgb(235, 86, 86);
 }
 
+.intro__text-login{
+    padding-left: 0;
+    padding-right: 5px;
+}
 
 @import "media";

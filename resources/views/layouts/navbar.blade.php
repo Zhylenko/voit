@@ -1,9 +1,12 @@
 @section('navbar')
-                <ul>
-                    <a href="{{ route('home') }}"><li>Główna</li></a>
-					<a href="{{ !Route::is('home') ? route('home') : ''}}{{ asset('#galeria') }}"><li>Galeria</li></a>
-					<a href="{{ !Route::is('home') ? route('home') : ''}}{{ asset('#zamówić') }}"><li>Jak zamówić</li></a>
-					<a href="{{ route('faq') }}"><li>FAQ</li></a>
-					<a href="{{ !Route::is('home') ? route('home') : ''}}{{ asset('#kontakt') }}"><li>Kontakt</li></a>
-                </ul>
+                    <nav class="menu">
+						<ul class="menu__list">
+							<li class="menu__item"><a class="menu__link" href="{{ !Route::is('index') ? Route('index') : ''}}{{ asset('#home') }}">Главная</a></li>
+							<li class="menu__item"><a class="menu__link" href="{{ !Route::is('index') ? Route('index') : ''}}{{ asset('#about') }}">О нас</a></li>
+							<li class="menu__item"><a class="menu__link" href="{{ !Route::is('index') ? Route('index') : ''}}{{ asset('#programm') }}">Программа</a></li>
+							<li class="menu__item"><a class="menu__link" href="{{ !Route::is('index') ? Route('index') : ''}}{{ asset('#price') }}">Цена</a></li>
+							<li class="menu__item"><a class="menu__link" href="{{ !Route::is('index') ? Route('index') : ''}}{{ asset('#feedback') }}">Отзывы</a></li>
+							<li class="menu__item"><a class="menu__link" href="{{ !Route::is('index') ? Route('index') : ''}}{{ asset('#contact') }}">Контакты</a></li>
+						</ul>
+					</nav>
 @endsection
