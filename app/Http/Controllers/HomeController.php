@@ -8,6 +8,7 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        return 'dsa';
+        return config('mail.from.address');
+        return view('home.index');
     }
 }
