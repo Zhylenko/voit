@@ -18,11 +18,11 @@ Route::get('/', 'HomeController@index')
     ->name('index');
 
 //Offer page
-Route::get('/offer', 'HomeController@index')
+Route::get('/offer', 'OfferController@index')
     ->name('offer');
 
 //Account page
-Route::get('/account', 'HomeController@index')
+Route::get('/account', 'AccountController@index')
     ->name('account');
 
 //Send contact data
