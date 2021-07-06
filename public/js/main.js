@@ -17,6 +17,7 @@ if(document.querySelector('meta[name="csrf-token"]') !== null) {
 }
 
 console.log('test');
+console.log('test test');
 
 $(function(){
 
