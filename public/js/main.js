@@ -16,6 +16,8 @@ if(document.querySelector('meta[name="csrf-token"]') !== null) {
         token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 }
 
+console.log('test');
+
 $(function(){
 
         const media = window.matchMedia('(max-width: 768px)');
