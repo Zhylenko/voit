@@ -29,6 +29,23 @@ Route::get('/account', 'AccountController@index')
 Route::post('/contact/send', 'ContactController@send')
         ->name('contact-send');
 
-//Account page
-Route::get('/logout', 'HomeController@index')
-    ->name('account-logout');
+/*
+|--------------------------------------------------------------------------
+| Authentication
+|--------------------------------------------------------------------------
+|
+| Authentication routes
+|
+*/
+
+//Login
+Route::post('/auth/login', 'AuthController@login')
+    ->name('auth-login');
+
+//Register
+Route::post('/auth/register', 'AuthController@register')
+    ->name('auth-register');
+
+//Logout page
+Route::get('/auth/logout', 'AuthController@logout')
+    ->name('auth-logout');

@@ -8,6 +8,6 @@ class AccountController extends Controller
 {
     public function index()
     {
-        # code...
+        return view('account.index');
     }
 }

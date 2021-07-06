@@ -34,7 +34,7 @@
 							<a class="account__btn log-in" href="{{ Route('account') }}">
 								<img class="account__img" src="{{ asset('img/user.svg') }}" alt="user">
 							</a>
-							<a class="account__btn log-out" href="{{ Route('account-logout') }}">
+							<a class="account__btn log-out" href="{{ Route('auth-logout') }}">
 								<img class="account__img" src="{{ asset('img/logout.svg') }}" alt="user">
 							</a>
 						</div>

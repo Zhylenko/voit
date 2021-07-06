@@ -2,8 +2,8 @@
     <script>
         const endPoints = {
             'contact-form':     `{{ Route('contact-send') }}`,
-            'register-form':    ``,
-            'login-form':       ``,
+            'register-form':    `{{ Route('auth-register') }}`,
+            'login-form':       `{{ Route('auth-login') }}`,
         };
     </script>
     <!-- JQuery -->
