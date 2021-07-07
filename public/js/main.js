@@ -88,7 +88,7 @@ $(function(){
         }
 
 
-        loadAboutPost($('.accordion__item-desc').first(), endPoints['about-menu']);
+        // loadAboutPost($('.accordion__item-desc').first(), endPoints['about-menu']);
         scrollFixed();
         slickSlider();
         
@@ -184,7 +184,7 @@ function accrodionMenu() {
         for (let i=0; i<items.length; i++) {
                 items[i].addEventListener('click', ()=>{
                         
-                        loadAboutPost($(items[i]), endPoints['about-menu']);
+                        // loadAboutPost($(items[i]), endPoints['about-menu']);
 
                         if(!(items[i].classList.contains('active'))) {
                                 let activeNode = null;
@@ -452,7 +452,7 @@ function Reset(form) {
 }
 
 // Register Function
-function register(formID, inputsReqClass, label ,url) {
+function register(formID, inputsReqClass, errorLabelsClass ,url) {
 
     const form = document.getElementById(formID),
           inputs = document.querySelectorAll(inputsReqClass);
@@ -461,13 +461,15 @@ function register(formID, inputsReqClass, label ,url) {
     const sendCodeButton = btns[0];
     const registerButton = btns[1];
 
+    const label = document.querySelectorAll(errorLabelsClass);
+
     if(form !== null) form.addEventListener('submit', formSend);
 
     async function formSend(e) {
             e.preventDefault();
         
                 let dataForm = new FormData();
-                dataForm.set('register-email', inputs[2].value);
+                dataForm.set('email', inputs[2].value);
 
                 let response = await fetch(url, {
                         method: 'POST',
@@ -489,18 +491,20 @@ function register(formID, inputsReqClass, label ,url) {
                         console.log(result.message);
                 } else {                       
                         alert('Ошибка');
-
+                        let result = await response.json();
                         for(let key in result.errors) {
                                 
-                                for(let index = 0; index < contactReq.length; index++) {
-                                        if(inputs[index].name === key) {
-                                               
-                                                contactReq[index].classList.add('._error');
-                                                label[index].textContent = result.errors[key];
-                                                label[index].style.display = 'block';
-                                             
-                                        }
+                                if(key === 'email') {
+                                        inputs[2].classList.add('._error');
+                                        label[2].textContent = result.errors[key];
+                                        label[2].style.display = 'block';
+                                } 
+                                if(key === 'code') {
+                                        inputs[3].classList.add('._error');
+                                        label[3].textContent = result.errors[key];
+                                        label[3].style.display = 'block';
                                 }
+      
                         }
                          
                 }
@@ -524,8 +528,8 @@ function registerWithCode(formID, inputsReqClass, label ,url) {
                 e.preventDefault();
                    console.log('after');
                     let dataForm = new FormData();
-                    dataForm.set('register-email', inputs[2].value);
-                    dataForm.set('register-code', inputs[3].value);
+                    dataForm.set('email', inputs[2].value);
+                    dataForm.set('code', inputs[3].value);
 
                     let response = await fetch(url, {
                             method: 'POST',
