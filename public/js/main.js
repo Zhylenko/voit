@@ -16,7 +16,16 @@ if(document.querySelector('meta[name="csrf-token"]') !== null) {
         token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 }
 
-console.log(endPoints);
+function loadAboutPost(ext, url) {
+        $.ajax({
+                url: url,
+                cache: false,
+                success: function(html) {
+                        ext.html(html);
+                }
+        });
+}
+
 
 $(function(){
 
@@ -77,15 +86,6 @@ $(function(){
                 });
         }
 
-        function loadAboutPost(ext, url) {
-                $.ajax({
-                        url: url,
-                        cache: false,
-                        success: function(html) {
-                                ext.html(html);
-                        }
-                });
-        }
 
         loadAboutPost($('.accordion__item-desc').first(), endPoints['about-menu']);
         scrollFixed();
@@ -169,6 +169,8 @@ function accrodionMenu() {
 
         for (let i=0; i<items.length; i++) {
                 items[i].addEventListener('click', ()=>{
+                        
+                        loadAboutPost($(items[i]), endPoints['about-menu']);
 
                         if(!(items[i].classList.contains('active'))) {
                                 let activeNode = null;
