@@ -3,7 +3,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
         accrodionMenu();
         programmMenu();
         modal('.overlay__popup','popup-btn', '.popup__close','.popup__login');
-        validatorForm('contact-form', '.form-control', '.form-error', "/contact/send");
+        validatorForm('contact-form', '.form-control', '.form-error', endPoints['contact-form']);
         register('register-form', '._req');
         addTimer('timer');
         registerModal('register-btn','.popup__reg', '.popup__login');
@@ -15,6 +15,8 @@ let token = 0;
 if(document.querySelector('meta[name="csrf-token"]') !== null) {
         token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 }
+
+console.log(endPoints);
 
 $(function(){
 
@@ -85,7 +87,7 @@ $(function(){
                 });
         }
 
-        loadAboutPost($('.accordion__item-desc').first(), '.php');
+        loadAboutPost($('.accordion__item-desc').first(), endPoints['about-menu']);
         scrollFixed();
         slickSlider();
         
@@ -344,7 +346,7 @@ function calcScroll() {
 
 
 //FORM SEND
-function validatorForm(form, formReq, errorLabelsClass ,filePhp) {
+function validatorForm(form, formReq, errorLabelsClass ,url) {
 
     const contactForm = document.getElementById(form);
     const contactReq = document.querySelectorAll(formReq);
@@ -357,7 +359,6 @@ function validatorForm(form, formReq, errorLabelsClass ,filePhp) {
     checkDiv.setAttribute('class', 'form-error checkbox-error');
     checkDiv.textContent = 'Необходимо заполнить пустое поле';
     check_group.children[0].append(checkDiv);
-
 
     if(contactForm!== null) contactForm.addEventListener('submit', formSend);
 
@@ -386,7 +387,7 @@ function validatorForm(form, formReq, errorLabelsClass ,filePhp) {
             
                     contactForm.classList.add('_sending');
 
-                    let response = await fetch(filePhp, {
+                    let response = await fetch(url, {
                             method: 'POST',
                             body: formData,
                             headers: new Headers({

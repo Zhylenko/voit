@@ -4,6 +4,7 @@
             'contact-form':     `{{ Route('contact-send') }}`,
             'register-form':    `{{ Route('auth-register') }}`,
             'login-form':       `{{ Route('auth-login') }}`,
+            'about-menu': `...`,
         };
     </script>
     <!-- JQuery -->
