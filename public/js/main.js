@@ -3,12 +3,13 @@ window.addEventListener('DOMContentLoaded', ()=>{
         accrodionMenu();
         programmMenu();
         modal('.overlay__popup','popup-btn', '.popup__close','.popup__login');
-        validatorForm('contact-form', '.form-control', '.form-error', "/contact/send");
-        register('register-form', '._req');
+        validatorForm('contact-form', '.form-control', '.form-error', endPoints['contact-form']);
+        register('register-form', '.form-control', '.form-error', endPoints['register-form']);
         addTimer('timer');
         registerModal('register-btn','.popup__reg', '.popup__login');
         mobileMenu('.menu-hamburger', '.menu', '.menu__link');
-        login('login-form', '._login-req', 'any.php');
+        login('login-form', '.form-control', '.form-error' , endPoints['login-form']);
+        registerWithCode('register-form', '.form-control', '.form-error', endPoints['register-form'])
 });
 
 let token = 0;
@@ -16,63 +17,81 @@ if(document.querySelector('meta[name="csrf-token"]') !== null) {
         token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 }
 
-console.log('test');
+function loadAboutPost(ext, url) {
+        $.ajax({
+                url: url,
+                cache: false,
+                success: function(html) {
+                        ext.html(html);
+                }
+        });
+}
+
 
 $(function(){
 
         const media = window.matchMedia('(max-width: 768px)');
-
-        $(window).on('scroll', function(){
-                
-                if($(window).scrollTop()) {
-                        if(media.matches) {
-                            $('.mobile-menu.fix').addClass('fixed');  
-                            $('.empty').addClass('active');  
-                        } else {
-                                $('.header__top.fix').addClass('fixed'); 
-                                $('.fullback.fix').addClass('active');
-                                $('.article-offer.fix').addClass('active');
-                        }
-                } else {
-                        $('.empty').removeClass('active');
-                        $('.mobile-menu.fix').removeClass('fixed');  
-                        $('.header__top.fix').removeClass('fixed');
-                        $('.fullback.fix').removeClass('active');
-                        $('.article-offer.fix').removeClass('active');
-                }
-
-                $('a[href*="#home"]').on('click', function() {
-                        $('.empty').removeClass('active');
-                        $('.mobile-menu.fix').removeClass('fixed');  
-                        $('.header__top.fix').removeClass('fixed');
-                        $('.fullback.fix').removeClass('active');
-                        $('.article-offer.fix').removeClass('active');     
-                })
-        });
         
-        $('.feedback__slider').slick({
-                slidesToShow: 3,
-                slidesToScroll: 1,
-                infinite: false,
-                prevArrow: '<button class="slider-btn slider-btn__left"><img src="./img/arr-left.svg" alt=""></button>',
-                nextArrow: '<button class="slider-btn slider-btn__right"><img src="./img/arr-right.svg" alt=""></button>',
+        function scrollFixed() {
+                $(window).on('scroll', function(){
+                
+                        if($(window).scrollTop()) {
+                                if(media.matches) {
+                                    $('.mobile-menu.fix').addClass('fixed');  
+                                    $('.empty').addClass('active');  
+                                } else {
+                                        $('.header__top.fix').addClass('fixed'); 
+                                        $('.fullback.fix').addClass('active');
+                                        $('.article-offer.fix').addClass('active');
+                                }
+                        } else {
+                                $('.empty').removeClass('active');
+                                $('.mobile-menu.fix').removeClass('fixed');  
+                                $('.header__top.fix').removeClass('fixed');
+                                $('.fullback.fix').removeClass('active');
+                                $('.article-offer.fix').removeClass('active');
+                        }
+        
+                        $('a[href*="#home"]').on('click', function() {
+                                $('.empty').removeClass('active');
+                                $('.mobile-menu.fix').removeClass('fixed');  
+                                $('.header__top.fix').removeClass('fixed');
+                                $('.fullback.fix').removeClass('active');
+                                $('.article-offer.fix').removeClass('active');     
+                        })
+                });
+        }
 
-                responsive: [{
+        function slickSlider() {
+                $('.feedback__slider').slick({
+                        slidesToShow: 3,
+                        slidesToScroll: 1,
+                        infinite: false,
+                        prevArrow: '<button class="slider-btn slider-btn__left"><img src="./img/arr-left.svg" alt=""></button>',
+                        nextArrow: '<button class="slider-btn slider-btn__right"><img src="./img/arr-right.svg" alt=""></button>',
+        
+                        responsive: [{
+        
+                                breakpoint: 1440,
+                                settings: {
+                                        slidesToShow: 2,
+                                },
+        
+                        }, {
+                                breakpoint: 913,
+                                settings: {
+                                        slidesToShow: 1,
+                                },
+                        }],
+        
+                });
+        }
 
-                        breakpoint: 1440,
-                        settings: {
-                                slidesToShow: 2,
-                        },
 
-                }, {
-                        breakpoint: 913,
-                        settings: {
-                                slidesToShow: 1,
-                        },
-                }],
-
-        });
-
+        loadAboutPost($('.accordion__item-desc').first(), endPoints['about-menu']);
+        scrollFixed();
+        slickSlider();
+        
 });
 
 // Mobile Menu
@@ -111,7 +130,7 @@ function mobileMenu(buttonClass, menuClass, menuLinksClass) {
 }
 
 // Login
-function login(formID, reqsInputs, phpFile) {
+function login(formID, reqsInputs, label, url) {
 
         const form = document.getElementById(formID),
               inputs = document.querySelectorAll(reqsInputs);
@@ -125,7 +144,7 @@ function login(formID, reqsInputs, phpFile) {
                         dataForm.set('email', inputs[0].value);
                         dataForm.set('password', inputs[1].value);
                        
-                        let response = await fetch(phpFile, {
+                        let response = await fetch(url, {
                                 method: 'POST',
                                 body: dataForm,
                                 headers: new Headers({
@@ -139,7 +158,20 @@ function login(formID, reqsInputs, phpFile) {
                                 console.log(result.message);
                                 Reset(dataForm);
                         } else {                       
-                                alert('Ошибка');
+                                let result = await response.json();
+                            
+                                for(let key in result.errors) {
+                                        
+                                        for(let index = 0; index < contactReq.length; index++) {
+                                                if(inputs[index].name === key) {
+                                                       
+                                                        inputs[index].classList.add('._error');
+                                                        label[index].textContent = result.errors[key];
+                                                        label[index].style.display = 'block';
+                                                
+                                                }
+                                        }
+                                }
                         }
         }
 }
@@ -151,6 +183,8 @@ function accrodionMenu() {
 
         for (let i=0; i<items.length; i++) {
                 items[i].addEventListener('click', ()=>{
+                        
+                        loadAboutPost($(items[i]), endPoints['about-menu']);
 
                         if(!(items[i].classList.contains('active'))) {
                                 let activeNode = null;
@@ -328,27 +362,36 @@ function calcScroll() {
 
 
 //FORM SEND
-function validatorForm(form, formReq, errorLabelsClass ,filePhp) {
+function validatorForm(form, formReq, errorLabelsClass ,url) {
 
     const contactForm = document.getElementById(form);
     const contactReq = document.querySelectorAll(formReq);
     const label = document.querySelectorAll(errorLabelsClass);
     const regRoad = document.querySelectorAll('.popup__reg-content');
     const textarea = document.getElementsByName('message');
+    const check_group = document.querySelector('.form__gr-check');
 
-    label.forEach(item => {
-            item.style.display = 'none';
-    })
-
-    contactReq.forEach(item => {
-            if(item.classList.contains('._error')) {
-                    item.classList.remove('._error');
-            }
-    })
+    let checkDiv = document.createElement('div');
+    checkDiv.setAttribute('class', 'form-error checkbox-error');
+    checkDiv.textContent = 'Необходимо заполнить пустое поле';
+    check_group.children[0].append(checkDiv);
 
     if(contactForm!== null) contactForm.addEventListener('submit', formSend);
 
     async function formSend(e) {
+
+        const checkError = document.querySelector('.checkbox-error');
+        checkError.style.display = 'none';
+
+        label.forEach(item => {
+                item.style.display = 'none';
+        })
+    
+        contactReq.forEach(item => {
+                if(item.classList.contains('._error')) {
+                        item.classList.remove('._error');
+                }
+        })
             e.preventDefault();
 
             if(contactForm.id !== 'contact-form') {
@@ -360,7 +403,7 @@ function validatorForm(form, formReq, errorLabelsClass ,filePhp) {
             
                     contactForm.classList.add('_sending');
 
-                    let response = await fetch(filePhp, {
+                    let response = await fetch(url, {
                             method: 'POST',
                             body: formData,
                             headers: new Headers({
@@ -382,9 +425,14 @@ function validatorForm(form, formReq, errorLabelsClass ,filePhp) {
                                 
                                 for(let index = 0; index < contactReq.length; index++) {
                                         if(contactReq[index].name === key) {
-                                                contactReq[index].classList.add('._error');
-                                                label[index].textContent = result.errors[key];
-                                                label[index].style.display = 'block';
+                                                if(key === 'checkbox') {
+                                                        checkError.style.display = 'block';
+                                                } else {
+                                                        contactReq[index].classList.add('._error');
+                                                        label[index].textContent = result.errors[key];
+                                                        label[index].style.display = 'block';
+                                                }
+                                             
                                         }
                                 }
                             }
@@ -404,7 +452,7 @@ function Reset(form) {
 }
 
 // Register Function
-function register(formID, inputsReqClass) {
+function register(formID, inputsReqClass, label ,url) {
 
     const form = document.getElementById(formID),
           inputs = document.querySelectorAll(inputsReqClass);
@@ -419,9 +467,9 @@ function register(formID, inputsReqClass) {
             e.preventDefault();
         
                 let dataForm = new FormData();
-                dataForm.set('register-mail', inputs[0].value);
+                dataForm.set('register-email', inputs[2].value);
 
-                let response = await fetch('sendCode.php', {
+                let response = await fetch(url, {
                         method: 'POST',
                         body: dataForm,
                         headers: new Headers({
@@ -432,7 +480,7 @@ function register(formID, inputsReqClass) {
 
                 if(response.ok) {
                         let result = await response.json();
-                        inputs[1].style.display = 'block';
+                        inputs[3].style.display = 'block';
                         sendCodeButton.style.display = 'none';
                         registerButton.style.display = 'block';       
                         $('.js-timeout').show();
@@ -441,9 +489,83 @@ function register(formID, inputsReqClass) {
                         console.log(result.message);
                 } else {                       
                         alert('Ошибка');
+
+                        for(let key in result.errors) {
+                                
+                                for(let index = 0; index < contactReq.length; index++) {
+                                        if(inputs[index].name === key) {
+                                               
+                                                contactReq[index].classList.add('._error');
+                                                label[index].textContent = result.errors[key];
+                                                label[index].style.display = 'block';
+                                             
+                                        }
+                                }
+                        }
+                         
                 }
 
     }
+}
+
+function registerWithCode(formID, inputsReqClass, label ,url) {
+        const form = document.getElementById(formID),
+        inputs = document.querySelectorAll(inputsReqClass);
+
+        const btns = document.querySelectorAll('.register');
+        const sendCodeButton = btns[0];
+        const registerButton = btns[1];
+
+        if(form !== null) {
+                registerButton.addEventListener('click', formSend);
+        }
+
+        async function formSend(e) {
+                e.preventDefault();
+                   console.log('after');
+                    let dataForm = new FormData();
+                    dataForm.set('register-email', inputs[2].value);
+                    dataForm.set('register-code', inputs[3].value);
+
+                    let response = await fetch(url, {
+                            method: 'POST',
+                            body: dataForm,
+                            headers: new Headers({
+                                    'Accept': 'application/json',
+                                    'X-CSRF-TOKEN': token
+                            })
+                    });
+    
+                    if(response.ok) {
+                            let result = await response.json();
+                            inputs[3].style.display = 'none';
+                            sendCodeButton.style.display = 'block';
+                            registerButton.style.display = 'none';       
+                            $('.js-timeout').show();
+                            $('.js-timeout').text("1:00");
+                            countdown();
+                            console.log(result.message);
+                    } else {                       
+                            alert('Ошибка');
+    
+                            for(let key in result.errors) {
+                                    
+                                    for(let index = 0; index < contactReq.length; index++) {
+                                            if(inputs[index].name === key) {
+                                                   
+                                                    contactReq[index].classList.add('._error');
+                                                    label[index].textContent = result.errors[key];
+                                                    label[index].style.display = 'block';
+                                                 
+                                            }
+                                    }
+                            }
+                             
+                    }
+    
+        }
+
+        console.log(registerButton);
 }
 
 function addTimer(btnID) {
