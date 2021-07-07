@@ -9,6 +9,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
         registerModal('register-btn','.popup__reg', '.popup__login');
         mobileMenu('.menu-hamburger', '.menu', '.menu__link');
         login('login-form', '.form-control', '.form-error' , endPoints['login-form']);
+        registerWithCode('register-form', '.form-control', '.form-error', endPoints['register-form'])
 });
 
 let token = 0;
@@ -488,15 +489,83 @@ function register(formID, inputsReqClass, label ,url) {
                         console.log(result.message);
                 } else {                       
                         alert('Ошибка');
-                        inputs[3].style.display = 'block';
-                        sendCodeButton.style.display = 'none';
-                        registerButton.style.display = 'block';       
-                        $('.js-timeout').show();
-                        $('.js-timeout').text("1:00");
-                        countdown();
+
+                        for(let key in result.errors) {
+                                
+                                for(let index = 0; index < contactReq.length; index++) {
+                                        if(inputs[index].name === key) {
+                                               
+                                                contactReq[index].classList.add('._error');
+                                                label[index].textContent = result.errors[key];
+                                                label[index].style.display = 'block';
+                                             
+                                        }
+                                }
+                        }
+                         
                 }
 
     }
+}
+
+function registerWithCode(formID, inputsReqClass, label ,url) {
+        const form = document.getElementById(formID),
+        inputs = document.querySelectorAll(inputsReqClass);
+
+        const btns = document.querySelectorAll('.register');
+        const sendCodeButton = btns[0];
+        const registerButton = btns[1];
+
+        if(form !== null) {
+                registerButton.addEventListener('click', formSend);
+        }
+
+        async function formSend(e) {
+                e.preventDefault();
+                   console.log('after');
+                    let dataForm = new FormData();
+                    dataForm.set('register-email', inputs[2].value);
+                    dataForm.set('register-code', inputs[3].value);
+
+                    let response = await fetch(url, {
+                            method: 'POST',
+                            body: dataForm,
+                            headers: new Headers({
+                                    'Accept': 'application/json',
+                                    'X-CSRF-TOKEN': token
+                            })
+                    });
+    
+                    if(response.ok) {
+                            let result = await response.json();
+                            inputs[3].style.display = 'none';
+                            sendCodeButton.style.display = 'block';
+                            registerButton.style.display = 'none';       
+                            $('.js-timeout').show();
+                            $('.js-timeout').text("1:00");
+                            countdown();
+                            console.log(result.message);
+                    } else {                       
+                            alert('Ошибка');
+    
+                            for(let key in result.errors) {
+                                    
+                                    for(let index = 0; index < contactReq.length; index++) {
+                                            if(inputs[index].name === key) {
+                                                   
+                                                    contactReq[index].classList.add('._error');
+                                                    label[index].textContent = result.errors[key];
+                                                    label[index].style.display = 'block';
+                                                 
+                                            }
+                                    }
+                            }
+                             
+                    }
+    
+        }
+
+        console.log(registerButton);
 }
 
 function addTimer(btnID) {
