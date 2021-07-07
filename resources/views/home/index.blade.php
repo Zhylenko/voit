@@ -7,7 +7,7 @@
 
 @include('home.main')
 @include('home.about')
-@include('home.reviews')
+@include('home.reviews', ['reviews' => $reviews])
 @include('layouts.footer')
 
 @section('content')

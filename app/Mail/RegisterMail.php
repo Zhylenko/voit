@@ -7,9 +7,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-use App\Http\Requests\ContactRequest;
+use App\Http\Requests\RegisterRequest;
 
-class ContactMail extends Mailable
+class RegisterMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -22,9 +22,9 @@ class ContactMail extends Mailable
      *
      * @return void
      */
-    public function __construct(ContactRequest $request)
+    public function __construct(RegisterRequest $request)
     {
-        $this->subject  = trans('mail.subjects.contact');
+        $this->subject  = trans('mail.subjects.register');
         $this->data     = $request;
     }
 
@@ -38,13 +38,10 @@ class ContactMail extends Mailable
         $data       = $this->data;
         $subject    = $this->subject;
 
-        return $this->view('mail.contact.index')
+        return $this->view('mail.auth.register.index')
                     ->with([
-                        'title'     => $subject,
-                        'name'      => $data->name,
-                        'surname'   => $data->surname,
-                        'email'     => $data->email,
-                        'text'      => $data->message,
+                        'title'         => $subject,
+                        'password'      => $data->password,
                     ])
                     ->subject($subject);
     }

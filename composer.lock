@@ -1293,6 +1293,13 @@
                 "logging",
                 "psr-3"
             ],
+<<<<<<< HEAD
+            "support": {
+                "issues": "https://github.com/Seldaek/monolog/issues",
+                "source": "https://github.com/Seldaek/monolog/tree/2.3.0"
+            },
+=======
+>>>>>>> 738cf80bb238a78320e65b41632fc7878b0f90fc
             "funding": [
                 {
                     "url": "https://github.com/Seldaek",
@@ -1444,6 +1451,13 @@
                 "parser",
                 "php"
             ],
+<<<<<<< HEAD
+            "support": {
+                "issues": "https://github.com/nikic/PHP-Parser/issues",
+                "source": "https://github.com/nikic/PHP-Parser/tree/v4.11.0"
+            },
+=======
+>>>>>>> 738cf80bb238a78320e65b41632fc7878b0f90fc
             "time": "2021-07-03T13:36:55+00:00"
         },
         {
@@ -4786,16 +4800,16 @@
         },
         {
             "name": "fakerphp/faker",
-            "version": "v1.14.1",
+            "version": "v1.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FakerPHP/Faker.git",
-                "reference": "ed22aee8d17c7b396f74a58b1e7fefa4f90d5ef1"
+                "reference": "89c6201c74db25fa759ff16e78a4d8f32547770e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/ed22aee8d17c7b396f74a58b1e7fefa4f90d5ef1",
-                "reference": "ed22aee8d17c7b396f74a58b1e7fefa4f90d5ef1",
+                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/89c6201c74db25fa759ff16e78a4d8f32547770e",
+                "reference": "89c6201c74db25fa759ff16e78a4d8f32547770e",
                 "shasum": ""
             },
             "require": {
@@ -4843,7 +4857,15 @@
                 "faker",
                 "fixtures"
             ],
+<<<<<<< HEAD
+            "support": {
+                "issues": "https://github.com/FakerPHP/Faker/issues",
+                "source": "https://github.com/FakerPHP/Faker/tree/v1.15.0"
+            },
+            "time": "2021-07-06T20:39:40+00:00"
+=======
             "time": "2021-03-30T06:27:33+00:00"
+>>>>>>> 738cf80bb238a78320e65b41632fc7878b0f90fc
         },
         {
             "name": "filp/whoops",
