@@ -340,19 +340,23 @@ function validatorForm(form, formReq, errorLabelsClass ,filePhp) {
     checkDiv.textContent = 'Необходимо заполнить пустое поле';
     check_group.children[0].append(checkDiv);
 
-    label.forEach(item => {
-            item.style.display = 'none';
-    })
-
-    contactReq.forEach(item => {
-            if(item.classList.contains('._error')) {
-                    item.classList.remove('._error');
-            }
-    })
 
     if(contactForm!== null) contactForm.addEventListener('submit', formSend);
 
     async function formSend(e) {
+
+        const checkError = document.querySelector('.checkbox-error');
+        checkError.style.display = 'none';
+
+        label.forEach(item => {
+                item.style.display = 'none';
+        })
+    
+        contactReq.forEach(item => {
+                if(item.classList.contains('._error')) {
+                        item.classList.remove('._error');
+                }
+        })
             e.preventDefault();
 
             if(contactForm.id !== 'contact-form') {
@@ -386,9 +390,14 @@ function validatorForm(form, formReq, errorLabelsClass ,filePhp) {
                                 
                                 for(let index = 0; index < contactReq.length; index++) {
                                         if(contactReq[index].name === key) {
-                                                contactReq[index].classList.add('._error');
-                                                label[index].textContent = result.errors[key];
-                                                label[index].style.display = 'block';
+                                                if(key === 'checkbox') {
+                                                        checkError.style.display = 'block';
+                                                } else {
+                                                        contactReq[index].classList.add('._error');
+                                                        label[index].textContent = result.errors[key];
+                                                        label[index].style.display = 'block';
+                                                }
+                                             
                                         }
                                 }
                             }
