@@ -75,8 +75,17 @@ $(function(){
                 });
         }
 
-        
+        function loadAboutPost(ext, url) {
+                $.ajax({
+                        url: url,
+                        cache: false,
+                        success: function(html) {
+                                ext.html(html);
+                        }
+                });
+        }
 
+        loadAboutPost($('.accordion__item-desc').first(), '.php');
         scrollFixed();
         slickSlider();
         
