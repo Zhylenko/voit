@@ -29,6 +29,9 @@ Route::get('/account', 'AccountController@index')
 Route::post('/contact/send', 'ContactController@send')
         ->name('contact-send');
 
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Authentication

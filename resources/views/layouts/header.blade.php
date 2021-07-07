@@ -26,7 +26,7 @@
 		
 					<div class="left-side">
 						<div class="phone">
-							<a class="phone__link" href="tel:+380951234567">+38 095 123 45 67</a>
+							<a class="phone__link" href="tel:{{ trans('content.phone') }}">{{ trans('content.phone') }}</a>
 						</div>
 				
 						<div class="account">

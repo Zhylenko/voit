@@ -124,13 +124,13 @@
 
                                     <div class="footer__contact-desc">
                                         <div class="footer__desc-data">
-                                            <a class="foot-desc-link" href="tel:+380951234567">+38 095 123 45 67</a>
-                                            <a class="foot-desc-link" href="mailto:itcourses@gmail.com">itcourses@gmail.com</a>
+                                            <a class="foot-desc-link" href="tel:{{ trans('content.phone') }}">{{ trans('content.phone') }}</a>
+                                            <a class="foot-desc-link" href="mailto:{{ trans('content.email') }}">{{ trans('content.email') }}</a>
                                         </div>
                                         <div class="footer__desc-social">
-                                            <a class="footer__social" href="#"><img src="{{ asset('img/foot-face.svg') }}" alt=""></a>
-                                            <a class="footer__social" href="#"><img src="{{ asset('img/foot-insta.svg') }}" alt=""></a>
-                                            <a class="footer__social" href="#"><img src="{{ asset('img/foot-tel.svg') }}" alt=""></a>
+                                            <a class="footer__social" href="{{ trans('content.social.facebook') }}"><img src="{{ asset('img/foot-face.svg') }}" alt=""></a>
+                                            <a class="footer__social" href="{{ trans('content.social.instagram') }}"><img src="{{ asset('img/foot-insta.svg') }}" alt=""></a>
+                                            <a class="footer__social" href="{{ trans('content.social.telegram') }}"><img src="{{ asset('img/foot-tel.svg') }}" alt=""></a>
                                         </div>
                                     </div>
                                 </div>
