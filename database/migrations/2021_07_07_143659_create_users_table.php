@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('email')->unique();
             $table->string('password');
+            $table->json('cookie_hash')->nullable();
             $table->timestamp('verified_at')->nullable();
             $table->timestamps();
         });

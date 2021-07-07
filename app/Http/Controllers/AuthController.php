@@ -18,6 +18,9 @@ class AuthController extends Controller
     {
         $request->password = $this->passGenerator();
 
+        $user = new User;
+        $user->create($request);
+
         return Mail::to($request->email)
                     ->send(new RegisterMail($request));
     }

@@ -40,6 +40,7 @@ class ContactMail extends Mailable
 
         return $this->view('mail.contact.index')
                     ->with([
+                        'title'     => $subject,
                         'name'      => $data->name,
                         'surname'   => $data->surname,
                         'email'     => $data->email,

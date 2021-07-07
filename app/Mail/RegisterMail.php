@@ -40,6 +40,7 @@ class RegisterMail extends Mailable
 
         return $this->view('mail.auth.register.index')
                     ->with([
+                        'title'         => $subject,
                         'password'      => $data->password,
                     ])
                     ->subject($subject);
