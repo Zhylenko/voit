@@ -19,58 +19,67 @@ if(document.querySelector('meta[name="csrf-token"]') !== null) {
 $(function(){
 
         const media = window.matchMedia('(max-width: 768px)');
-
-        $(window).on('scroll', function(){
-                
-                if($(window).scrollTop()) {
-                        if(media.matches) {
-                            $('.mobile-menu.fix').addClass('fixed');  
-                            $('.empty').addClass('active');  
-                        } else {
-                                $('.header__top.fix').addClass('fixed'); 
-                                $('.fullback.fix').addClass('active');
-                                $('.article-offer.fix').addClass('active');
-                        }
-                } else {
-                        $('.empty').removeClass('active');
-                        $('.mobile-menu.fix').removeClass('fixed');  
-                        $('.header__top.fix').removeClass('fixed');
-                        $('.fullback.fix').removeClass('active');
-                        $('.article-offer.fix').removeClass('active');
-                }
-
-                $('a[href*="#home"]').on('click', function() {
-                        $('.empty').removeClass('active');
-                        $('.mobile-menu.fix').removeClass('fixed');  
-                        $('.header__top.fix').removeClass('fixed');
-                        $('.fullback.fix').removeClass('active');
-                        $('.article-offer.fix').removeClass('active');     
-                })
-        });
         
-        $('.feedback__slider').slick({
-                slidesToShow: 3,
-                slidesToScroll: 1,
-                infinite: false,
-                prevArrow: '<button class="slider-btn slider-btn__left"><img src="./img/arr-left.svg" alt=""></button>',
-                nextArrow: '<button class="slider-btn slider-btn__right"><img src="./img/arr-right.svg" alt=""></button>',
+        function scrollFixed() {
+                $(window).on('scroll', function(){
+                
+                        if($(window).scrollTop()) {
+                                if(media.matches) {
+                                    $('.mobile-menu.fix').addClass('fixed');  
+                                    $('.empty').addClass('active');  
+                                } else {
+                                        $('.header__top.fix').addClass('fixed'); 
+                                        $('.fullback.fix').addClass('active');
+                                        $('.article-offer.fix').addClass('active');
+                                }
+                        } else {
+                                $('.empty').removeClass('active');
+                                $('.mobile-menu.fix').removeClass('fixed');  
+                                $('.header__top.fix').removeClass('fixed');
+                                $('.fullback.fix').removeClass('active');
+                                $('.article-offer.fix').removeClass('active');
+                        }
+        
+                        $('a[href*="#home"]').on('click', function() {
+                                $('.empty').removeClass('active');
+                                $('.mobile-menu.fix').removeClass('fixed');  
+                                $('.header__top.fix').removeClass('fixed');
+                                $('.fullback.fix').removeClass('active');
+                                $('.article-offer.fix').removeClass('active');     
+                        })
+                });
+        }
 
-                responsive: [{
+        function slickSlider() {
+                $('.feedback__slider').slick({
+                        slidesToShow: 3,
+                        slidesToScroll: 1,
+                        infinite: false,
+                        prevArrow: '<button class="slider-btn slider-btn__left"><img src="./img/arr-left.svg" alt=""></button>',
+                        nextArrow: '<button class="slider-btn slider-btn__right"><img src="./img/arr-right.svg" alt=""></button>',
+        
+                        responsive: [{
+        
+                                breakpoint: 1440,
+                                settings: {
+                                        slidesToShow: 2,
+                                },
+        
+                        }, {
+                                breakpoint: 913,
+                                settings: {
+                                        slidesToShow: 1,
+                                },
+                        }],
+        
+                });
+        }
 
-                        breakpoint: 1440,
-                        settings: {
-                                slidesToShow: 2,
-                        },
+        
 
-                }, {
-                        breakpoint: 913,
-                        settings: {
-                                slidesToShow: 1,
-                        },
-                }],
-
-        });
-
+        scrollFixed();
+        slickSlider();
+        
 });
 
 // Mobile Menu
