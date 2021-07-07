@@ -333,6 +333,12 @@ function validatorForm(form, formReq, errorLabelsClass ,filePhp) {
     const label = document.querySelectorAll(errorLabelsClass);
     const regRoad = document.querySelectorAll('.popup__reg-content');
     const textarea = document.getElementsByName('message');
+    const check_group = document.querySelector('.form__gr-check');
+
+    let checkDiv = document.createElement('div');
+    checkDiv.setAttribute('class', 'form-error checkbox-error');
+    checkDiv.textContent = 'Необходимо заполнить пустое поле';
+    check_group.children[0].append(checkDiv);
 
     label.forEach(item => {
             item.style.display = 'none';
