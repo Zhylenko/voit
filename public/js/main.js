@@ -317,6 +317,8 @@ function removePopup(window, style, mediaMatch) {
         const registerForm = popupWindow.children[1].children[1];
         const codeInput = document.querySelector('._code');
         const inputs = document.querySelectorAll('input');
+        const btns = document.querySelectorAll('.register'),
+              timer = document.getElementById('timer');
 
               inputs.forEach((input) => {
                       if(input.classList.contains('_error')) {
@@ -327,6 +329,9 @@ function removePopup(window, style, mediaMatch) {
               popupWindow.classList.remove('active');
               regModal.style.display = 'none';
               codeInput.style.display = 'none';
+              btns[0].style.display = 'block';
+              btns[1].style.display = 'none';
+              timer.display = 'none';
               $('.js-timeout').text("1:00");
               $('.js-timeout').hide();
               Reset(loginForm);
@@ -359,7 +364,6 @@ function calcScroll() {
 
         return scrollWidth;
 }
-
 
 //FORM SEND
 function validatorForm(form, formReq, errorLabelsClass ,url) {
