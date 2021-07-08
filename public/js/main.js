@@ -3,13 +3,13 @@ window.addEventListener('DOMContentLoaded', ()=>{
         accrodionMenu();
         programmMenu();
         modal('.overlay__popup','popup-btn', '.popup__close','.popup__login');
-        postContactForm('contact-form', '.form-control', '.form-error', config.endPoints['contact-send']);
+        postContactFormRequests('contact-form', '.form-control', '.form-error', config.endPoints['contact-send']);
+        postLoginFormRequests('login-form', '.form-control', '.form-error' , config.endPoints['auth-login']);
         register('register-form', '.form-control', '.form-error', config.endPoints['auth-register']);
         addTimer('timer');
         registerModal('register-btn','.popup__reg', '.popup__login');
         mobileMenu('.menu-hamburger', '.menu', '.menu__link');
-        login('login-form', '.form-control', '.form-error' , config.endPoints['auth-login']);
-        registerWithCode('register-form', '.form-control', '.form-error', config.endPoints['auth-login'])
+        registerWithCode('register-form', '.form-control', '.form-error', config.endPoints['auth-login']);
 });
 
 
@@ -28,7 +28,8 @@ function loadAboutPost(ext, url) {
         });
 }
 
-
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* jQueary Main Function */
 $(function(){
 
         const media = window.matchMedia('(max-width: 768px)');
@@ -94,20 +95,25 @@ $(function(){
         slickSlider();
         
 });
+/* ------------------------------------------------------------------------------------------------------------------ */
 
-function createNewDiv(setClass) {
 
-        let newDiv = document.createElement('div');
-        newDiv.setAttribute('class', setClass);
-        
-        return newDiv;
+function clearErrors(inputsError, labelError) {
+
+        labelError.forEach(item => {
+                item.style.display = 'none';
+        });
+
+        inputsError.forEach(item => {
+                if(item.classList.contains('._error')) {
+                        item.classList.remove('._error');
+                }
+        });
 }
 
 /* ------------------------------------------------------------------------------------------------------------------ */
 /* POST Requests */
-
-//Contact Form POST sending
-function postContactForm(form, formReq, errorLabelsClass ,url) {
+function postContactFormRequests(form, formReq, errorLabelsClass ,url) {
 
     const contactForm = document.getElementById(form),
           contactReq = document.querySelectorAll(formReq),
@@ -116,9 +122,6 @@ function postContactForm(form, formReq, errorLabelsClass ,url) {
           check_group = document.querySelector('.form__gr-check');
 
     let checkDiv = createNewDiv('form-error checkbox-error');
-//     let formAfterSend = createNewDiv('sent');
-//     let formAfterSendText = createNewDiv('sent-text');
-//     formAfterSendText.textContent = 'Отправка...';
     checkDiv.textContent = 'Необходимо заполнить пустое поле';
 
     if(contactForm!== null) {
@@ -132,15 +135,7 @@ function postContactForm(form, formReq, errorLabelsClass ,url) {
         const checkError = document.querySelector('.checkbox-error');
         checkError.style.display = 'none';
 
-        label.forEach(item => {
-                item.style.display = 'none';
-        })
-    
-        contactReq.forEach(item => {
-                if(item.classList.contains('._error')) {
-                        item.classList.remove('._error');
-                }
-        })
+        clearErrors(contactReq, label);
 
         if(contactForm.id !== 'contact-form') {
                 regRoad[0].style.display = 'none';
@@ -193,8 +188,68 @@ function postContactForm(form, formReq, errorLabelsClass ,url) {
         }
 }
 
+function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
+
+        const form = document.getElementById(formID),
+              inputs = document.querySelectorAll(reqsInputs),
+              label = document.querySelectorAll(errorLabelsClass);
+
+        if(form !== null) form.addEventListener('submit', formSend);
+
+        async function formSend(e) {
+                e.preventDefault();
+
+                clearErrors(inputs, label);
+
+                let dataForm = new FormData();
+                dataForm.set('email', inputs[0].value);
+                dataForm.set('password', inputs[1].value);
+                form.classList.add("._sending");
+                       
+                        let response = await fetch(url, {
+                                method: 'POST',
+                                body: dataForm,
+                                headers: new Headers({
+                                        'Accept': 'application/json',
+                                        'X-CSRF-TOKEN': token
+                                })
+                        });
+    
+                        if(response.ok) {
+
+                                form.classList.remove("._sending");
+                                Reset(dataForm);
+                                location.reload();
+
+                        } else {                       
+                                let result = await response.json();
+                            
+                                for(let error in result.errors) {
+                                        
+                                        for(let index = 0; index < inputs.length; index++) {
+
+                                                if(inputs[index].name === error) {
+                                                       
+                                                        inputs[index].classList.add('._error');
+                                                        label[index].textContent = result.errors[error];
+                                                        label[index].style.display = 'block';
+                                                
+                                                }
+                                        }
+                                }
+                                form.classList.remove("._sending");
+                        }
+        }
+}
 
 
+function createNewDiv(setClass) {
+
+        let newDiv = document.createElement('div');
+        newDiv.setAttribute('class', setClass);
+        
+        return newDiv;
+}
 
 // Mobile Menu
 function mobileMenu(buttonClass, menuClass, menuLinksClass) {
@@ -231,52 +286,6 @@ function mobileMenu(buttonClass, menuClass, menuLinksClass) {
         })
 }
 
-// Login
-function login(formID, reqsInputs, label, url) {
-
-        const form = document.getElementById(formID),
-              inputs = document.querySelectorAll(reqsInputs);
-
-        if(form !== null) form.addEventListener('submit', formSend);
-
-        async function formSend(e) {
-                e.preventDefault();
-
-                        let dataForm = new FormData();
-                        dataForm.set('email', inputs[0].value);
-                        dataForm.set('password', inputs[1].value);
-                       
-                        let response = await fetch(url, {
-                                method: 'POST',
-                                body: dataForm,
-                                headers: new Headers({
-                                        'Accept': 'application/json',
-                                        'X-CSRF-TOKEN': token
-                                })
-                        });
-    
-                        if(response.ok) {
-                                let result = await response.json();
-                                console.log(result.message);
-                                Reset(dataForm);
-                        } else {                       
-                                let result = await response.json();
-                            
-                                for(let key in result.errors) {
-                                        
-                                        for(let index = 0; index < contactReq.length; index++) {
-                                                if(inputs[index].name === key) {
-                                                       
-                                                        inputs[index].classList.add('._error');
-                                                        label[index].textContent = result.errors[key];
-                                                        label[index].style.display = 'block';
-                                                
-                                                }
-                                        }
-                                }
-                        }
-        }
-}
 
 // Accordion About Menu
 function accrodionMenu() {
@@ -573,7 +582,7 @@ function registerWithCode(formID, inputsReqClass, errorLabelsClass, url) {
 
                     let dataForm = new FormData();
                     dataForm.set('email', inputs[2].value);
-                    dataForm.set('code', inputs[3].value);
+                    dataForm.set('password', inputs[3].value);
 
                     let response = await fetch(url, {
                             method: 'POST',
