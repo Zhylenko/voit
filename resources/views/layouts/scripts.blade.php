@@ -7,7 +7,7 @@
                 'login-form':       `{{ Route('auth-login') }}`,
                 'about-menu':       `...`,
             },
-            'timer': '',
+            'timer': '6',
         }
     </script>
     <!-- JQuery -->
