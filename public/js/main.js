@@ -5,7 +5,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
         modal('.overlay__popup','popup-btn', '.popup__close','.popup__login');
         postContactFormRequests('contact-form', '.form-control', '.form-error', config.endPoints['contact-send']);
         postLoginFormRequests('login-form', '.form-control', '.form-error' , config.endPoints['auth-login']);
-        register('register-form', '.form-control', '.form-error', config.endPoints['auth-register']);
+        postRegisterEmailRequests('register-form', '.form-control', '.form-error', config.endPoints['auth-register']);
         addTimer('timer');
         registerModal('register-btn','.popup__reg', '.popup__login');
         mobileMenu('.menu-hamburger', '.menu', '.menu__link');
@@ -204,7 +204,7 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
                 let dataForm = new FormData();
                 dataForm.set('email', inputs[0].value);
                 dataForm.set('password', inputs[1].value);
-                form.classList.add("._sending");
+                form.classList.add("_sending");
                        
                         let response = await fetch(url, {
                                 method: 'POST',
@@ -217,7 +217,7 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
     
                         if(response.ok) {
 
-                                form.classList.remove("._sending");
+                                form.classList.remove("_sending");
                                 Reset(dataForm);
                                 location.reload();
 
@@ -237,10 +237,68 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
                                                 }
                                         }
                                 }
-                                form.classList.remove("._sending");
+                                form.classList.remove("_sending");
                         }
         }
 }
+
+function postRegisterEmailRequests(formID, inputsReqClass, errorLabelsClass ,url) {
+
+    const form = document.getElementById(formID),
+          inputs = document.querySelectorAll(inputsReqClass),
+          btns = document.querySelectorAll('.register'),
+          sendCodeButton = btns[0],
+          registerButton = btns[1],
+          label = document.querySelectorAll(errorLabelsClass);
+
+    if(form !== null) form.addEventListener('submit', formSend);
+
+    async function formSend(e) {
+        e.preventDefault();
+
+        clearErrors(inputs, label);
+        
+                let dataForm = new FormData();
+                dataForm.set('email', inputs[2].value);
+                form.classList.add('_sending');
+
+                let response = await fetch(url, {
+                        method: 'POST',
+                        body: dataForm,
+                        headers: new Headers({
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': token
+                        })
+                });
+
+                if(response.ok) {
+
+                        form.classList.remove('_sending');
+
+                        inputs[3].style.display = 'block';
+                        sendCodeButton.style.display = 'none';
+                        registerButton.style.display = 'block'; 
+
+                        $('.js-timeout').show();
+                        $('.js-timeout').text(config.password_timeout);
+                        countdown();
+
+                } else {                       
+                        let result = await response.json();
+
+                        for(let error in result.errors) {
+                                
+                                if(error === 'email') {
+                                        inputs[2].classList.add('._error');
+                                        label[2].textContent = result.errors[error];
+                                        label[2].style.display = 'block';
+                                } 
+                        }
+                        form.classList.remove('_sending');      
+                }
+        }
+}
+/* ------------------------------------------------------------------------------------------------------------------ */
 
 
 function createNewDiv(setClass) {
@@ -481,77 +539,6 @@ function Reset(form) {
         form.reset();
 }
 
-// Register Function
-function register(formID, inputsReqClass, errorLabelsClass ,url) {
-
-    const form = document.getElementById(formID),
-          inputs = document.querySelectorAll(inputsReqClass),
-          btns = document.querySelectorAll('.register'),
-          sendCodeButton = btns[0],
-          registerButton = btns[1],
-          label = document.querySelectorAll(errorLabelsClass);
-
-    if(form !== null) form.addEventListener('submit', formSend);
-
-    async function formSend(e) {
-            e.preventDefault();
-
-                label.forEach(item => {
-                        item.style.display = 'none';
-                })
-        
-                inputs.forEach(item => {
-                        if(item.classList.contains('._error')) {
-                                item.classList.remove('._error');
-                        }
-                })
-        
-                let dataForm = new FormData();
-                dataForm.set('email', inputs[2].value);
-
-                let response = await fetch(url, {
-                        method: 'POST',
-                        body: dataForm,
-                        headers: new Headers({
-                                'Accept': 'application/json',
-                                'X-CSRF-TOKEN': token
-                        })
-                });
-
-                if(response.ok) {
-
-                        inputs[3].style.display = 'block';
-                        sendCodeButton.style.display = 'none';
-                        registerButton.style.display = 'block'; 
-
-                        $('.js-timeout').show();
-                        $('.js-timeout').text(config.password_timeout);
-                        countdown();
-
-                } else {                       
-                        alert('Ошибка');
-
-                        let result = await response.json();
-
-                        for(let key in result.errors) {
-                                
-                                if(key === 'email') {
-                                        inputs[2].classList.add('._error');
-                                        label[2].textContent = result.errors[key];
-                                        label[2].style.display = 'block';
-                                } 
-                                if(key === 'code') {
-                                        inputs[3].classList.add('._error');
-                                        label[3].textContent = result.errors[key];
-                                        label[3].style.display = 'block';
-                                }
-      
-                        }
-                         
-                }
-
-    }
-}
 
 // Register with Code Function
 function registerWithCode(formID, inputsReqClass, errorLabelsClass, url) {
