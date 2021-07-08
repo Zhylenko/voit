@@ -4,7 +4,11 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class Login
+use App\Models\User;
+
+use App\Http\Requests\LoginRequest;
+
+class Auth
 {
     /**
      * Handle an incoming request.
@@ -13,7 +17,7 @@ class Login
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(LoginRequest $request, Closure $next)
     {
         return $next($request);
     }

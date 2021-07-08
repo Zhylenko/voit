@@ -16,13 +16,26 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $request)
     {
+        $user = User::where('email', '=', $request->email)->first();
+
         $request->password = $this->passGenerator();
 
-        $user = new User;
-        $user->create($request);
+        if($user == null){
 
-        return Mail::to($request->email)
-                    ->send(new RegisterMail($request));
+            $user = new User;
+            $user->create($request);
+
+        }else if($user !== null && $user->verified_at == null){
+
+            $request->password = ($user->updated_at);
+            $user->updatePassword($request);
+
+        }else{
+            return $user->updated_at;
+        }
+
+        Mail::to($request->email)
+            ->send(new RegisterMail($request));
     }
 
     public function login(LoginRequest $request)
@@ -43,11 +56,11 @@ class AuthController extends Controller
         $password   = "";
 
         for ($i = 0; $i < 4; $i++) { 
-            $password .= $numbers[mt_rand(0, strlen($numbers))];
+            $password .= $numbers[mt_rand(0, strlen($numbers) - 1)];
         }
 
         for ($i = 0; $i < 2; $i++) { 
-            $password .= $alphabet[mt_rand(0, strlen($alphabet))];
+            $password .= $alphabet[mt_rand(0, strlen($alphabet) - 1)];
         }
 
         return $password;
