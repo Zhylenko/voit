@@ -94,7 +94,13 @@ $(function(){
         
 });
 
+function createNewDiv(setClass) {
 
+        let newDiv = document.createElement('div');
+        newDiv.setAttribute('class', setClass);
+        
+        return newDiv;
+}
 
 /* -------------------------------------------------------------- */
 /* POST Requests */
@@ -108,8 +114,10 @@ function postContactForm(form, formReq, errorLabelsClass ,url) {
           regRoad = document.querySelectorAll('.popup__reg-content'),
           check_group = document.querySelector('.form__gr-check');
 
-    let checkDiv = document.createElement('div');
-    checkDiv.setAttribute('class', 'form-error checkbox-error');
+    let checkDiv = createNewDiv('form-error checkbox-error');
+    let formAfterSend = createNewDiv('sent');
+    let formAfterSendText = createNewDiv('sent-text');
+    formAfterSendText.textContent = 'Отправка...';
     checkDiv.textContent = 'Необходимо заполнить пустое поле';
 
     if(contactForm!== null) {
@@ -139,7 +147,8 @@ function postContactForm(form, formReq, errorLabelsClass ,url) {
         } 
 
         let formData = new FormData(contactForm);      
-        contactForm.classList.add('_sending');
+        contactForm.append(formAfterSend);
+        // formAfterSend.append(formAfterSendText);
 
                 let response = await fetch(url, {
                         method: 'POST',
@@ -152,7 +161,7 @@ function postContactForm(form, formReq, errorLabelsClass ,url) {
 
                 if(response.ok) {
 
-                        contactForm.classList.remove('_sending');
+                        contactForm.removeChild(formAfterSend);
                         contactForm.classList.add('active');
                         Reset(contactForm);
                         location.reload();
@@ -179,6 +188,8 @@ function postContactForm(form, formReq, errorLabelsClass ,url) {
                                         }
                                 }
                         }
+
+                        contactForm.removeChild(formAfterSend);
                 }
         }
 }
