@@ -26,7 +26,7 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'     => 'bail|required|min:6|max:255|email|unique:users',
+            'email'     => 'bail|required|min:6|max:255|email',
         ];
     }
 }

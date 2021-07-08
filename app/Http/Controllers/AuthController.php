@@ -16,18 +16,45 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $request)
     {
-        $request->password = $this->passGenerator();
+        $user = User::where('email', '=', $request->email)->first();
 
-        $user = new User;
-        $user->create($request);
+        $request->password = $this->passwordGenerator();
 
-        return Mail::to($request->email)
-                    ->send(new RegisterMail($request));
+        if($user == null) {
+
+            $user = new User;
+            $user->createNewUser($request);
+
+        }else if($user !== null && $user->verified_at == null) {
+
+            //Check last generating password
+            $diff = time() - $user->updated_at->getTimestamp();
+
+            if($diff >= config('auth.password_timeout')) {
+
+                $user->updatePassword($request);
+
+            }else {
+                return 'timeout error';
+            }
+
+        }else {
+            return 'user already exists';
+        }
+
+        Mail::to($request->email)
+            ->send(new RegisterMail($request));
     }
 
     public function login(LoginRequest $request)
     {
-        # code...
+        $user = User::where('email', '=', $request->email)->first();
+
+        if(password_verify($request->password, $user->user)) {
+            $user->verifyUser();
+        }else{
+            return 'wrong password';
+        }
     }
 
     public function logout()
@@ -35,27 +62,20 @@ class AuthController extends Controller
         # code...
     }
 
-    //Generates random password
-    protected function passGenerator()
+    protected function passwordGenerator()
     {
         $alphabet   = "abcdefghijklmnopqrstuvwxyz";
         $numbers    = "0123456789";
         $password   = "";
 
         for ($i = 0; $i < 4; $i++) { 
-            $password .= $numbers[mt_rand(0, strlen($numbers))];
+            $password .= $numbers[mt_rand(0, strlen($numbers) - 1)];
         }
 
         for ($i = 0; $i < 2; $i++) { 
-            $password .= $alphabet[mt_rand(0, strlen($alphabet))];
+            $password .= $alphabet[mt_rand(0, strlen($alphabet) - 1)];
         }
 
         return $password;
-    }
-
-    //Save login
-    protected function saveCookies(User $user)
-    {
-        # code...
     }
 }
