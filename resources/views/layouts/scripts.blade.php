@@ -2,12 +2,12 @@
     <script>
         const config = {
             'endPoints': {
-                'contact-form':     `{{ Route('contact-send') }}`,
-                'register-form':    `{{ Route('auth-register') }}`,
-                'login-form':       `{{ Route('auth-login') }}`,
+                'contact-send':     `{{ Route('contact-send') }}`,
+                'auth-register':    `{{ Route('auth-register') }}`,
+                'auth-login':       `{{ Route('auth-login') }}`,
                 'about-menu':       `...`,
             },
-            'timer': '',
+            'password_timeout': `{{ config('auth.password_timeout') }}`,
         }
     </script>
     <!-- JQuery -->
