@@ -465,6 +465,16 @@ function register(formID, inputsReqClass, errorLabelsClass ,url) {
 
     async function formSend(e) {
             e.preventDefault();
+
+                label.forEach(item => {
+                        item.style.display = 'none';
+                })
+        
+                inputs.forEach(item => {
+                        if(item.classList.contains('._error')) {
+                                item.classList.remove('._error');
+                        }
+                })
         
                 let dataForm = new FormData();
                 dataForm.set('email', inputs[2].value);
@@ -490,7 +500,9 @@ function register(formID, inputsReqClass, errorLabelsClass ,url) {
 
                 } else {                       
                         alert('Ошибка');
+
                         let result = await response.json();
+
                         for(let key in result.errors) {
                                 
                                 if(key === 'email') {
@@ -511,13 +523,15 @@ function register(formID, inputsReqClass, errorLabelsClass ,url) {
     }
 }
 
-function registerWithCode(formID, inputsReqClass, label ,url) {
-        const form = document.getElementById(formID),
-        inputs = document.querySelectorAll(inputsReqClass);
+// Register with Code Function
+function registerWithCode(formID, inputsReqClass, errorLabelsClass, url) {
 
-        const btns = document.querySelectorAll('.register');
-        const sendCodeButton = btns[0];
-        const registerButton = btns[1];
+        const form = document.getElementById(formID),
+              inputs = document.querySelectorAll(inputsReqClass),
+              btns = document.querySelectorAll('.register'),
+              sendCodeButton = btns[0],
+              registerButton = btns[1],
+              label = document.querySelectorAll(errorLabelsClass);
 
         if(form !== null) {
                 registerButton.addEventListener('click', formSend);
@@ -525,7 +539,17 @@ function registerWithCode(formID, inputsReqClass, label ,url) {
 
         async function formSend(e) {
                 e.preventDefault();
-                   console.log('after');
+
+                label.forEach(item => {
+                        item.style.display = 'none';
+                })
+        
+                inputs.forEach(item => {
+                        if(item.classList.contains('._error')) {
+                                item.classList.remove('._error');
+                        }
+                })
+
                     let dataForm = new FormData();
                     dataForm.set('email', inputs[2].value);
                     dataForm.set('code', inputs[3].value);
@@ -540,29 +564,31 @@ function registerWithCode(formID, inputsReqClass, label ,url) {
                     });
     
                     if(response.ok) {
-                            let result = await response.json();
+
                             inputs[3].style.display = 'none';
                             sendCodeButton.style.display = 'block';
-                            registerButton.style.display = 'none';       
-                            $('.js-timeout').show();
-                            $('.js-timeout').text("1:00");
-                            countdown();
-                            console.log(result.message);
+                            registerButton.style.display = 'none'; 
+
+                            Reset(form);
+                            location.reload();
+
                     } else {                       
                             alert('Ошибка');
     
-                            for(let key in result.errors) {
-                                    
-                                    for(let index = 0; index < contactReq.length; index++) {
-                                            if(inputs[index].name === key) {
-                                                   
-                                                    contactReq[index].classList.add('._error');
-                                                    label[index].textContent = result.errors[key];
-                                                    label[index].style.display = 'block';
-                                                 
-                                            }
-                                    }
-                            }
+                                for(let key in result.errors) {
+                                        
+                                        if(key === 'email') {
+                                                inputs[2].classList.add('._error');
+                                                label[2].textContent = result.errors[key];
+                                                label[2].style.display = 'block';
+                                        } 
+                                        if(key === 'code') {
+                                                inputs[3].classList.add('._error');
+                                                label[3].textContent = result.errors[key];
+                                                label[3].style.display = 'block';
+                                        }
+        
+                                }
                              
                     }
     
