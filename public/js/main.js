@@ -3,13 +3,13 @@ window.addEventListener('DOMContentLoaded', ()=>{
         accrodionMenu();
         programmMenu();
         modal('.overlay__popup','popup-btn', '.popup__close','.popup__login');
-        validatorForm('contact-form', '.form-control', '.form-error', endPoints['contact-form']);
-        register('register-form', '.form-control', '.form-error', endPoints['register-form']);
+        validatorForm('contact-form', '.form-control', '.form-error', config.endPoints['contact-form']);
+        register('register-form', '.form-control', '.form-error', config.endPoints['register-form']);
         addTimer('timer');
         registerModal('register-btn','.popup__reg', '.popup__login');
         mobileMenu('.menu-hamburger', '.menu', '.menu__link');
-        login('login-form', '.form-control', '.form-error' , endPoints['login-form']);
-        registerWithCode('register-form', '.form-control', '.form-error', endPoints['register-form'])
+        login('login-form', '.form-control', '.form-error' , config.endPoints['login-form']);
+        registerWithCode('register-form', '.form-control', '.form-error', config.endPoints['register-form'])
 });
 
 let token = 0;
