@@ -3,7 +3,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
         accrodionMenu();
         programmMenu();
         modal('.overlay__popup','popup-btn', '.popup__close','.popup__login');
-        validatorForm('contact-form', '.form-control', '.form-error', config.endPoints['contact-form']);
+        postContactForm('contact-form', '.form-control', '.form-error', config.endPoints['contact-form']);
         register('register-form', '.form-control', '.form-error', config.endPoints['register-form']);
         addTimer('timer');
         registerModal('register-btn','.popup__reg', '.popup__login');
@@ -93,6 +93,109 @@ $(function(){
         slickSlider();
         
 });
+
+function createNewDiv(setClass) {
+
+        let newDiv = document.createElement('div');
+        newDiv.setAttribute('class', setClass);
+        
+        return newDiv;
+}
+
+/* -------------------------------------------------------------- */
+/* POST Requests */
+
+//Contact Form POST sending
+function postContactForm(form, formReq, errorLabelsClass ,url) {
+
+    const contactForm = document.getElementById(form),
+          contactReq = document.querySelectorAll(formReq),
+          label = document.querySelectorAll(errorLabelsClass),
+          regRoad = document.querySelectorAll('.popup__reg-content'),
+          check_group = document.querySelector('.form__gr-check');
+
+    let checkDiv = createNewDiv('form-error checkbox-error');
+    let formAfterSend = createNewDiv('sent');
+    let formAfterSendText = createNewDiv('sent-text');
+    formAfterSendText.textContent = 'Отправка...';
+    checkDiv.textContent = 'Необходимо заполнить пустое поле';
+
+    if(contactForm!== null) {
+        check_group.children[0].append(checkDiv);
+        contactForm.addEventListener('submit', formSend);
+    } 
+
+    async function formSend(e) {
+        e.preventDefault();
+
+        const checkError = document.querySelector('.checkbox-error');
+        checkError.style.display = 'none';
+
+        label.forEach(item => {
+                item.style.display = 'none';
+        })
+    
+        contactReq.forEach(item => {
+                if(item.classList.contains('._error')) {
+                        item.classList.remove('._error');
+                }
+        })
+
+        if(contactForm.id !== 'contact-form') {
+                regRoad[0].style.display = 'none';
+                regRoad[1].style.display = 'block'; 
+        } 
+
+        let formData = new FormData(contactForm);      
+        contactForm.append(formAfterSend);
+        // formAfterSend.append(formAfterSendText);
+
+                let response = await fetch(url, {
+                        method: 'POST',
+                        body: formData,
+                        headers: new Headers({
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': token
+                        })
+                });
+
+                if(response.ok) {
+
+                        contactForm.removeChild(formAfterSend);
+                        contactForm.classList.add('active');
+                        Reset(contactForm);
+                        location.reload();
+
+                } else {                       
+                        let result = await response.json();
+                            
+                        for(let error in result.errors) {
+                                
+                                for(let index = 0; index < contactReq.length; index++) {
+
+                                        if(contactReq[index].name === error) {
+
+                                                if(error === 'checkbox') {
+                                                        checkError.textContent = result.errors[error];
+                                                        checkError.style.display = 'block';
+
+                                                } else {
+
+                                                        contactReq[index].classList.add('._error');
+                                                        label[index].textContent = result.errors[error];
+                                                        label[index].style.display = 'block';
+                                                }  
+                                        }
+                                }
+                        }
+
+                        contactForm.removeChild(formAfterSend);
+                }
+        }
+}
+
+
+
 
 // Mobile Menu
 function mobileMenu(buttonClass, menuClass, menuLinksClass) {
@@ -317,6 +420,8 @@ function removePopup(window, style, mediaMatch) {
         const registerForm = popupWindow.children[1].children[1];
         const codeInput = document.querySelector('._code');
         const inputs = document.querySelectorAll('input');
+        const btns = document.querySelectorAll('.register'),
+              timer = document.getElementById('timer');
 
               inputs.forEach((input) => {
                       if(input.classList.contains('_error')) {
@@ -327,6 +432,9 @@ function removePopup(window, style, mediaMatch) {
               popupWindow.classList.remove('active');
               regModal.style.display = 'none';
               codeInput.style.display = 'none';
+              btns[0].style.display = 'block';
+              btns[1].style.display = 'none';
+              timer.display = 'none';
               $('.js-timeout').text("1:00");
               $('.js-timeout').hide();
               Reset(loginForm);
@@ -361,92 +469,6 @@ function calcScroll() {
 }
 
 
-//FORM SEND
-function validatorForm(form, formReq, errorLabelsClass ,url) {
-
-    const contactForm = document.getElementById(form);
-    const contactReq = document.querySelectorAll(formReq);
-    const label = document.querySelectorAll(errorLabelsClass);
-    const regRoad = document.querySelectorAll('.popup__reg-content');
-    const textarea = document.getElementsByName('message');
-    const check_group = document.querySelector('.form__gr-check');
-
-    let checkDiv = document.createElement('div');
-    checkDiv.setAttribute('class', 'form-error checkbox-error');
-    checkDiv.textContent = 'Необходимо заполнить пустое поле';
-    check_group.children[0].append(checkDiv);
-
-    if(contactForm!== null) contactForm.addEventListener('submit', formSend);
-
-    async function formSend(e) {
-
-        const checkError = document.querySelector('.checkbox-error');
-        checkError.style.display = 'none';
-
-        label.forEach(item => {
-                item.style.display = 'none';
-        })
-    
-        contactReq.forEach(item => {
-                if(item.classList.contains('._error')) {
-                        item.classList.remove('._error');
-                }
-        })
-            e.preventDefault();
-
-            if(contactForm.id !== 'contact-form') {
-                regRoad[0].style.display = 'none';
-                regRoad[1].style.display = 'block'; 
-            } 
-
-            let formData = new FormData(contactForm);
-            
-                    contactForm.classList.add('_sending');
-
-                    let response = await fetch(url, {
-                            method: 'POST',
-                            body: formData,
-                            headers: new Headers({
-                                'Accept': 'application/json',
-                                'X-CSRF-TOKEN': token
-                        })
-                    });
-
-                    if(response.ok) {
-                            let result = await response.json();
-                            console.log(result.message);
-                            contactForm.classList.remove('_sending');
-                            contactForm.classList.add('active');
-                            Reset(contactForm);
-                    } else {                       
-                            let result = await response.json();
-                            
-                            for(let key in result.errors) {
-                                
-                                for(let index = 0; index < contactReq.length; index++) {
-                                        if(contactReq[index].name === key) {
-                                                if(key === 'checkbox') {
-                                                        checkError.style.display = 'block';
-                                                } else {
-                                                        contactReq[index].classList.add('._error');
-                                                        label[index].textContent = result.errors[key];
-                                                        label[index].style.display = 'block';
-                                                }
-                                             
-                                        }
-                                }
-                            }
-
-
-                    }
-
-
-
-    }
-
-
-}
-
 function Reset(form) {
         form.reset();
 }
@@ -465,6 +487,16 @@ function register(formID, inputsReqClass, errorLabelsClass ,url) {
 
     async function formSend(e) {
             e.preventDefault();
+
+                label.forEach(item => {
+                        item.style.display = 'none';
+                })
+        
+                inputs.forEach(item => {
+                        if(item.classList.contains('._error')) {
+                                item.classList.remove('._error');
+                        }
+                })
         
                 let dataForm = new FormData();
                 dataForm.set('email', inputs[2].value);
@@ -490,7 +522,9 @@ function register(formID, inputsReqClass, errorLabelsClass ,url) {
 
                 } else {                       
                         alert('Ошибка');
+
                         let result = await response.json();
+
                         for(let key in result.errors) {
                                 
                                 if(key === 'email') {
@@ -511,13 +545,15 @@ function register(formID, inputsReqClass, errorLabelsClass ,url) {
     }
 }
 
-function registerWithCode(formID, inputsReqClass, label ,url) {
-        const form = document.getElementById(formID),
-        inputs = document.querySelectorAll(inputsReqClass);
+// Register with Code Function
+function registerWithCode(formID, inputsReqClass, errorLabelsClass, url) {
 
-        const btns = document.querySelectorAll('.register');
-        const sendCodeButton = btns[0];
-        const registerButton = btns[1];
+        const form = document.getElementById(formID),
+              inputs = document.querySelectorAll(inputsReqClass),
+              btns = document.querySelectorAll('.register'),
+              sendCodeButton = btns[0],
+              registerButton = btns[1],
+              label = document.querySelectorAll(errorLabelsClass);
 
         if(form !== null) {
                 registerButton.addEventListener('click', formSend);
@@ -525,7 +561,17 @@ function registerWithCode(formID, inputsReqClass, label ,url) {
 
         async function formSend(e) {
                 e.preventDefault();
-                   console.log('after');
+
+                label.forEach(item => {
+                        item.style.display = 'none';
+                })
+        
+                inputs.forEach(item => {
+                        if(item.classList.contains('._error')) {
+                                item.classList.remove('._error');
+                        }
+                })
+
                     let dataForm = new FormData();
                     dataForm.set('email', inputs[2].value);
                     dataForm.set('code', inputs[3].value);
@@ -540,35 +586,36 @@ function registerWithCode(formID, inputsReqClass, label ,url) {
                     });
     
                     if(response.ok) {
-                            let result = await response.json();
+
                             inputs[3].style.display = 'none';
                             sendCodeButton.style.display = 'block';
-                            registerButton.style.display = 'none';       
-                            $('.js-timeout').show();
-                            $('.js-timeout').text("1:00");
-                            countdown();
-                            console.log(result.message);
+                            registerButton.style.display = 'none'; 
+
+                            Reset(form);
+                            location.reload();
+
                     } else {                       
                             alert('Ошибка');
     
-                            for(let key in result.errors) {
-                                    
-                                    for(let index = 0; index < contactReq.length; index++) {
-                                            if(inputs[index].name === key) {
-                                                   
-                                                    contactReq[index].classList.add('._error');
-                                                    label[index].textContent = result.errors[key];
-                                                    label[index].style.display = 'block';
-                                                 
-                                            }
-                                    }
-                            }
+                                for(let key in result.errors) {
+                                        
+                                        if(key === 'email') {
+                                                inputs[2].classList.add('._error');
+                                                label[2].textContent = result.errors[key];
+                                                label[2].style.display = 'block';
+                                        } 
+                                        if(key === 'code') {
+                                                inputs[3].classList.add('._error');
+                                                label[3].textContent = result.errors[key];
+                                                label[3].style.display = 'block';
+                                        }
+        
+                                }
                              
                     }
     
         }
 
-        console.log(registerButton);
 }
 
 function addTimer(btnID) {
