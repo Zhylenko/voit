@@ -3,7 +3,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
         accrodionMenu();
         programmMenu();
         modal('.overlay__popup','popup-btn', '.popup__close','.popup__login');
-        validatorForm('contact-form', '.form-control', '.form-error', config.endPoints['contact-form']);
+        postContactForm('contact-form', '.form-control', '.form-error', config.endPoints['contact-form']);
         register('register-form', '.form-control', '.form-error', config.endPoints['register-form']);
         addTimer('timer');
         registerModal('register-btn','.popup__reg', '.popup__login');
@@ -93,6 +93,98 @@ $(function(){
         slickSlider();
         
 });
+
+
+
+/* -------------------------------------------------------------- */
+/* POST Requests */
+
+//Contact Form POST sending
+function postContactForm(form, formReq, errorLabelsClass ,url) {
+
+    const contactForm = document.getElementById(form),
+          contactReq = document.querySelectorAll(formReq),
+          label = document.querySelectorAll(errorLabelsClass),
+          regRoad = document.querySelectorAll('.popup__reg-content'),
+          check_group = document.querySelector('.form__gr-check');
+
+    let checkDiv = document.createElement('div');
+    checkDiv.setAttribute('class', 'form-error checkbox-error');
+    checkDiv.textContent = 'Необходимо заполнить пустое поле';
+
+    if(contactForm!== null) {
+        check_group.children[0].append(checkDiv);
+        contactForm.addEventListener('submit', formSend);
+    } 
+
+    async function formSend(e) {
+        e.preventDefault();
+
+        const checkError = document.querySelector('.checkbox-error');
+        checkError.style.display = 'none';
+
+        label.forEach(item => {
+                item.style.display = 'none';
+        })
+    
+        contactReq.forEach(item => {
+                if(item.classList.contains('._error')) {
+                        item.classList.remove('._error');
+                }
+        })
+
+        if(contactForm.id !== 'contact-form') {
+                regRoad[0].style.display = 'none';
+                regRoad[1].style.display = 'block'; 
+        } 
+
+        let formData = new FormData(contactForm);      
+        contactForm.classList.add('_sending');
+
+                let response = await fetch(url, {
+                        method: 'POST',
+                        body: formData,
+                        headers: new Headers({
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': token
+                        })
+                });
+
+                if(response.ok) {
+
+                        contactForm.classList.remove('_sending');
+                        contactForm.classList.add('active');
+                        Reset(contactForm);
+                        location.reload();
+
+                } else {                       
+                        let result = await response.json();
+                            
+                        for(let error in result.errors) {
+                                
+                                for(let index = 0; index < contactReq.length; index++) {
+
+                                        if(contactReq[index].name === error) {
+
+                                                if(error === 'checkbox') {
+                                                        checkError.textContent = result.errors[error];
+                                                        checkError.style.display = 'block';
+
+                                                } else {
+
+                                                        contactReq[index].classList.add('._error');
+                                                        label[index].textContent = result.errors[error];
+                                                        label[index].style.display = 'block';
+                                                }  
+                                        }
+                                }
+                        }
+                }
+        }
+}
+
+
+
 
 // Mobile Menu
 function mobileMenu(buttonClass, menuClass, menuLinksClass) {
@@ -365,91 +457,6 @@ function calcScroll() {
         return scrollWidth;
 }
 
-//FORM SEND
-function validatorForm(form, formReq, errorLabelsClass ,url) {
-
-    const contactForm = document.getElementById(form);
-    const contactReq = document.querySelectorAll(formReq);
-    const label = document.querySelectorAll(errorLabelsClass);
-    const regRoad = document.querySelectorAll('.popup__reg-content');
-    const textarea = document.getElementsByName('message');
-    const check_group = document.querySelector('.form__gr-check');
-
-    let checkDiv = document.createElement('div');
-    checkDiv.setAttribute('class', 'form-error checkbox-error');
-    checkDiv.textContent = 'Необходимо заполнить пустое поле';
-    check_group.children[0].append(checkDiv);
-
-    if(contactForm!== null) contactForm.addEventListener('submit', formSend);
-
-    async function formSend(e) {
-
-        const checkError = document.querySelector('.checkbox-error');
-        checkError.style.display = 'none';
-
-        label.forEach(item => {
-                item.style.display = 'none';
-        })
-    
-        contactReq.forEach(item => {
-                if(item.classList.contains('._error')) {
-                        item.classList.remove('._error');
-                }
-        })
-            e.preventDefault();
-
-            if(contactForm.id !== 'contact-form') {
-                regRoad[0].style.display = 'none';
-                regRoad[1].style.display = 'block'; 
-            } 
-
-            let formData = new FormData(contactForm);
-            
-                    contactForm.classList.add('_sending');
-
-                    let response = await fetch(url, {
-                            method: 'POST',
-                            body: formData,
-                            headers: new Headers({
-                                'Accept': 'application/json',
-                                'X-CSRF-TOKEN': token
-                        })
-                    });
-
-                    if(response.ok) {
-                            let result = await response.json();
-                            console.log(result.message);
-                            contactForm.classList.remove('_sending');
-                            contactForm.classList.add('active');
-                            Reset(contactForm);
-                    } else {                       
-                            let result = await response.json();
-                            
-                            for(let key in result.errors) {
-                                
-                                for(let index = 0; index < contactReq.length; index++) {
-                                        if(contactReq[index].name === key) {
-                                                if(key === 'checkbox') {
-                                                        checkError.style.display = 'block';
-                                                } else {
-                                                        contactReq[index].classList.add('._error');
-                                                        label[index].textContent = result.errors[key];
-                                                        label[index].style.display = 'block';
-                                                }
-                                             
-                                        }
-                                }
-                            }
-
-
-                    }
-
-
-
-    }
-
-
-}
 
 function Reset(form) {
         form.reset();
@@ -598,7 +605,6 @@ function registerWithCode(formID, inputsReqClass, errorLabelsClass, url) {
     
         }
 
-        console.log(registerButton);
 }
 
 function addTimer(btnID) {
