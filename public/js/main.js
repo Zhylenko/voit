@@ -1,15 +1,20 @@
 window.addEventListener('DOMContentLoaded', ()=>{
 
-        accrodionMenu();
-        programmMenu();
+        programmMenu('.programm__menu-item','.programm__menu-btn', 913);
         modal('.overlay__popup','popup-btn', '.popup__close','.popup__login');
+
+        mobileMenu('.menu-hamburger', '.menu', '.menu__link');
+
         postContactFormRequests('contact-form', '.form-control', '.form-error', config.endPoints['contact-send']);
         postLoginFormRequests('login-form', '.form-control', '.form-error' , config.endPoints['auth-login']);
         postRegisterEmailRequests('register-form', '.form-control', '.form-error', config.endPoints['auth-register']);
+        postRegisterFormRequests('register-form', '.form-control', '.form-error', config.endPoints['auth-login']);
+
+        accordionAboutMenu('.accordion__item');
+
         addTimer('timer');
         registerModal('register-btn','.popup__reg', '.popup__login');
-        mobileMenu('.menu-hamburger', '.menu', '.menu__link');
-        registerWithCode('register-form', '.form-control', '.form-error', config.endPoints['auth-login']);
+
 });
 
 
@@ -98,24 +103,49 @@ $(function(){
 /* ------------------------------------------------------------------------------------------------------------------ */
 
 
-function clearErrors(inputsError, labelError) {
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* Adative functions */
+function mobileMenu(buttonClass, menuClass, menuLinksClass) {
 
-        labelError.forEach(item => {
-                item.style.display = 'none';
-        });
+        const btn = document.querySelector(buttonClass),
+              menu = document.querySelector(menuClass),
+              links = document.querySelectorAll(menuLinksClass);
 
-        inputsError.forEach(item => {
-                if(item.classList.contains('._error')) {
-                        item.classList.remove('._error');
+        let isOpen = true;
+
+        btn.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                if(isOpen) {
+                        btn.classList.add('active');
+                        menu.classList.add('active');
+                        document.querySelector('body').style.overflowY = 'hidden';
+                        isOpen = false;
+                } else {
+                        btn.classList.remove('active');
+                        menu.classList.remove('active');
+                        document.querySelector('body').style.overflowY = 'scroll';
+                        isOpen = true;
                 }
         });
+
+        links.forEach((link) => {
+                link.addEventListener('click', () => {
+                        btn.classList.remove('active');
+                        menu.classList.remove('active');
+                        document.querySelector('body').style.overflowY = 'scroll';
+                        isOpen = true;  
+                });
+        });
 }
+/* ------------------------------------------------------------------------------------------------------------------ */
+
 
 /* ------------------------------------------------------------------------------------------------------------------ */
-/* POST Requests */
-function postContactFormRequests(form, formReq, errorLabelsClass ,url) {
+/* POST Request functions*/
+function postContactFormRequests(formID, formReq, errorLabelsClass ,url) {
 
-    const contactForm = document.getElementById(form),
+    const contactForm = document.getElementById(formID),
           contactReq = document.querySelectorAll(formReq),
           label = document.querySelectorAll(errorLabelsClass),
           regRoad = document.querySelectorAll('.popup__reg-content'),
@@ -298,86 +328,139 @@ function postRegisterEmailRequests(formID, inputsReqClass, errorLabelsClass ,url
                 }
         }
 }
+
+function postRegisterFormRequests(formID, inputsReqClass, errorLabelsClass, url) {
+
+        const form = document.getElementById(formID),
+              inputs = document.querySelectorAll(inputsReqClass),
+              btns = document.querySelectorAll('.register'),
+              sendCodeButton = btns[0],
+              registerButton = btns[1],
+              label = document.querySelectorAll(errorLabelsClass);
+
+        if(form !== null) {
+                registerButton.addEventListener('click', formSend);
+        }
+
+        async function formSend(e) {
+                e.preventDefault();
+
+                clearErrors(inputs, label);
+
+                let dataForm = new FormData();
+                dataForm.set('email', inputs[2].value);
+                dataForm.set('password', inputs[3].value);
+                form.classList.add('_sending');
+
+                    let response = await fetch(url, {
+                        method: 'POST',
+                        body: dataForm,
+                        headers: new Headers({
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': token
+                        })
+                    });
+    
+                    if(response.ok) {
+
+                        form.classList.remove('_sending');
+
+                        inputs[3].style.display = 'none';
+                        sendCodeButton.style.display = 'block';
+                        registerButton.style.display = 'none'; 
+
+                        Reset(form);
+                        location.reload();
+
+                    } else {                       
+
+                        for(let error in result.errors) {
+                                        
+                                if(error === 'email') {
+                                        inputs[2].classList.add('._error');
+                                        label[2].textContent = result.errors[error];
+                                        label[2].style.display = 'block';
+                                } 
+                                if(error === 'password') {
+                                        inputs[3].classList.add('._error');
+                                        label[3].textContent = result.errors[error];
+                                        label[3].style.display = 'block';
+                                }
+                        }  
+                        form.classList.remove('_sending');     
+                }
+        }
+}
 /* ------------------------------------------------------------------------------------------------------------------ */
 
 
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* HTML Contents functions */
 function createNewDiv(setClass) {
 
         let newDiv = document.createElement('div');
         newDiv.setAttribute('class', setClass);
-        
         return newDiv;
 }
 
-// Mobile Menu
-function mobileMenu(buttonClass, menuClass, menuLinksClass) {
+function clearErrors(inputsError, labelError) {
 
-        const btn = document.querySelector(buttonClass),
-              menu = document.querySelector(menuClass),
-              links = document.querySelectorAll(menuLinksClass);
+        inputsError.forEach(item => {
+                if(item.classList.contains('._error')) item.classList.remove('._error');
+        });
 
-        let isOpen = true;
-
-        btn.addEventListener('click', (e) => {
-                e.preventDefault();
-
-                if(isOpen) {
-                        btn.classList.add('active');
-                        menu.classList.add('active');
-                        document.querySelector('body').style.overflowY = 'hidden';
-                        isOpen = false;
-                } else {
-                        btn.classList.remove('active');
-                        menu.classList.remove('active');
-                        document.querySelector('body').style.overflowY = 'scroll';
-                        isOpen = true;
-                }
-        })
-
-        links.forEach((link) => {
-                link.addEventListener('click', () => {
-                        btn.classList.remove('active');
-                        menu.classList.remove('active');
-                        document.querySelector('body').style.overflowY = 'scroll';
-                        isOpen = true;  
-                });
-        })
+        labelError.forEach(item => {
+                item.style.display = 'none';
+        });
 }
 
+function Reset(form) {
+        form.reset();
+}
+/* ------------------------------------------------------------------------------------------------------------------ */
 
-// Accordion About Menu
-function accrodionMenu() {
 
-        let items = document.querySelectorAll('.accordion__item');
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* Accordion functions */
+function accordionAboutMenu(itemsClass) {
 
-        for (let i=0; i<items.length; i++) {
-                items[i].addEventListener('click', ()=>{
-                        
+        const items = document.querySelectorAll(itemsClass);
+        let activeNode = null;
+
+        items.forEach((item) => {
+
+                item.addEventListener('click', ()=>{
                         // loadAboutPost($(items[i]), endPoints['about-menu']);
 
-                        if(!(items[i].classList.contains('active'))) {
-                                let activeNode = null;
+                        if(!(item.classList.contains('active'))) {
+
+                                activeNode = null;
                                 try{
                                         activeNode = document.querySelector('.about__accordion .active');
                                 } catch(msg) {}
-                                
-                                items[i].classList.add('active');
+        
+                                item.classList.add('active');
 
                                 if(activeNode) {
                                         activeNode.classList.remove('active');
                                 }
                         }
-                })
-        }
+                });
+        });
 }
 
-// Programm Section - Sub Menu
-function programmMenu() {
-        
-        const media = window.matchMedia('(max-width: 913px)');
+function programmMenu(itemsClass, buttonsClass, mediaWidth) {
 
-        let items = document.querySelectorAll('.programm__menu-item');
-        let btn = document.querySelectorAll('.programm__menu-btn');
+        const items = document.querySelectorAll(itemsClass),
+              btns = document.querySelectorAll(buttonsClass),
+              media = window.matchMedia(`(max-width: ${mediaWidth}px)`);
+
+        btns.forEach(button => {
+
+                button.addEventListener('click', () => {
+                        
+                })
+        })
 
         for (let i=0; i<btn.length; i++) {
                 btn[i].addEventListener('click', ()=>{
@@ -535,83 +618,7 @@ function calcScroll() {
 }
 
 
-function Reset(form) {
-        form.reset();
-}
 
-
-// Register with Code Function
-function registerWithCode(formID, inputsReqClass, errorLabelsClass, url) {
-
-        const form = document.getElementById(formID),
-              inputs = document.querySelectorAll(inputsReqClass),
-              btns = document.querySelectorAll('.register'),
-              sendCodeButton = btns[0],
-              registerButton = btns[1],
-              label = document.querySelectorAll(errorLabelsClass);
-
-        if(form !== null) {
-                registerButton.addEventListener('click', formSend);
-        }
-
-        async function formSend(e) {
-                e.preventDefault();
-
-                label.forEach(item => {
-                        item.style.display = 'none';
-                })
-        
-                inputs.forEach(item => {
-                        if(item.classList.contains('._error')) {
-                                item.classList.remove('._error');
-                        }
-                })
-
-                    let dataForm = new FormData();
-                    dataForm.set('email', inputs[2].value);
-                    dataForm.set('password', inputs[3].value);
-
-                    let response = await fetch(url, {
-                            method: 'POST',
-                            body: dataForm,
-                            headers: new Headers({
-                                    'Accept': 'application/json',
-                                    'X-CSRF-TOKEN': token
-                            })
-                    });
-    
-                    if(response.ok) {
-
-                            inputs[3].style.display = 'none';
-                            sendCodeButton.style.display = 'block';
-                            registerButton.style.display = 'none'; 
-
-                            Reset(form);
-                            location.reload();
-
-                    } else {                       
-                            alert('Ошибка');
-    
-                                for(let key in result.errors) {
-                                        
-                                        if(key === 'email') {
-                                                inputs[2].classList.add('._error');
-                                                label[2].textContent = result.errors[key];
-                                                label[2].style.display = 'block';
-                                        } 
-                                        if(key === 'code') {
-                                                inputs[3].classList.add('._error');
-                                                label[3].textContent = result.errors[key];
-                                                label[3].style.display = 'block';
-                                        }
-        
-                                }
-                             
-                    }
-    
-        }
-
-}
 
 function addTimer(btnID) {
         const btn = document.getElementById(btnID);
