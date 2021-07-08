@@ -9,5 +9,5 @@ return [
     | Timeout to send new password to register
     |
     */
-    'password_timout' => 60,
+    'password_timeout' => 6,
 ];

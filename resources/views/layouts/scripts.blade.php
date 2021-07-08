@@ -7,7 +7,7 @@
                 'login-form':       `{{ Route('auth-login') }}`,
                 'about-menu':       `...`,
             },
-            'timer': '',
+            'timer': `{{ config('auth.password_timeout') }}`,
         }
     </script>
     <!-- JQuery -->
