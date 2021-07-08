@@ -1,7 +1,7 @@
 @section('scripts')
     <script>
         const config = {
-            endPoints = {
+            'endPoints': {
                 'contact-form':     `{{ Route('contact-send') }}`,
                 'register-form':    `{{ Route('auth-register') }}`,
                 'login-form':       `{{ Route('auth-login') }}`,
