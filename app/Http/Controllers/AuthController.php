@@ -20,26 +20,25 @@ class AuthController extends Controller
 
         $request->password = $this->passwordGenerator();
 
-        if($user == null){
+        if($user == null) {
 
             $user = new User;
             $user->createNewUser($request);
 
-        }else if($user !== null && $user->verified_at == null){
+        }else if($user !== null && $user->verified_at == null) {
 
             //Check last generating password
             $diff = time() - $user->updated_at->getTimestamp();
 
-            if($diff >= config('auth.password_timeout')){
+            if($diff >= config('auth.password_timeout')) {
 
-                $request->password = ($user->updated_at);
                 $user->updatePassword($request);
 
-            }else{
+            }else {
                 return 'timeout error';
             }
 
-        }else{
+        }else {
             return 'user already exists';
         }
 
@@ -49,7 +48,13 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        #
+        $user = User::where('email', '=', $request->email)->first();
+
+        if(password_verify($request->password, $user->user)) {
+            $user->verifyUser();
+        }else{
+            return 'wrong password';
+        }
     }
 
     public function logout()

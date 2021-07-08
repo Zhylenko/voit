@@ -28,4 +28,11 @@ class User extends Model
 
         $this->save();
     }
+
+    public function verifyUser()
+    {
+        $this->verified_at  = time();
+
+        $this->save();
+    }
 }
