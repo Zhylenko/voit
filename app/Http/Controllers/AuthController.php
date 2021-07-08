@@ -25,7 +25,7 @@ class AuthController extends Controller
             $user = new User;
             $user->createNewUser($request);
 
-        }else if($user !== null && $user->verified_at == null) {
+        }else if($user !== null && $user->verified_at === null) {
 
             //Check last generating password
             $diff = time() - $user->updated_at->getTimestamp();
@@ -50,11 +50,15 @@ class AuthController extends Controller
     {
         $user = User::where('email', '=', $request->email)->first();
 
-        if(password_verify($request->password, $user->user)) {
-            $user->verifyUser();
-        }else{
+        if(!password_verify($request->password, $user->user)) {
             return 'wrong password';
         }
+
+        if ($user->verified_at === null) {
+            $user->verifyUser();
+        }
+
+        //Login algorithm
     }
 
     public function logout()
