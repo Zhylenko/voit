@@ -3,13 +3,13 @@ window.addEventListener('DOMContentLoaded', ()=>{
         accrodionMenu();
         programmMenu();
         modal('.overlay__popup','popup-btn', '.popup__close','.popup__login');
-        postContactForm('contact-form', '.form-control', '.form-error', config.endPoints['contact-form']);
-        register('register-form', '.form-control', '.form-error', config.endPoints['register-form']);
+        postContactForm('contact-form', '.form-control', '.form-error', config.endPoints['contact-send']);
+        register('register-form', '.form-control', '.form-error', config.endPoints['auth-register']);
         addTimer('timer');
         registerModal('register-btn','.popup__reg', '.popup__login');
         mobileMenu('.menu-hamburger', '.menu', '.menu__link');
-        login('login-form', '.form-control', '.form-error' , config.endPoints['login-form']);
-        registerWithCode('register-form', '.form-control', '.form-error', config.endPoints['login-form'])
+        login('login-form', '.form-control', '.form-error' , config.endPoints['auth-login']);
+        registerWithCode('register-form', '.form-control', '.form-error', config.endPoints['auth-login'])
 });
 
 
@@ -103,7 +103,7 @@ function createNewDiv(setClass) {
         return newDiv;
 }
 
-/* ------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------ */
 /* POST Requests */
 
 //Contact Form POST sending
@@ -434,7 +434,7 @@ function removePopup(window, style, mediaMatch) {
               btns[0].style.display = 'block';
               btns[1].style.display = 'none';
               timer.display = 'none';
-              $('.js-timeout').text(config.timer);
+              $('.js-timeout').text(config.password_timeout);
               $('.js-timeout').hide();
               Reset(loginForm);
               Reset(registerForm);
@@ -516,7 +516,7 @@ function register(formID, inputsReqClass, errorLabelsClass ,url) {
                         registerButton.style.display = 'block'; 
 
                         $('.js-timeout').show();
-                        $('.js-timeout').text(config.timer);
+                        $('.js-timeout').text(config.password_timeout);
                         countdown();
 
                 } else {                       
@@ -623,7 +623,7 @@ function addTimer(btnID) {
                 btn.addEventListener('click', () => {
                         $('.timer').hide();   
                         $('.js-timeout').show();
-                        $('.js-timeout').text(config.timer);
+                        $('.js-timeout').text(config.password_timeout);
                         countdown();
                 });
         }
