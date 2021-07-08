@@ -103,7 +103,7 @@ function createNewDiv(setClass) {
         return newDiv;
 }
 
-/* -------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------ */
 /* POST Requests */
 
 //Contact Form POST sending
@@ -147,7 +147,8 @@ function postContactForm(form, formReq, errorLabelsClass ,url) {
                 regRoad[1].style.display = 'block'; 
         } 
 
-        let formData = new FormData(contactForm);      
+        let formData = new FormData(contactForm); 
+        contactForm.classList.add('_sending');
 
                 let response = await fetch(url, {
                         method: 'POST',
@@ -160,6 +161,7 @@ function postContactForm(form, formReq, errorLabelsClass ,url) {
 
                 if(response.ok) {
 
+                        contactForm.classList.remove('_sending');
                         contactForm.classList.add('active');
                         Reset(contactForm);
                         location.reload();
@@ -186,6 +188,7 @@ function postContactForm(form, formReq, errorLabelsClass ,url) {
                                         }
                                 }
                         }
+                        contactForm.classList.remove('_sending');
                 }
         }
 }
@@ -633,9 +636,11 @@ function countdown() {
   clearInterval(interval);
   interval = setInterval( function() {
       var timer = $('.js-timeout').html();
-      timer = timer.split(':');
-      var minutes = timer[0];
-      var seconds = timer[1];
+      var minutes = 0;
+      if(timer > 60) {
+         minutes = (timer/60).toFixed(0);
+      }
+      var seconds = timer;
       seconds -= 1;
       if (minutes < 0) {
         return;
@@ -644,9 +649,9 @@ function countdown() {
           minutes -= 1;
           seconds = 59;
       }
-      else if (seconds < 10 && length.seconds != 2) seconds = '0' + seconds;
+      else if (seconds < 10 && length.seconds != 2) seconds = seconds;
 
-      $('.js-timeout').html(minutes + ':' + seconds);
+      $('.js-timeout').html(seconds);
 
       if (minutes == 0 && seconds == 0) {
         $('.js-timeout').hide();
