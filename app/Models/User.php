@@ -9,10 +9,11 @@ use App\Http\Requests\RegisterRequest;
 class User extends Model
 {
     protected $casts = [
-        'cookie_hash' => 'array'
+        'cookie_hash'   => 'array',
     ];
 
-    public function create(RegisterRequest $request)
+
+    public function createNewUser(RegisterRequest $request)
     {
         $this->email        = $request->email;
         $this->password     = password_hash($request->password, PASSWORD_BCRYPT);

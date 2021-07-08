@@ -18,20 +18,29 @@ class AuthController extends Controller
     {
         $user = User::where('email', '=', $request->email)->first();
 
-        $request->password = $this->passGenerator();
+        $request->password = $this->passwordGenerator();
 
         if($user == null){
 
             $user = new User;
-            $user->create($request);
+            $user->createNewUser($request);
 
         }else if($user !== null && $user->verified_at == null){
 
-            $request->password = ($user->updated_at);
-            $user->updatePassword($request);
+            //Check last generating password
+            $diff = time() - $user->updated_at->getTimestamp();
+
+            if($diff >= config('auth.password_timeout')){
+
+                $request->password = ($user->updated_at);
+                $user->updatePassword($request);
+
+            }else{
+                return 'timeout error';
+            }
 
         }else{
-            return $user->updated_at;
+            return 'user already exists';
         }
 
         Mail::to($request->email)
@@ -40,7 +49,7 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        # code...
+        #
     }
 
     public function logout()
@@ -48,8 +57,7 @@ class AuthController extends Controller
         # code...
     }
 
-    //Generates random password
-    protected function passGenerator()
+    protected function passwordGenerator()
     {
         $alphabet   = "abcdefghijklmnopqrstuvwxyz";
         $numbers    = "0123456789";
@@ -64,11 +72,5 @@ class AuthController extends Controller
         }
 
         return $password;
-    }
-
-    //Save login
-    protected function saveCookies(User $user)
-    {
-        # code...
     }
 }
