@@ -455,13 +455,11 @@ function Reset(form) {
 function register(formID, inputsReqClass, errorLabelsClass ,url) {
 
     const form = document.getElementById(formID),
-          inputs = document.querySelectorAll(inputsReqClass);
-
-    const btns = document.querySelectorAll('.register');
-    const sendCodeButton = btns[0];
-    const registerButton = btns[1];
-
-    const label = document.querySelectorAll(errorLabelsClass);
+          inputs = document.querySelectorAll(inputsReqClass),
+          btns = document.querySelectorAll('.register'),
+          sendCodeButton = btns[0],
+          registerButton = btns[1],
+          label = document.querySelectorAll(errorLabelsClass);
 
     if(form !== null) form.addEventListener('submit', formSend);
 
@@ -481,14 +479,15 @@ function register(formID, inputsReqClass, errorLabelsClass ,url) {
                 });
 
                 if(response.ok) {
-                        let result = await response.json();
+
                         inputs[3].style.display = 'block';
                         sendCodeButton.style.display = 'none';
-                        registerButton.style.display = 'block';       
+                        registerButton.style.display = 'block'; 
+
                         $('.js-timeout').show();
                         $('.js-timeout').text("1:00");
                         countdown();
-                        console.log(result.message);
+
                 } else {                       
                         alert('Ошибка');
                         let result = await response.json();
