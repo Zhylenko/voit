@@ -12,6 +12,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
         registerWithCode('register-form', '.form-control', '.form-error', config.endPoints['login-form'])
 });
 
+
 let token = 0;
 if(document.querySelector('meta[name="csrf-token"]') !== null) {
         token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -115,9 +116,9 @@ function postContactForm(form, formReq, errorLabelsClass ,url) {
           check_group = document.querySelector('.form__gr-check');
 
     let checkDiv = createNewDiv('form-error checkbox-error');
-    let formAfterSend = createNewDiv('sent');
-    let formAfterSendText = createNewDiv('sent-text');
-    formAfterSendText.textContent = 'Отправка...';
+//     let formAfterSend = createNewDiv('sent');
+//     let formAfterSendText = createNewDiv('sent-text');
+//     formAfterSendText.textContent = 'Отправка...';
     checkDiv.textContent = 'Необходимо заполнить пустое поле';
 
     if(contactForm!== null) {
@@ -147,8 +148,6 @@ function postContactForm(form, formReq, errorLabelsClass ,url) {
         } 
 
         let formData = new FormData(contactForm);      
-        contactForm.append(formAfterSend);
-        // formAfterSend.append(formAfterSendText);
 
                 let response = await fetch(url, {
                         method: 'POST',
@@ -161,7 +160,6 @@ function postContactForm(form, formReq, errorLabelsClass ,url) {
 
                 if(response.ok) {
 
-                        contactForm.removeChild(formAfterSend);
                         contactForm.classList.add('active');
                         Reset(contactForm);
                         location.reload();
@@ -188,8 +186,6 @@ function postContactForm(form, formReq, errorLabelsClass ,url) {
                                         }
                                 }
                         }
-
-                        contactForm.removeChild(formAfterSend);
                 }
         }
 }
@@ -435,7 +431,7 @@ function removePopup(window, style, mediaMatch) {
               btns[0].style.display = 'block';
               btns[1].style.display = 'none';
               timer.display = 'none';
-              $('.js-timeout').text("1:00");
+              $('.js-timeout').text(config.timer);
               $('.js-timeout').hide();
               Reset(loginForm);
               Reset(registerForm);
@@ -517,7 +513,7 @@ function register(formID, inputsReqClass, errorLabelsClass ,url) {
                         registerButton.style.display = 'block'; 
 
                         $('.js-timeout').show();
-                        $('.js-timeout').text("1:00");
+                        $('.js-timeout').text(config.timer);
                         countdown();
 
                 } else {                       
@@ -624,7 +620,7 @@ function addTimer(btnID) {
                 btn.addEventListener('click', () => {
                         $('.timer').hide();   
                         $('.js-timeout').show();
-                        $('.js-timeout').text("1:00");
+                        $('.js-timeout').text(config.timer);
                         countdown();
                 });
         }
