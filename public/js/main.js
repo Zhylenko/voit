@@ -9,7 +9,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
         registerModal('register-btn','.popup__reg', '.popup__login');
         mobileMenu('.menu-hamburger', '.menu', '.menu__link');
         login('login-form', '.form-control', '.form-error' , config.endPoints['login-form']);
-        registerWithCode('register-form', '.form-control', '.form-error', config.endPoints['register-form'])
+        registerWithCode('register-form', '.form-control', '.form-error', config.endPoints['login-form'])
 });
 
 let token = 0;
