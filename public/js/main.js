@@ -247,12 +247,18 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
                                         
                                         for(let index = 0; index < inputs.length; index++) {
 
-                                                if(inputs[index].name === error) {
+                                                if(inputs[0].name === 'login-' + error) {
                                                        
-                                                        inputs[index].classList.add('_error');
-                                                        label[index].textContent = result.errors[error];
-                                                        label[index].style.display = 'block';
+                                                        inputs[0].classList.add('_error');
+                                                        label[0].textContent = result.errors[error];
+                                                        label[0].style.display = 'block';
                                                 
+                                                } 
+
+                                                if(inputs[1].name === 'login-' + error) {
+                                                        inputs[1].classList.add('_error');
+                                                        label[1].textContent = result.errors[error];
+                                                        label[1].style.display = 'block';
                                                 }
                                         }
                                 }
