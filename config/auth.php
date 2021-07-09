@@ -10,4 +10,6 @@ return [
     |
     */
     'password_timeout' => 60,
+
+    'cookie_life' => 43800,
 ];

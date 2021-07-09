@@ -12,6 +12,12 @@ class User extends Model
         'cookie_hash'   => 'array',
     ];
 
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'verified_at',
+    ];
+
 
     public function createNewUser(RegisterRequest $request)
     {

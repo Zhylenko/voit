@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Cookie;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -50,36 +52,37 @@ class AuthController extends Controller
     {
         $user = User::where('email', '=', $request->email)->first();
 
-        if(!password_verify($request->password, $user->user)) {
+        if(!password_verify($request->password, $user->password)) {
             return 'wrong password';
         }
 
         if ($user->verified_at === null) {
-            //Доделать
             $user->verifyUser();
         }
 
-        //Login algorithm
-        
+        $cookie = Cookie::make('auth', $user->id, config('auth.cookie_life'));
+        return response('')->withCookie($cookie);
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        # code...
+        return redirect(Route('index'))->withCookie(Cookie::forget('auth'));
     }
 
     protected function passwordGenerator()
     {
         $alphabet   = "abcdefghijklmnopqrstuvwxyz";
+        $alphabetLength = strlen($alphabet);
         $numbers    = "0123456789";
+        $numbersLength = strlen($numbers);
         $password   = "";
 
         for ($i = 0; $i < 4; $i++) { 
-            $password .= $numbers[mt_rand(0, strlen($numbers) - 1)];
+            $password .= $numbers[mt_rand(0, $numbersLength - 1)];
         }
 
         for ($i = 0; $i < 2; $i++) { 
-            $password .= $alphabet[mt_rand(0, strlen($alphabet) - 1)];
+            $password .= $alphabet[mt_rand(0, $alphabetLength - 1)];
         }
 
         return $password;

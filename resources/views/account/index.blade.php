@@ -28,8 +28,8 @@
                         @yield('auth')
                     </div>
 
+                    @if(1)
                     <div class="programm__inner cabinet__inner" style="display: none;">
-
                         <div class="programm__menu cabinet-menu">
 
                             <div class="programm__menu-item cabinet__item active">
@@ -156,9 +156,8 @@
                             </div>
 
                         </div>
-
                     </div>
-
+                    @endif
 
                 </div>
             </div>
