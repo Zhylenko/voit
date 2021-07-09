@@ -23,13 +23,10 @@
                             <div class="for__item-block circle-cut">
                                 <div class="for__item-text">
                                     <h3 class="for__block-title for__block-title286">
-                                        Для тех, кто хочет сменить сферу деятельностиe
+                                        {!! trans('content.for.blocks')[0]['title'] !!}
                                     </h3>
-                                    <p class="for__block-info">Хотите <span class="blue-info">больше получать</span>,
-                                        или иметь больше <span class="blue-info">свободного времени</span>, или
-                                        <span class="blue-info">работать удаленно</span> из любой точки мира?
-                                        А может ваша сфера деятельности сама по себе менее прибыльная, либо устаревшая?
-                                        Тогда IT сфера точно для вас.
+                                    <p class="for__block-info">
+                                        {!! trans('content.for.blocks')[0]['description'] !!}
                                     </p>
                                 </div>
                             </div>
@@ -44,12 +41,10 @@
 
                                 <div class="for__item-text">
                                     <h3 class="for__block-title">
-                                        Для родителей, которые хотят помочь ребенку с карьерой
+                                        {!! trans('content.for.blocks')[1]['title'] !!}
                                     </h3>
-                                    <p class="for__block-info">Все нормальные родители хотят прекрасную жизнь
-                                        и <span class="blue-info">хороший доход</span> для своего ребенка. Но в силу возраста и неопытности,
-                                        детки часто не могут сами сделать правильный выбор.
-                                        Помогите ребенку найти <span class="blue-info">свой карьерный путь</span>.
+                                    <p class="for__block-info">
+                                        {!! trans('content.for.blocks')[1]['description'] !!}
                                     </p>
                                 </div>
                             </div>
@@ -66,12 +61,10 @@
 
                                 <div class="for__item-text">
                                     <h3 class="for__block-title">
-                                        Для желающих получить дополнительный доход
+                                        {!! trans('content.for.blocks')[2]['title'] !!}
                                     </h3>
-                                    <p class="for__block-info">Если у вас есть <span class="blue-info">свободное время</span> и
-                                        <span class="blue-info">не хватает денег</span>,
-                                        можете попробовать себя в IT. Все, что вам нужно, это <span class="blue-info">ноутбук и вай-фай</span>.
-                                        Не важно, вы студент или мама в декрете, главное это желание и упорство.
+                                    <p class="for__block-info">
+                                        {!! trans('content.for.blocks')[2]['description'] !!}
                                     </p>
                                 </div>
 
@@ -87,12 +80,10 @@
 
                                 <div class="for__item-text">
                                     <h3 class="for__block-title for__block-title286">
-                                        Для тех, кто ищет свое призвание в жизни
+                                        {!! trans('content.for.blocks')[3]['title'] !!}
                                     </h3>
-                                    <p class="for__block-info">Если вы еще <span class="blue-info">не нашли себя</span>, то вам просто
-                                        необходимо пройти наш курс, здесь вы сможете пройти тестирование
-                                        и на его основе сделать вывод о том, <span class="blue-info">подойдет ли вам данная сфера</span>,
-                                        какие у вас шансы преуспеть в ней, да и вообще, с чего же начать.
+                                    <p class="for__block-info">
+                                        {!! trans('content.for.blocks')[3]['description'] !!}
                                     </p>
                                 </div>
 

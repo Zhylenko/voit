@@ -21,12 +21,12 @@
                         <h3 class="about__left-title">Расскажем немного<br><span>о нашем курсе</span></h3>
 
                         <div class="about__accordion">
-
-                            <div class="accordion__item active">
+                            @foreach(trans('content.about.questions') as $question => $answer)
+                            <div class="accordion__item {{ ($loop->index == 0) ? 'active' : '' }}">
 
                                 <div class="accordion__item-top">
 
-                                    <h3 class="accordion__item-title">О чем курс?</h3>
+                                    <h3 class="accordion__item-title">{!! $question !!}</h3>
                                     <div class="accordion__item-btn">
                                         <div class="btn-shadow">
                                             <div class="btn-main">
@@ -39,80 +39,11 @@
                                 </div>
 
                                 <div class="accordion__item-desc">
-                                    <p>Дистанционное обучение стало популярным с появлением интернета,
-                                        открыв новые возможности развития для жителей удаленных населенных
-                                        пунктов и деловых людей с плотным рабочим графиком.
-                                    </p>
-                                    <p>
-                                        Во время дистанционного обучения студент занимается самостоятельно по разработанной программе,
-                                        просматривает записи вебинаров, решает задачи, консультируется с преподавателем в онлайн-чате
-                                        и периодически отдает ему на проверку свои работы.
-                                    </p>
+                                    {!! $answer !!}
                                 </div>
 
                             </div>
-
-                            <div class="accordion__item">
-
-                                <div class="accordion__item-top">
-
-                                    <h3 class="accordion__item-title">В каком формате проходит обучение?</h3>
-                                    <div class="accordion__item-btn">
-                                        <div class="btn-shadow">
-                                            <div class="btn-main">
-                                                <div></div>
-                                                <div></div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="accordion__item-desc">
-                                    <p>Дистанционное обучение стало популярным с появлением интернета,
-                                        открыв новые возможности развития для жителей удаленных населенных
-                                        пунктов и деловых людей с плотным рабочим графиком.
-                                    </p>
-                                    <p>
-                                        Во время дистанционного обучения студент занимается самостоятельно по разработанной программе,
-                                        просматривает записи вебинаров, решает задачи, консультируется с преподавателем в онлайн-чате
-                                        и периодически отдает ему на проверку свои работы.
-                                    </p>
-                                </div>
-
-                            </div>
-
-                            <div class="accordion__item">
-
-                                <div class="accordion__item-top">
-
-                                    <h3 class="accordion__item-title">В чем преимущество данного курса?</h3>
-                                    <div class="accordion__item-btn">
-                                        <div class="btn-shadow">
-                                            <div class="btn-main">
-                                                <div></div>
-                                                <div></div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="accordion__item-desc">
-                                    <p>Дистанционное обучение стало популярным с появлением интернета,
-                                        открыв новые возможности развития для жителей удаленных населенных
-                                        пунктов и деловых людей с плотным рабочим графиком.
-                                    </p>
-                                    <p>
-                                        Во время дистанционного обучения студент занимается самостоятельно по разработанной программе,
-                                        просматривает записи вебинаров, решает задачи, консультируется с преподавателем в онлайн-чате
-                                        и периодически отдает ему на проверку свои работы.
-                                    </p>
-                                </div>
-
-                            </div>
-
-
+                            @endforeach
                         </div>
 
                     </div>

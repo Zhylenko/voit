@@ -55,10 +55,12 @@ class AuthController extends Controller
         }
 
         if ($user->verified_at === null) {
+            //Доделать
             $user->verifyUser();
         }
 
         //Login algorithm
+        
     }
 
     public function logout()
