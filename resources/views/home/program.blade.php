@@ -15,6 +15,7 @@
                 </div>
 
                 <div class="programm__menu">
+
                     @foreach(trans('content.program.plan') as $title => $lesson)
                     <div class="programm__menu-item {{ ($loop->index == 5) ? 'active' : '' }}">
 

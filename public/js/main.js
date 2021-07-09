@@ -1,31 +1,25 @@
 window.addEventListener('DOMContentLoaded', ()=>{
 
-        accrodionMenu();
-        programmMenu();
-        modal('.overlay__popup','popup-btn', '.popup__close','.popup__login');
+        mobileMenu('.menu-hamburger', '.menu', '.menu__link');
+
         postContactFormRequests('contact-form', '.form-control', '.form-error', config.endPoints['contact-send']);
         postLoginFormRequests('login-form', '.form-control', '.form-error' , config.endPoints['auth-login']);
-        register('register-form', '.form-control', '.form-error', config.endPoints['auth-register']);
-        addTimer('timer');
-        registerModal('register-btn','.popup__reg', '.popup__login');
-        mobileMenu('.menu-hamburger', '.menu', '.menu__link');
-        registerWithCode('register-form', '.form-control', '.form-error', config.endPoints['auth-login']);
-});
+        postRegisterEmailRequests('register-form', '.form-control', '.form-error', config.endPoints['auth-register']);
+        postRegisterFormRequests('register-form', '.form-control', '.form-error', config.endPoints['auth-login']);
 
+        accordionAboutMenu('.accordion__item');
+        accordionProgrammMenu('.programm__menu-item','.programm__menu-btn', 913);
+
+        modalStartedOpener('.overlay__popup','popup-btn', '.popup__close','.popup__login', 769);
+        modalRegisterOpener('register-btn','.popup__reg', '.popup__login');
+
+        addTimer('timer');
+
+});
 
 let token = 0;
 if(document.querySelector('meta[name="csrf-token"]') !== null) {
         token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-}
-
-function loadAboutPost(ext, url) {
-        $.ajax({
-                url: url,
-                cache: false,
-                success: function(html) {
-                        ext.html(html);
-                }
-        });
 }
 
 /* ------------------------------------------------------------------------------------------------------------------ */
@@ -89,8 +83,6 @@ $(function(){
                 });
         }
 
-
-        // loadAboutPost($('.accordion__item-desc').first(), endPoints['about-menu']);
         scrollFixed();
         slickSlider();
         
@@ -98,24 +90,49 @@ $(function(){
 /* ------------------------------------------------------------------------------------------------------------------ */
 
 
-function clearErrors(inputsError, labelError) {
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* Adative functions */
+function mobileMenu(buttonClass, menuClass, menuLinksClass) {
 
-        labelError.forEach(item => {
-                item.style.display = 'none';
-        });
+        const btn = document.querySelector(buttonClass),
+              menu = document.querySelector(menuClass),
+              links = document.querySelectorAll(menuLinksClass);
 
-        inputsError.forEach(item => {
-                if(item.classList.contains('._error')) {
-                        item.classList.remove('._error');
+        let isOpen = true;
+
+        btn.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                if(isOpen) {
+                        btn.classList.add('active');
+                        menu.classList.add('active');
+                        document.querySelector('body').style.overflowY = 'hidden';
+                        isOpen = false;
+                } else {
+                        btn.classList.remove('active');
+                        menu.classList.remove('active');
+                        document.querySelector('body').style.overflowY = 'scroll';
+                        isOpen = true;
                 }
         });
+
+        links.forEach((link) => {
+                link.addEventListener('click', () => {
+                        btn.classList.remove('active');
+                        menu.classList.remove('active');
+                        document.querySelector('body').style.overflowY = 'scroll';
+                        isOpen = true;  
+                });
+        });
 }
+/* ------------------------------------------------------------------------------------------------------------------ */
+
 
 /* ------------------------------------------------------------------------------------------------------------------ */
-/* POST Requests */
-function postContactFormRequests(form, formReq, errorLabelsClass ,url) {
+/* POST Request functions*/
+function postContactFormRequests(formID, formReq, errorLabelsClass ,url) {
 
-    const contactForm = document.getElementById(form),
+    const contactForm = document.getElementById(formID),
           contactReq = document.querySelectorAll(formReq),
           label = document.querySelectorAll(errorLabelsClass),
           regRoad = document.querySelectorAll('.popup__reg-content'),
@@ -146,6 +163,7 @@ function postContactFormRequests(form, formReq, errorLabelsClass ,url) {
         contactForm.classList.add('_sending');
 
                 let response = await fetch(url, {
+                        credentials: 'same-origin',
                         method: 'POST',
                         body: formData,
                         headers: new Headers({
@@ -204,9 +222,10 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
                 let dataForm = new FormData();
                 dataForm.set('email', inputs[0].value);
                 dataForm.set('password', inputs[1].value);
-                form.classList.add("._sending");
+                form.classList.add("_sending");
                        
                         let response = await fetch(url, {
+                                credentials: 'same-origin',
                                 method: 'POST',
                                 body: dataForm,
                                 headers: new Headers({
@@ -217,7 +236,7 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
     
                         if(response.ok) {
 
-                                form.classList.remove("._sending");
+                                form.classList.remove("_sending");
                                 Reset(dataForm);
                                 location.reload();
 
@@ -230,96 +249,201 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
 
                                                 if(inputs[index].name === error) {
                                                        
-                                                        inputs[index].classList.add('._error');
+                                                        inputs[index].classList.add('_error');
                                                         label[index].textContent = result.errors[error];
                                                         label[index].style.display = 'block';
                                                 
                                                 }
                                         }
                                 }
-                                form.classList.remove("._sending");
+                                form.classList.remove("_sending");
                         }
         }
 }
 
+function postRegisterEmailRequests(formID, inputsReqClass, errorLabelsClass ,url) {
 
+    const form = document.getElementById(formID),
+          inputs = document.querySelectorAll(inputsReqClass),
+          btns = document.querySelectorAll('.register'),
+          sendCodeButton = btns[0],
+          registerButton = btns[1],
+          label = document.querySelectorAll(errorLabelsClass);
+
+    if(form !== null) form.addEventListener('submit', formSend);
+
+    async function formSend(e) {
+        e.preventDefault();
+
+        clearErrors(inputs, label);
+        
+                let dataForm = new FormData();
+                dataForm.set('email', inputs[2].value);
+                form.classList.add('_sending');
+
+                let response = await fetch(url, {
+                        credentials: 'same-origin',
+                        method: 'POST',
+                        body: dataForm,
+                        headers: new Headers({
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': token
+                        })
+                });
+
+                if(response.ok) {
+
+                        form.classList.remove('_sending');
+
+                        inputs[3].style.display = 'block';
+                        sendCodeButton.style.display = 'none';
+                        registerButton.style.display = 'block'; 
+
+                        $('.js-timeout').show();
+                        $('.js-timeout').text(config.password_timeout);
+                        countdown();
+
+                } else {                       
+                        let result = await response.json();
+
+                        for(let error in result.errors) {
+                                
+                                if(error === 'email') {
+                                        inputs[2].classList.add('_error');
+                                        label[2].textContent = result.errors[error];
+                                        label[2].style.display = 'block';
+                                } 
+                        }
+                        form.classList.remove('_sending');      
+                }
+        }
+}
+
+function postRegisterFormRequests(formID, inputsReqClass, errorLabelsClass, url) {
+
+        const form = document.getElementById(formID),
+              inputs = document.querySelectorAll(inputsReqClass),
+              btns = document.querySelectorAll('.register'),
+              sendCodeButton = btns[0],
+              registerButton = btns[1],
+              label = document.querySelectorAll(errorLabelsClass);
+
+        if(form !== null) {
+                registerButton.addEventListener('click', formSend);
+        }
+
+        async function formSend(e) {
+                e.preventDefault();
+
+                clearErrors(inputs, label);
+
+                let dataForm = new FormData();
+                dataForm.set('email', inputs[2].value);
+                dataForm.set('password', inputs[3].value);
+                form.classList.add('_sending');
+
+                    let response = await fetch(url, {
+                        credentials: 'same-origin',
+                        method: 'POST',
+                        body: dataForm,
+                        headers: new Headers({
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': token
+                        })
+                    });
+    
+                    if(response.ok) {
+
+                        form.classList.remove('_sending');
+
+                        inputs[3].style.display = 'none';
+                        sendCodeButton.style.display = 'block';
+                        registerButton.style.display = 'none'; 
+
+                        Reset(form);
+                        location.reload();
+
+                    } else {                       
+
+                        for(let error in result.errors) {
+                                        
+                                if(error === 'email') {
+                                        inputs[2].classList.add('_error');
+                                        label[2].textContent = result.errors[error];
+                                        label[2].style.display = 'block';
+                                } 
+                                if(error === 'password') {
+                                        inputs[3].classList.add('_error');
+                                        label[3].textContent = result.errors[error];
+                                        label[3].style.display = 'block';
+                                }
+                        }  
+                        form.classList.remove('_sending');     
+                }
+        }
+}
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* HTML Contents functions */
 function createNewDiv(setClass) {
 
         let newDiv = document.createElement('div');
         newDiv.setAttribute('class', setClass);
-        
         return newDiv;
 }
 
-// Mobile Menu
-function mobileMenu(buttonClass, menuClass, menuLinksClass) {
+function clearErrors(inputsError, labelError) {
 
-        const btn = document.querySelector(buttonClass),
-              menu = document.querySelector(menuClass),
-              links = document.querySelectorAll(menuLinksClass);
+        inputsError.forEach(item => {
+                if(item.classList.contains('_error')) item.classList.remove('_error');
+        });
 
-        let isOpen = true;
-
-        btn.addEventListener('click', (e) => {
-                e.preventDefault();
-
-                if(isOpen) {
-                        btn.classList.add('active');
-                        menu.classList.add('active');
-                        document.querySelector('body').style.overflowY = 'hidden';
-                        isOpen = false;
-                } else {
-                        btn.classList.remove('active');
-                        menu.classList.remove('active');
-                        document.querySelector('body').style.overflowY = 'scroll';
-                        isOpen = true;
-                }
-        })
-
-        links.forEach((link) => {
-                link.addEventListener('click', () => {
-                        btn.classList.remove('active');
-                        menu.classList.remove('active');
-                        document.querySelector('body').style.overflowY = 'scroll';
-                        isOpen = true;  
-                });
-        })
+        labelError.forEach(item => {
+                item.style.display = 'none';
+        });
 }
 
+function Reset(form) {
+        form.reset();
+}
+/* ------------------------------------------------------------------------------------------------------------------ */
 
-// Accordion About Menu
-function accrodionMenu() {
 
-        let items = document.querySelectorAll('.accordion__item');
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* Accordion functions */
+function accordionAboutMenu(itemsClass) {
 
-        for (let i=0; i<items.length; i++) {
-                items[i].addEventListener('click', ()=>{
-                        
-                        // loadAboutPost($(items[i]), endPoints['about-menu']);
+        const items = document.querySelectorAll(itemsClass);
+        let activeNode = null;
 
-                        if(!(items[i].classList.contains('active'))) {
-                                let activeNode = null;
+        items.forEach((item) => {
+
+                item.addEventListener('click', ()=>{
+
+                        if(!(item.classList.contains('active'))) {
+
+                                activeNode = null;
                                 try{
                                         activeNode = document.querySelector('.about__accordion .active');
                                 } catch(msg) {}
-                                
-                                items[i].classList.add('active');
+        
+                                item.classList.add('active');
 
                                 if(activeNode) {
                                         activeNode.classList.remove('active');
                                 }
                         }
-                })
-        }
+                });
+        });
 }
 
-// Programm Section - Sub Menu
-function programmMenu() {
-        
-        const media = window.matchMedia('(max-width: 913px)');
+function accordionProgrammMenu(itemsClass, buttonsClass, mediaWidth) {
 
-        let items = document.querySelectorAll('.programm__menu-item');
-        let btn = document.querySelectorAll('.programm__menu-btn');
+        const items = document.querySelectorAll(itemsClass),
+              btn = document.querySelectorAll(buttonsClass),
+              media = window.matchMedia(`(max-width: ${mediaWidth}px)`);
 
         for (let i=0; i<btn.length; i++) {
                 btn[i].addEventListener('click', ()=>{
@@ -344,119 +468,105 @@ function programmMenu() {
                                         },800);                
                                 }
 
-                                if(activeNode) {
-                                        activeNode.classList.remove('active');
-                                }
-
-                                if(activeButton) {
-                                        activeButton.classList.remove('up');
-                                }
+                                if(activeNode) activeNode.classList.remove('active');
+                                if(activeButton) activeButton.classList.remove('up');    
                         }
                 })
         }
 }
+/* ------------------------------------------------------------------------------------------------------------------ */
 
-// MODAL 
-function modal(popup, button, closeButton, displayModal) {
 
-        const popupWindow = document.querySelector(popup),
-              popupBtn = document.getElementsByClassName(button),
-              popupCls = document.querySelectorAll(closeButton),
-              displayPopup = document.querySelector(displayModal);
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* Modal functions */
+function modalStartedOpener(overlayModalClass, modalBtnClass, modalClsBtnClass, startedModalWindowClass, mediaWidth) {
 
-        const header = document.querySelector('article');
-        const header_top = document.querySelector('.header__top');
-        const styleHeader = getComputedStyle(header);
-        const scroll = calcScroll();
-        const media = window.matchMedia('(max-width: 769px)');
+        const modalWindow = document.querySelector(overlayModalClass),
+              modalOpenBtn = document.getElementsByClassName(modalBtnClass),
+              modalCloseBtn = document.querySelectorAll(modalClsBtnClass),
+              modalStarted = document.querySelector(startedModalWindowClass),
+              media = window.matchMedia(`(max-width: ${mediaWidth}px)`);
 
-        if(popupBtn != null && popupWindow !== null) {
+        const header = document.querySelector('article'),
+              styleHeader = getComputedStyle(header),
+              scroll = calcScroll();
 
-                [].forEach.call(popupBtn, (btn)=>{
+        if(modalWindow !== null && modalOpenBtn != null) {
 
-                        btn.addEventListener('click', (but)=>{
+                [].forEach.call(modalOpenBtn, (openButton)=>{
 
-                                popupWindow.classList.add('active');
-                                displayPopup.style.display = 'block';
+                        openButton.addEventListener('click', ()=>{
+
+                                modalWindow.classList.add('active');
+                                modalStarted.style.display = 'block';
 
                                 document.body.style.overflowY = 'hidden';
-                                document.body.style.marginRight = `${scroll}px`;
-
-                               
+                                document.body.style.marginRight = `${scroll}px`; 
                         });
-                })
-               
+                }) 
         }
 
-        if(popupCls != null) {
+        if(modalCloseBtn != null) {
 
-                popupCls.forEach((item) => {
-                        item.addEventListener('click', ()=>{
+                modalCloseBtn.forEach((btnItem) => {
 
-                                removePopup(popupWindow, styleHeader, media);
-                                
+                        btnItem.addEventListener('click', ()=>{
+
+                                modalRemover(modalWindow, styleHeader, media);    
                         })
                 })
-
         }
-
 }
 
-// Register Popup
-function registerModal(buttonID, modalClass, loginModal) {
+function modalRegisterOpener(buttonID, modalClass, loginModalClass) {
 
         const openBtn = document.getElementById(buttonID),
-              modal = document.querySelector(modalClass),
-              login = document.querySelector(loginModal);
+              registerModal = document.querySelector(modalClass),
+              loginModal = document.querySelector(loginModalClass);
 
         if(openBtn !== null) {
-                openBtn.addEventListener('click',() => {
-                        login.style.display = 'none';
-                        modal.style.display= 'block';
+                openBtn.addEventListener('click', () => {
+                        loginModal.style.display = 'none';
+                        registerModal.style.display= 'block';
                 })
         }
 }
 
-function removePopup(window, style, mediaMatch) {
+function modalRemover(overlayModal, styleCalc, mediaWidth) {
         
-        const popupWindow = window,
-              styleHeader = style,
-              media = mediaMatch;
+        const modalWindow = overlayModal,
+              styleHeader = styleCalc,
+              media = mediaWidth;
 
-        const regModal = document.querySelector('.popup__reg');
-        const loginForm = popupWindow.children[0].children[1];
-        const registerForm = popupWindow.children[1].children[1];
-        const codeInput = document.querySelector('._code');
-        const inputs = document.querySelectorAll('input');
-        const btns = document.querySelectorAll('.register'),
+        const inputs = document.querySelectorAll('input'),
+              labels = document.querySelectorAll('.form-error'),
+              modalLogin = modalWindow.children[0].children[1],
+              modalRegister = modalWindow.children[1].children[1],
+              modalRegisterGroup = document.querySelector('.popup__reg'),
+              codeInput = document.querySelector('._code'),
+              registerSendButtons = document.querySelectorAll('.register'),
               timer = document.getElementById('timer');
 
-              inputs.forEach((input) => {
-                      if(input.classList.contains('_error')) {
-                              input.classList.remove('_error');
-                      }
-              })
+              clearErrors(inputs, labels);
+              Reset(modalLogin);
+              Reset(modalRegister);
 
-              popupWindow.classList.remove('active');
-              regModal.style.display = 'none';
+              modalWindow.classList.remove('active');
+              modalRegisterGroup.style.display = 'none';
               codeInput.style.display = 'none';
-              btns[0].style.display = 'block';
-              btns[1].style.display = 'none';
+              registerSendButtons[0].style.display = 'block';
+              registerSendButtons[1].style.display = 'none';
               timer.display = 'none';
+
               $('.js-timeout').text(config.password_timeout);
               $('.js-timeout').hide();
-              Reset(loginForm);
-              Reset(registerForm);
 
               if(styleHeader.minHeight === '0px') {
                       document.body.style.overflowY = 'scroll';
                       document.body.style.marginRight = '0px';
               }
 
-              if(media.matches) {
-                      document.body.style.position = 'relative';
-              }
-
+              if(media.matches) document.body.style.position = 'relative';
 }
 
 function calcScroll() {
@@ -475,157 +585,11 @@ function calcScroll() {
 
         return scrollWidth;
 }
+/* ------------------------------------------------------------------------------------------------------------------ */
 
 
-function Reset(form) {
-        form.reset();
-}
-
-// Register Function
-function register(formID, inputsReqClass, errorLabelsClass ,url) {
-
-    const form = document.getElementById(formID),
-          inputs = document.querySelectorAll(inputsReqClass),
-          btns = document.querySelectorAll('.register'),
-          sendCodeButton = btns[0],
-          registerButton = btns[1],
-          label = document.querySelectorAll(errorLabelsClass);
-
-    if(form !== null) form.addEventListener('submit', formSend);
-
-    async function formSend(e) {
-            e.preventDefault();
-
-                label.forEach(item => {
-                        item.style.display = 'none';
-                })
-        
-                inputs.forEach(item => {
-                        if(item.classList.contains('._error')) {
-                                item.classList.remove('._error');
-                        }
-                })
-        
-                let dataForm = new FormData();
-                dataForm.set('email', inputs[2].value);
-
-                let response = await fetch(url, {
-                        method: 'POST',
-                        body: dataForm,
-                        headers: new Headers({
-                                'Accept': 'application/json',
-                                'X-CSRF-TOKEN': token
-                        })
-                });
-
-                if(response.ok) {
-
-                        inputs[3].style.display = 'block';
-                        sendCodeButton.style.display = 'none';
-                        registerButton.style.display = 'block'; 
-
-                        $('.js-timeout').show();
-                        $('.js-timeout').text(config.password_timeout);
-                        countdown();
-
-                } else {                       
-                        alert('Ошибка');
-
-                        let result = await response.json();
-
-                        for(let key in result.errors) {
-                                
-                                if(key === 'email') {
-                                        inputs[2].classList.add('._error');
-                                        label[2].textContent = result.errors[key];
-                                        label[2].style.display = 'block';
-                                } 
-                                if(key === 'code') {
-                                        inputs[3].classList.add('._error');
-                                        label[3].textContent = result.errors[key];
-                                        label[3].style.display = 'block';
-                                }
-      
-                        }
-                         
-                }
-
-    }
-}
-
-// Register with Code Function
-function registerWithCode(formID, inputsReqClass, errorLabelsClass, url) {
-
-        const form = document.getElementById(formID),
-              inputs = document.querySelectorAll(inputsReqClass),
-              btns = document.querySelectorAll('.register'),
-              sendCodeButton = btns[0],
-              registerButton = btns[1],
-              label = document.querySelectorAll(errorLabelsClass);
-
-        if(form !== null) {
-                registerButton.addEventListener('click', formSend);
-        }
-
-        async function formSend(e) {
-                e.preventDefault();
-
-                label.forEach(item => {
-                        item.style.display = 'none';
-                })
-        
-                inputs.forEach(item => {
-                        if(item.classList.contains('._error')) {
-                                item.classList.remove('._error');
-                        }
-                })
-
-                    let dataForm = new FormData();
-                    dataForm.set('email', inputs[2].value);
-                    dataForm.set('password', inputs[3].value);
-
-                    let response = await fetch(url, {
-                            method: 'POST',
-                            body: dataForm,
-                            headers: new Headers({
-                                    'Accept': 'application/json',
-                                    'X-CSRF-TOKEN': token
-                            })
-                    });
-    
-                    if(response.ok) {
-
-                            inputs[3].style.display = 'none';
-                            sendCodeButton.style.display = 'block';
-                            registerButton.style.display = 'none'; 
-
-                            Reset(form);
-                            location.reload();
-
-                    } else {                       
-                            alert('Ошибка');
-    
-                                for(let key in result.errors) {
-                                        
-                                        if(key === 'email') {
-                                                inputs[2].classList.add('._error');
-                                                label[2].textContent = result.errors[key];
-                                                label[2].style.display = 'block';
-                                        } 
-                                        if(key === 'code') {
-                                                inputs[3].classList.add('._error');
-                                                label[3].textContent = result.errors[key];
-                                                label[3].style.display = 'block';
-                                        }
-        
-                                }
-                             
-                    }
-    
-        }
-
-}
-
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* Timer functions */
 function addTimer(btnID) {
         const btn = document.getElementById(btnID);
         if(btn !== null) {
@@ -639,34 +603,36 @@ function addTimer(btnID) {
 
 }
 
-var interval;
+let interval;
 
 function countdown() {
-  clearInterval(interval);
-  interval = setInterval( function() {
-      var timer = $('.js-timeout').html();
-      var minutes = 0;
-      if(timer > 60) {
-         minutes = (timer/60).toFixed(0);
-      }
-      var seconds = timer;
-      seconds -= 1;
-      if (minutes < 0) {
-        return;
-      } 
-      else if (seconds < 0 && minutes != 0) {
-          minutes -= 1;
-          seconds = 59;
-      }
-      else if (seconds < 10 && length.seconds != 2) seconds = seconds;
-
-      $('.js-timeout').html(seconds);
-
-      if (minutes == 0 && seconds == 0) {
-        $('.js-timeout').hide();
-        $('.timer').show();   
         clearInterval(interval);
-      } 
-  }, 1000);
 
+        interval = setInterval( function() {
+
+                let timer = $('.js-timeout').html();
+                let minutes = 0;
+
+                if(timer > 60) minutes = (timer/60).toFixed(0);
+
+                let seconds = timer;
+                seconds -= 1;
+
+                if (minutes < 0) return;
+                else if (seconds < 0 && minutes != 0) {
+
+                        minutes -= 1;
+                        seconds = 59;
+                } else if (seconds < 10 && length.seconds != 2) seconds = seconds;
+
+                $('.js-timeout').html(seconds);
+
+                if (minutes == 0 && seconds == 0) {
+                        $('.js-timeout').hide();
+                        $('.timer').show();   
+                        clearInterval(interval);
+                } 
+
+        }, 1000);
 }
+/* ------------------------------------------------------------------------------------------------------------------ */
