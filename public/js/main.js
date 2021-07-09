@@ -1,7 +1,5 @@
 window.addEventListener('DOMContentLoaded', ()=>{
 
-        modal('.overlay__popup','popup-btn', '.popup__close','.popup__login');
-
         mobileMenu('.menu-hamburger', '.menu', '.menu__link');
 
         postContactFormRequests('contact-form', '.form-control', '.form-error', config.endPoints['contact-send']);
@@ -12,8 +10,10 @@ window.addEventListener('DOMContentLoaded', ()=>{
         accordionAboutMenu('.accordion__item');
         accordionProgrammMenu('.programm__menu-item','.programm__menu-btn', 913);
 
+        modalStartedOpener('.overlay__popup','popup-btn', '.popup__close','.popup__login', 769);
+        modalRegisterOpener('register-btn','.popup__reg', '.popup__login');
+
         addTimer('timer');
-        registerModal('register-btn','.popup__reg', '.popup__login');
 
 });
 
@@ -485,111 +485,97 @@ function accordionProgrammMenu(itemsClass, buttonsClass, mediaWidth) {
 }
 /* ------------------------------------------------------------------------------------------------------------------ */
 
+
 /* ------------------------------------------------------------------------------------------------------------------ */
 /* Modal functions */
+function modalStartedOpener(overlayModalClass, modalBtnClass, modalClsBtnClass, startedModalWindowClass, mediaWidth) {
 
+        const modalWindow = document.querySelector(overlayModalClass),
+              modalOpenBtn = document.getElementsByClassName(modalBtnClass),
+              modalCloseBtn = document.querySelectorAll(modalClsBtnClass),
+              modalStarted = document.querySelector(startedModalWindowClass),
+              media = window.matchMedia(`(max-width: ${mediaWidth}px)`);
 
-// MODAL 
-function modal(popup, button, closeButton, displayModal) {
+        const header = document.querySelector('article'),
+              styleHeader = getComputedStyle(header),
+              scroll = calcScroll();
 
-        const popupWindow = document.querySelector(popup),
-              popupBtn = document.getElementsByClassName(button),
-              popupCls = document.querySelectorAll(closeButton),
-              displayPopup = document.querySelector(displayModal);
+        if(modalWindow !== null && modalOpenBtn != null) {
 
-        const header = document.querySelector('article');
-        const header_top = document.querySelector('.header__top');
-        const styleHeader = getComputedStyle(header);
-        const scroll = calcScroll();
-        const media = window.matchMedia('(max-width: 769px)');
+                [].forEach.call(modalOpenBtn, (openButton)=>{
 
-        if(popupBtn != null && popupWindow !== null) {
+                        openButton.addEventListener('click', ()=>{
 
-                [].forEach.call(popupBtn, (btn)=>{
-
-                        btn.addEventListener('click', (but)=>{
-
-                                popupWindow.classList.add('active');
-                                displayPopup.style.display = 'block';
+                                modalWindow.classList.add('active');
+                                modalStarted.style.display = 'block';
 
                                 document.body.style.overflowY = 'hidden';
-                                document.body.style.marginRight = `${scroll}px`;
-
-                               
+                                document.body.style.marginRight = `${scroll}px`; 
                         });
-                })
-               
+                }) 
         }
 
-        if(popupCls != null) {
+        if(modalCloseBtn != null) {
 
-                popupCls.forEach((item) => {
-                        item.addEventListener('click', ()=>{
+                modalCloseBtn.forEach((btnItem) => {
 
-                                removePopup(popupWindow, styleHeader, media);
-                                
+                        btnItem.addEventListener('click', ()=>{
+
+                                modalRemover(modalWindow, styleHeader, media);    
                         })
                 })
-
         }
-
 }
 
-// Register Popup
-function registerModal(buttonID, modalClass, loginModal) {
+function modalRegisterOpener(buttonID, modalClass, loginModalClass) {
 
         const openBtn = document.getElementById(buttonID),
-              modal = document.querySelector(modalClass),
-              login = document.querySelector(loginModal);
+              registerModal = document.querySelector(modalClass),
+              loginModal = document.querySelector(loginModalClass);
 
         if(openBtn !== null) {
-                openBtn.addEventListener('click',() => {
-                        login.style.display = 'none';
-                        modal.style.display= 'block';
+                openBtn.addEventListener('click', () => {
+                        loginModal.style.display = 'none';
+                        registerModal.style.display= 'block';
                 })
         }
 }
 
-function removePopup(window, style, mediaMatch) {
+function modalRemover(overlayModal, styleCalc, mediaWidth) {
         
-        const popupWindow = window,
-              styleHeader = style,
-              media = mediaMatch;
+        const modalWindow = overlayModal,
+              styleHeader = styleCalc,
+              media = mediaWidth;
 
-        const regModal = document.querySelector('.popup__reg');
-        const loginForm = popupWindow.children[0].children[1];
-        const registerForm = popupWindow.children[1].children[1];
-        const codeInput = document.querySelector('._code');
-        const inputs = document.querySelectorAll('input');
-        const btns = document.querySelectorAll('.register'),
+        const inputs = document.querySelectorAll('input'),
+              labels = document.querySelectorAll('.form-error'),
+              modalLogin = modalWindow.children[0].children[1],
+              modalRegister = modalWindow.children[1].children[1],
+              modalRegisterGroup = document.querySelector('.popup__reg'),
+              codeInput = document.querySelector('._code'),
+              registerSendButtons = document.querySelectorAll('.register'),
               timer = document.getElementById('timer');
 
-              inputs.forEach((input) => {
-                      if(input.classList.contains('_error')) {
-                              input.classList.remove('_error');
-                      }
-              })
+              clearErrors(inputs, labels);
+              Reset(modalLogin);
+              Reset(modalRegister);
 
-              popupWindow.classList.remove('active');
-              regModal.style.display = 'none';
+              modalWindow.classList.remove('active');
+              modalRegisterGroup.style.display = 'none';
               codeInput.style.display = 'none';
-              btns[0].style.display = 'block';
-              btns[1].style.display = 'none';
+              registerSendButtons[0].style.display = 'block';
+              registerSendButtons[1].style.display = 'none';
               timer.display = 'none';
+
               $('.js-timeout').text(config.password_timeout);
               $('.js-timeout').hide();
-              Reset(loginForm);
-              Reset(registerForm);
 
               if(styleHeader.minHeight === '0px') {
                       document.body.style.overflowY = 'scroll';
                       document.body.style.marginRight = '0px';
               }
 
-              if(media.matches) {
-                      document.body.style.position = 'relative';
-              }
-
+              if(media.matches) document.body.style.position = 'relative';
 }
 
 function calcScroll() {
@@ -608,10 +594,11 @@ function calcScroll() {
 
         return scrollWidth;
 }
+/* ------------------------------------------------------------------------------------------------------------------ */
 
 
-
-
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* Timer functions */
 function addTimer(btnID) {
         const btn = document.getElementById(btnID);
         if(btn !== null) {
@@ -628,31 +615,33 @@ function addTimer(btnID) {
 var interval;
 
 function countdown() {
-  clearInterval(interval);
-  interval = setInterval( function() {
-      var timer = $('.js-timeout').html();
-      var minutes = 0;
-      if(timer > 60) {
-         minutes = (timer/60).toFixed(0);
-      }
-      var seconds = timer;
-      seconds -= 1;
-      if (minutes < 0) {
-        return;
-      } 
-      else if (seconds < 0 && minutes != 0) {
-          minutes -= 1;
-          seconds = 59;
-      }
-      else if (seconds < 10 && length.seconds != 2) seconds = seconds;
-
-      $('.js-timeout').html(seconds);
-
-      if (minutes == 0 && seconds == 0) {
-        $('.js-timeout').hide();
-        $('.timer').show();   
         clearInterval(interval);
-      } 
-  }, 1000);
 
+        interval = setInterval( function() {
+
+                let timer = $('.js-timeout').html();
+                let minutes = 0;
+
+                if(timer > 60) minutes = (timer/60).toFixed(0);
+
+                let seconds = timer;
+                seconds -= 1;
+
+                if (minutes < 0) return;
+                else if (seconds < 0 && minutes != 0) {
+
+                        minutes -= 1;
+                        seconds = 59;
+                } else if (seconds < 10 && length.seconds != 2) seconds = seconds;
+
+                $('.js-timeout').html(seconds);
+
+                if (minutes == 0 && seconds == 0) {
+                        $('.js-timeout').hide();
+                        $('.timer').show();   
+                        clearInterval(interval);
+                } 
+
+        }, 1000);
 }
+/* ------------------------------------------------------------------------------------------------------------------ */
