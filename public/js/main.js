@@ -17,20 +17,9 @@ window.addEventListener('DOMContentLoaded', ()=>{
 
 });
 
-
 let token = 0;
 if(document.querySelector('meta[name="csrf-token"]') !== null) {
         token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-}
-
-function loadAboutPost(ext, url) {
-        $.ajax({
-                url: url,
-                cache: false,
-                success: function(html) {
-                        ext.html(html);
-                }
-        });
 }
 
 /* ------------------------------------------------------------------------------------------------------------------ */
@@ -94,8 +83,6 @@ $(function(){
                 });
         }
 
-
-        // loadAboutPost($('.accordion__item-desc').first(), endPoints['about-menu']);
         scrollFixed();
         slickSlider();
         
@@ -612,7 +599,7 @@ function addTimer(btnID) {
 
 }
 
-var interval;
+let interval;
 
 function countdown() {
         clearInterval(interval);
