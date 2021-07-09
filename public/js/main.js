@@ -1,6 +1,5 @@
 window.addEventListener('DOMContentLoaded', ()=>{
 
-        programmMenu('.programm__menu-item','.programm__menu-btn', 913);
         modal('.overlay__popup','popup-btn', '.popup__close','.popup__login');
 
         mobileMenu('.menu-hamburger', '.menu', '.menu__link');
@@ -11,6 +10,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
         postRegisterFormRequests('register-form', '.form-control', '.form-error', config.endPoints['auth-login']);
 
         accordionAboutMenu('.accordion__item');
+        accordionProgrammMenu('.programm__menu-item','.programm__menu-btn', 913);
 
         addTimer('timer');
         registerModal('register-btn','.popup__reg', '.popup__login');
@@ -430,7 +430,6 @@ function accordionAboutMenu(itemsClass) {
         items.forEach((item) => {
 
                 item.addEventListener('click', ()=>{
-                        // loadAboutPost($(items[i]), endPoints['about-menu']);
 
                         if(!(item.classList.contains('active'))) {
 
@@ -449,18 +448,11 @@ function accordionAboutMenu(itemsClass) {
         });
 }
 
-function programmMenu(itemsClass, buttonsClass, mediaWidth) {
+function accordionProgrammMenu(itemsClass, buttonsClass, mediaWidth) {
 
         const items = document.querySelectorAll(itemsClass),
-              btns = document.querySelectorAll(buttonsClass),
+              btn = document.querySelectorAll(buttonsClass),
               media = window.matchMedia(`(max-width: ${mediaWidth}px)`);
-
-        btns.forEach(button => {
-
-                button.addEventListener('click', () => {
-                        
-                })
-        })
 
         for (let i=0; i<btn.length; i++) {
                 btn[i].addEventListener('click', ()=>{
@@ -485,17 +477,17 @@ function programmMenu(itemsClass, buttonsClass, mediaWidth) {
                                         },800);                
                                 }
 
-                                if(activeNode) {
-                                        activeNode.classList.remove('active');
-                                }
-
-                                if(activeButton) {
-                                        activeButton.classList.remove('up');
-                                }
+                                if(activeNode) activeNode.classList.remove('active');
+                                if(activeButton) activeButton.classList.remove('up');    
                         }
                 })
         }
 }
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* Modal functions */
+
 
 // MODAL 
 function modal(popup, button, closeButton, displayModal) {

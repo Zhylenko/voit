@@ -15,7 +15,7 @@
                 </div>
 
                 <div class="programm__menu">
-                    <div class="programm__menu-item">
+                    <div class="programm__menu-item active">
 
                         <div class="programm__menu-line">
                             <div class="programm__menu-title"><span>1.</span> Общая информация о сфере. Плюсы и минусы.</div>
@@ -174,7 +174,7 @@
 
                     </div>
 
-                    <div class="programm__menu-item active">
+                    <div class="programm__menu-item">
                         <div class="programm__menu-line">
                             <div class="programm__menu-title"><span>6.</span> Подготовка к собеседованию</div>
                             <button class="programm__menu-btn">
