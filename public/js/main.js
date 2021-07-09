@@ -163,6 +163,7 @@ function postContactFormRequests(formID, formReq, errorLabelsClass ,url) {
         contactForm.classList.add('_sending');
 
                 let response = await fetch(url, {
+                        credentials: 'same-origin',
                         method: 'POST',
                         body: formData,
                         headers: new Headers({
@@ -224,6 +225,7 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
                 form.classList.add("_sending");
                        
                         let response = await fetch(url, {
+                                credentials: 'same-origin',
                                 method: 'POST',
                                 body: dataForm,
                                 headers: new Headers({
@@ -247,7 +249,7 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
 
                                                 if(inputs[index].name === error) {
                                                        
-                                                        inputs[index].classList.add('._error');
+                                                        inputs[index].classList.add('_error');
                                                         label[index].textContent = result.errors[error];
                                                         label[index].style.display = 'block';
                                                 
@@ -280,6 +282,7 @@ function postRegisterEmailRequests(formID, inputsReqClass, errorLabelsClass ,url
                 form.classList.add('_sending');
 
                 let response = await fetch(url, {
+                        credentials: 'same-origin',
                         method: 'POST',
                         body: dataForm,
                         headers: new Headers({
@@ -306,7 +309,7 @@ function postRegisterEmailRequests(formID, inputsReqClass, errorLabelsClass ,url
                         for(let error in result.errors) {
                                 
                                 if(error === 'email') {
-                                        inputs[2].classList.add('._error');
+                                        inputs[2].classList.add('_error');
                                         label[2].textContent = result.errors[error];
                                         label[2].style.display = 'block';
                                 } 
@@ -340,6 +343,7 @@ function postRegisterFormRequests(formID, inputsReqClass, errorLabelsClass, url)
                 form.classList.add('_sending');
 
                     let response = await fetch(url, {
+                        credentials: 'same-origin',
                         method: 'POST',
                         body: dataForm,
                         headers: new Headers({
@@ -364,12 +368,12 @@ function postRegisterFormRequests(formID, inputsReqClass, errorLabelsClass, url)
                         for(let error in result.errors) {
                                         
                                 if(error === 'email') {
-                                        inputs[2].classList.add('._error');
+                                        inputs[2].classList.add('_error');
                                         label[2].textContent = result.errors[error];
                                         label[2].style.display = 'block';
                                 } 
                                 if(error === 'password') {
-                                        inputs[3].classList.add('._error');
+                                        inputs[3].classList.add('_error');
                                         label[3].textContent = result.errors[error];
                                         label[3].style.display = 'block';
                                 }
@@ -393,7 +397,7 @@ function createNewDiv(setClass) {
 function clearErrors(inputsError, labelError) {
 
         inputsError.forEach(item => {
-                if(item.classList.contains('._error')) item.classList.remove('._error');
+                if(item.classList.contains('_error')) item.classList.remove('_error');
         });
 
         labelError.forEach(item => {
