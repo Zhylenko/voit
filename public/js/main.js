@@ -136,8 +136,7 @@ function postContactFormRequests(formID, formReq, errorLabelsClass ,url) {
           contactReq = document.querySelectorAll(formReq),
           label = document.querySelectorAll(errorLabelsClass),
           regRoad = document.querySelectorAll('.popup__reg-content'),
-          check_group = document.querySelector('.form__gr-check'),
-          submitBtn = contactForm.children[5].children[0];
+          check_group = document.querySelector('.form__gr-check');
 
     let checkDiv = createNewDiv('form-error checkbox-error');
     checkDiv.textContent = 'Необходимо заполнить пустое поле';
@@ -149,6 +148,7 @@ function postContactFormRequests(formID, formReq, errorLabelsClass ,url) {
 
     async function formSend(e) {
         e.preventDefault();
+        const submitBtn = contactForm.children[5].children[0];
         submitBtn.disabled = true;
 
         const checkError = document.querySelector('.checkbox-error');
