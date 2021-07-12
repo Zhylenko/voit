@@ -136,7 +136,8 @@ function postContactFormRequests(formID, formReq, errorLabelsClass ,url) {
           contactReq = document.querySelectorAll(formReq),
           label = document.querySelectorAll(errorLabelsClass),
           regRoad = document.querySelectorAll('.popup__reg-content'),
-          check_group = document.querySelector('.form__gr-check');
+          check_group = document.querySelector('.form__gr-check'),
+          submitBtn = contactForm.children[5].children[0];
 
     let checkDiv = createNewDiv('form-error checkbox-error');
     checkDiv.textContent = 'Необходимо заполнить пустое поле';
@@ -148,6 +149,7 @@ function postContactFormRequests(formID, formReq, errorLabelsClass ,url) {
 
     async function formSend(e) {
         e.preventDefault();
+        submitBtn.disabled = true;
 
         const checkError = document.querySelector('.checkbox-error');
         checkError.style.display = 'none';
@@ -177,6 +179,7 @@ function postContactFormRequests(formID, formReq, errorLabelsClass ,url) {
                         contactForm.classList.remove('_sending');
                         contactForm.classList.add('active');
                         Reset(contactForm);
+                        submitBtn.disabled = false;
                         location.reload();
 
                 } else {                       
@@ -201,6 +204,7 @@ function postContactFormRequests(formID, formReq, errorLabelsClass ,url) {
                                         }
                                 }
                         }
+                        submitBtn.disabled = false;
                         contactForm.classList.remove('_sending');
                 }
         }
@@ -210,12 +214,14 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
 
         const form = document.getElementById(formID),
               inputs = document.querySelectorAll(reqsInputs),
-              label = document.querySelectorAll(errorLabelsClass);
+              label = document.querySelectorAll(errorLabelsClass),
+              submitBtn = form.children[3];
 
         if(form !== null) form.addEventListener('submit', formSend);
 
         async function formSend(e) {
                 e.preventDefault();
+                submitBtn.disabled = true;
 
                 clearErrors(inputs, label);
 
@@ -238,6 +244,7 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
 
                                 form.classList.remove("_sending");
                                 Reset(dataForm);
+                                submitBtn.disabled = false;
                                 location.reload();
 
                         } else {                       
@@ -262,6 +269,7 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
                                                 }
                                         }
                                 }
+                                submitBtn.disabled = false;
                                 form.classList.remove("_sending");
                         }
         }
@@ -280,6 +288,7 @@ function postRegisterEmailRequests(formID, inputsReqClass, errorLabelsClass ,url
 
     async function formSend(e) {
         e.preventDefault();
+        sendCodeButton.disabled = true;
 
         clearErrors(inputs, label);
         
@@ -302,6 +311,7 @@ function postRegisterEmailRequests(formID, inputsReqClass, errorLabelsClass ,url
                         form.classList.remove('_sending');
 
                         inputs[3].style.display = 'block';
+                        sendCodeButton.disabled = false;
                         sendCodeButton.style.display = 'none';
                         registerButton.style.display = 'block'; 
 
@@ -320,6 +330,7 @@ function postRegisterEmailRequests(formID, inputsReqClass, errorLabelsClass ,url
                                         label[2].style.display = 'block';
                                 } 
                         }
+                        sendCodeButton.disabled = false;
                         form.classList.remove('_sending');      
                 }
         }
@@ -340,6 +351,7 @@ function postRegisterFormRequests(formID, inputsReqClass, errorLabelsClass, url)
 
         async function formSend(e) {
                 e.preventDefault();
+                registerButton.disabled = true;
 
                 clearErrors(inputs, label);
 
@@ -363,6 +375,7 @@ function postRegisterFormRequests(formID, inputsReqClass, errorLabelsClass, url)
                         form.classList.remove('_sending');
 
                         inputs[3].style.display = 'none';
+                        registerButton.disabled = false;
                         sendCodeButton.style.display = 'block';
                         registerButton.style.display = 'none'; 
 
@@ -370,7 +383,7 @@ function postRegisterFormRequests(formID, inputsReqClass, errorLabelsClass, url)
                         location.reload();
 
                     } else {                       
-
+                        let result = await response.json();
                         for(let error in result.errors) {
                                         
                                 if(error === 'email') {
@@ -384,6 +397,7 @@ function postRegisterFormRequests(formID, inputsReqClass, errorLabelsClass, url)
                                         label[3].style.display = 'block';
                                 }
                         }  
+                        registerButton.disabled = false;
                         form.classList.remove('_sending');     
                 }
         }
