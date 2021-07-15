@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('account.index');
+        return view('account.index', [
+            'auth'      => $request->auth,
+        ]);
     }
 }

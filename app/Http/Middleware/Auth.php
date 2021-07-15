@@ -21,12 +21,13 @@ class Auth
     {
         $auth = Cookie::get('auth');
 
+        $request->auth = false;
+
         if($auth != null){
             $id = $auth;
             $user = User::where('id', '=', $id)->first();
-            $request->auth = $user->cookie_hash;
+            $request->auth = true;
         }
-
         return $next($request);
     }
 }

@@ -20,15 +20,17 @@ Route::get('/', 'HomeController@index')
 
 //Offer page
 Route::get('/offer', 'OfferController@index')
+    ->middleware('auth')
     ->name('offer');
 
 //Account page
 Route::get('/account', 'AccountController@index')
+    ->middleware('auth')
     ->name('account');
 
 //Send contact data
 Route::post('/contact/send', 'ContactController@send')
-        ->name('contact-send');
+    ->name('contact-send');
 
 
 

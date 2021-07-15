@@ -15,21 +15,8 @@
 
                     <h1 class="intro__title">Мои заказы</h1>
 
-                    <div class="intro__empty">
-                        <div class="intro__box">
-                            <img class="empty-box" src="{{ asset('img/empty-box.png') }}" alt="">
-                            <div class="intro__subtitle">Тут пусто</div>
-                        </div>
-
-                        <div class="intro__text">
-                            <button class="intro__text-login popup-btn" href="./cabinet.html">Авторизируйтесь</button>чтобы просмотреть все ваши заказы
-                        </div>
-
-                        @yield('auth')
-                    </div>
-
-                    @if(1)
-                    <div class="programm__inner cabinet__inner" style="display: none;">
+                    @if(isset($auth) && $auth === true)
+                    <div class="programm__inner cabinet__inner">
                         <div class="programm__menu cabinet-menu">
 
                             <div class="programm__menu-item cabinet__item active">
@@ -156,6 +143,19 @@
                             </div>
 
                         </div>
+                    </div>
+                    @else
+                    <div class="intro__empty">
+                        <div class="intro__box">
+                            <img class="empty-box" src="{{ asset('img/empty-box.png') }}" alt="">
+                            <div class="intro__subtitle">Тут пусто</div>
+                        </div>
+
+                        <div class="intro__text">
+                            <button class="intro__text-login popup-btn" href="./cabinet.html">Авторизируйтесь</button>чтобы просмотреть все ваши заказы
+                        </div>
+
+                        @yield('auth')
                     </div>
                     @endif
 

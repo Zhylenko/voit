@@ -50,7 +50,7 @@ class AuthController extends Controller
             $json = [
                 'message' => '',
                 'errors' => [
-                    'timeout' => trans('auth.exists'),
+                    'password' => trans('auth.exists'),
                 ]
             ];
             return response()->json($json, 403);
@@ -68,7 +68,7 @@ class AuthController extends Controller
             $json = [
                 'message' => '',
                 'errors' => [
-                    'timeout' => trans('auth.failed'),
+                    'email' => trans('auth.failed'),
                 ]
             ];
             return response()->json($json, 403);
@@ -84,7 +84,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        return redirect(Route('index'))->withCookie(Cookie::forget('auth'));
+        return redirect()->back()->withCookie(Cookie::forget('auth'));
     }
 
     protected function passwordGenerator()

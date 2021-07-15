@@ -1,4 +1,5 @@
 @include('layouts.auth')
+@include('home.challenge')
 
 @section('main')
 <section class="home">
@@ -22,8 +23,12 @@
                     </button>
                 </div>
             </div>
-
+            
+            @if(isset($auth) && $auth === true)
+            @yield('challenge')
+            @else
             @yield('auth')
+            @endif
 
             <div class="content__right">
                 <img src="{{ asset('img/header-image.svg') }}" alt="graphic">

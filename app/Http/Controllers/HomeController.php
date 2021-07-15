@@ -15,6 +15,9 @@ class HomeController extends Controller
         $questions = new Question;
         $reviews = Review::all();
         
-        return view('home.index', ['reviews' => $reviews]);
+        return view('home.index', [
+            'auth'      => $request->auth,
+            'reviews'   => $reviews,
+        ]);
     }
 }
