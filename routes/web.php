@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 //Home page
 Route::get('/', 'HomeController@index')
+    ->middleware('auth')
     ->name('index');
 
 //Offer page

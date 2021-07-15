@@ -6,7 +6,7 @@ use Closure;
 
 use App\Models\User;
 
-use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Cookie;
 
 class Auth
 {
@@ -17,8 +17,16 @@ class Auth
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle(LoginRequest $request, Closure $next)
+    public function handle($request, Closure $next)
     {
+        $auth = Cookie::get('auth');
+
+        if($auth != null){
+            $id = $auth;
+            $user = User::where('id', '=', $id)->first();
+            $request->auth = $user->cookie_hash;
+        }
+
         return $next($request);
     }
 }

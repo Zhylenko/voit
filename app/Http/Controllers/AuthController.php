@@ -37,11 +37,23 @@ class AuthController extends Controller
                 $user->updatePassword($request);
 
             }else {
-                return 'timeout error';
+                $json = [
+                    'message' => '',
+                    'errors' => [
+                        'timeout' => trans('auth.timeout'),
+                    ]
+                ];
+                return response()->json($json, 403);
             }
 
         }else {
-            return 'user already exists';
+            $json = [
+                'message' => '',
+                'errors' => [
+                    'timeout' => trans('auth.exists'),
+                ]
+            ];
+            return response()->json($json, 403);
         }
 
         Mail::to($request->email)
@@ -53,7 +65,13 @@ class AuthController extends Controller
         $user = User::where('email', '=', $request->email)->first();
 
         if(!password_verify($request->password, $user->password)) {
-            return 'wrong password';
+            $json = [
+                'message' => '',
+                'errors' => [
+                    'timeout' => trans('auth.failed'),
+                ]
+            ];
+            return response()->json($json, 403);
         }
 
         if ($user->verified_at === null) {
