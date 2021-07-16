@@ -33,7 +33,20 @@ Route::post('/contact/send', 'ContactController@send')
     ->name('contact-send');
 
 
+/*
+|--------------------------------------------------------------------------
+| Challenges
+|--------------------------------------------------------------------------
+|
+| Challenges routes
+|
+*/
 
+//Get question
+Route::get('/challenge/get', 'ChallengeController@get')
+    ->middleware('auth')
+    ->middleware('challenge')
+    ->name('challenge-get');
 
 /*
 |--------------------------------------------------------------------------

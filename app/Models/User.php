@@ -41,4 +41,11 @@ class User extends Model
 
         $this->save();
     }
+
+    public function updateCookieHash($hash = [])
+    {
+        $this->cookie_hash  = $hash;
+
+        $this->save();
+    }
 }

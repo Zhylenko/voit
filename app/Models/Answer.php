@@ -6,8 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Answer extends Model
 {
-    public function answers()
-    {
-        return $this->belongsTo('App\Models\Questions');
-    }
+    
 }
