@@ -6,7 +6,7 @@
 @endsection
 
 @include('home.main')
-@include('home.about')
+@include('home.about', ['courses' => $courses])
 @include('home.reviews', ['reviews' => $reviews])
 @include('layouts.footer')
 

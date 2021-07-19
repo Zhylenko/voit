@@ -48,6 +48,7 @@ Route::get('/challenge/get', 'ChallengeController@get')
     ->middleware('challenge')
     ->name('challenge-get');
 
+
 /*
 |--------------------------------------------------------------------------
 | Authentication
@@ -68,3 +69,17 @@ Route::post('/auth/register', 'AuthController@register')
 //Logout page
 Route::get('/auth/logout', 'AuthController@logout')
     ->name('auth-logout');
+
+
+/*
+|--------------------------------------------------------------------------
+| Courses
+|--------------------------------------------------------------------------
+|
+| Courses routes
+|
+*/
+
+//Course payment
+Route::get('/course/payment', 'CourseController@payment')
+    ->name('course-payment');

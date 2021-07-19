@@ -16,8 +16,9 @@ class Challenge
     public function handle($request, Closure $next)
     {
         if(isset($request->auth) && $request->auth === true) {
-            
+            return $next($request);
         }
-        return $next($request);
+
+        return response('', 403);
     }
 }

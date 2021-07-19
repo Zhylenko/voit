@@ -91,8 +91,8 @@ class AuthController extends Controller
             'hash'  => $hash,
         ]);
 
-        $cookieAuth = Cookie::make('auth', $cookieData, config('auth.cookie_life'));
-        $cookieDevice = Cookie::make('device', $device, config('auth.cookie_life'));
+        $cookieAuth     = Cookie::make('auth', $cookieData, config('auth.cookie_life'));
+        $cookieDevice   = Cookie::make('device', $device, config('auth.cookie_life'));
 
         return response('')
                     ->withCookie($cookieAuth)

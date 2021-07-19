@@ -10,9 +10,10 @@ class ChallengeController extends Controller
 {
     public function get(Request $request)
     {
-        //dd($request->auth);
         $questions = Question::where('id', $request->id)->first();
         $questions->answers;
-        return json_encode($questions);
+        $json = $questions;
+
+        return response()->json($json, 200);
     }
 }

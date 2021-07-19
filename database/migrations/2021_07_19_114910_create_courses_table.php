@@ -17,6 +17,8 @@ class CreateCoursesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('price');
+            $table->boolean('big');
+            $table->boolean('active');
             $table->timestamps();
         });
     }
