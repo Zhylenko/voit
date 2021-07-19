@@ -17,7 +17,7 @@ class CreateAnswersTable extends Migration
             $table->id();
             $table->string('answer');
             $table->string('question_id');
-            $table->string('next_question_id');          
+            $table->string('next_question_id')->nullable();          
             $table->string('score');            
             $table->timestamps();
         });

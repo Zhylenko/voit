@@ -44,8 +44,8 @@ Route::post('/contact/send', 'ContactController@send')
 
 //Get question
 Route::get('/challenge/get', 'ChallengeController@get')
-    ->middleware('auth')
-    ->middleware('challenge')
+    //->middleware('auth')
+    //->middleware('challenge')
     ->name('challenge-get');
 
 
