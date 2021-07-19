@@ -6,13 +6,19 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Cookie;
 
-use App\Models\Challenge;
 use App\Models\Answer;
+use App\Models\Challenge;
 use App\Models\Question;
 use App\Models\Result;
 use App\Models\User;
 use App\Models\UsersChallenge;
+/**
 
+Сделать проверку, прошёл ли юзер активный тест, учитывая посредник middleware.
+Сохранение места прохождения теста.
+Когда тест пройден, не выводит окно с тестом, скрипты и деактивировать кнопку
+
+**/
 class ChallengeController extends Controller
 {
     public function get(Request $request)
@@ -20,11 +26,10 @@ class ChallengeController extends Controller
         if ($request->answer === null) {
             //First question
             $challenge       = Challenge::where('active', 1)->first();
-            $nextQuestion    = $challenge->questions->first();
+            $nextQuestion    = $challenge->questions->where('id', 0)->first();
             $nextQuestion->answers;
 
-            $scoreCookie     = [];
-            $scoreCookie     = Cookie::make('score', json_encode($scoreCookie), config('challenge.cookie_life'));
+            $scoreCookie     = $this->createScoreCookie();
         } else {
             $answer          = Answer::where('answer', $request->answer)->first();
 
@@ -52,7 +57,7 @@ class ChallengeController extends Controller
             }
 
             $scoreCookie[$questionId] = $answer->score;
-            $scoreCookie = Cookie::make('score', json_encode($scoreCookie), config('challenge.cookie_life'));
+            $scoreCookie = $this->createScoreCookie($scoreCookie);
 
             if ($answer->next_question_id !== null) {
                 $nextQuestion    = Question::where('id', $answer->next_question_id)->first();
@@ -65,7 +70,8 @@ class ChallengeController extends Controller
                     'result' => $result,
                 ];
                 return response()
-                    ->json($json, 200);
+                    ->json($json, 200)
+                    ->withCookie(Cookie::forget('score'));
             }
         }
 
@@ -76,7 +82,7 @@ class ChallengeController extends Controller
 
     protected function createResult()
     {
-        $authCookie = json_decode(Cookie::get('auth'), 1);
+        $authCookie     = json_decode(Cookie::get('auth'), 1);
 
         $user           = User::where('id', $authCookie['id'])->first();
         $challenge      = Challenge::where('active', 1)->first();
@@ -109,8 +115,8 @@ class ChallengeController extends Controller
 
     protected function calculateResult($score = 0)
     {
-        $results    = Result::all();
-        $resultsCount = count($results);
+        $results        = Result::all();
+        $resultsCount   = count($results);
 
         for ($i = 0; $i < $resultsCount; $i++) {
             if (($i + 1) != $resultsCount) {
@@ -124,5 +130,10 @@ class ChallengeController extends Controller
         }
 
         return $result;
+    }
+
+    protected function createScoreCookie($array = [])
+    {
+        return Cookie::make('score', json_encode($array), config('challenge.cookie_life'));
     }
 }

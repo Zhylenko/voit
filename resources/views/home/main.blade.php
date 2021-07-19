@@ -18,7 +18,7 @@
                     </div>
 
                     <button class="left__bottom-btn but-init popup-btn" id="popup-Btn">
-                        Пройти Тест
+                        {{ (false) ? 'Тест пройден' : 'Пройти Тест' }}
                         <img src="{{ asset('img/paper-plane.svg') }}" alt="plane">
                     </button>
                 </div>
