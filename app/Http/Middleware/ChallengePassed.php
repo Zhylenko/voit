@@ -8,7 +8,7 @@ use App\Models\UsersChallenge;
 use Closure;
 use Illuminate\Support\Facades\Cookie;
 
-class Challenge
+class ChallengePassed
 {
     /**
      * Handle an incoming request.
@@ -19,30 +19,20 @@ class Challenge
      */
     public function handle($request, Closure $next)
     {
+        $request->passed = false;
+
         if (isset($request->auth) && $request->auth === true) {
 
             $authCookie = json_decode(Cookie::get('auth'), 1);
             $challenge  = ModelsChallenge::where('active', 1)->first();
 
-            if ($challenge === null) {
-                return redirect()->back();
-            }
-
             $usersChallenge = UsersChallenge::where([['user_id', $authCookie['id']], ['challenge_id', $challenge->id]])->first();
 
             if ($usersChallenge !== null) {
-                $json = [
-                    'message' => '',
-                    'errors' => [
-                        'answer' => trans('challenge.passed'),
-                    ]
-                ];
-                return response()->json($json, 403);
+                $request->passed = true;
             }
-
-            return $next($request);
         }
 
-        return response('', 403);
+        return $next($request);
     }
 }

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 //Home page
 Route::get('/', 'HomeController@index')
     ->middleware('auth')
+    ->middleware('challenge.passed')
     ->name('index');
 
 //Offer page
@@ -44,8 +45,10 @@ Route::post('/contact/send', 'ContactController@send')
 
 //Get question
 Route::get('/challenge/get', 'ChallengeController@get')
-    //->middleware('auth')
-    //->middleware('challenge')
+    ->middleware('auth')
+    ->middleware('challenge.auth')
+    ->middleware('challenge.exists')
+    ->middleware('challenge.passed')
     ->name('challenge-get');
 
 

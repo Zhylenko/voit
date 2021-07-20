@@ -11,7 +11,7 @@ class Course extends Model
         return $this->hasMany('App\Models\Characteristic');
     }
 
-    public function courseLinks()
+    public function links()
     {
         return $this->hasMany('App\Models\CourseLink');
     }

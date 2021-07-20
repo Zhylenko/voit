@@ -16,6 +16,7 @@ class HomeController extends Controller
         
         return view('home.index', [
             'auth'      => $request->auth,
+            'passed'    => $request->passed,
             'courses'   => $courses,
             'reviews'   => $reviews,
         ]);

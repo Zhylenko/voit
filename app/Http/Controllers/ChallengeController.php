@@ -12,22 +12,32 @@ use App\Models\Question;
 use App\Models\Result;
 use App\Models\User;
 use App\Models\UsersChallenge;
+
 /**
 
+Первый вопрос
 Сделать проверку, прошёл ли юзер активный тест, учитывая посредник middleware.
-Сохранение места прохождения теста.
-Когда тест пройден, не выводит окно с тестом, скрипты и деактивировать кнопку
+Когда тест пройден, не выводить окно с тестом, скрипты и деактивировать кнопку
 
-**/
+ **/
 class ChallengeController extends Controller
 {
     public function get(Request $request)
     {
+        if ($request->passed === true) {
+            $json = [
+                'message' => '',
+                'errors' => [
+                    'answer' => trans('challenge.passed'),
+                ]
+            ];
+            return response()->json($json, 403);
+        }
+        
         if ($request->answer === null) {
             //First question
             $challenge       = Challenge::where('active', 1)->first();
-            $nextQuestion    = $challenge->questions->where('id', 0)->first();
-            $nextQuestion->answers;
+            $nextQuestion    = $challenge->questions->with('answers')->where('id', 0)->first();
 
             $scoreCookie     = $this->createScoreCookie();
         } else {
@@ -60,8 +70,7 @@ class ChallengeController extends Controller
             $scoreCookie = $this->createScoreCookie($scoreCookie);
 
             if ($answer->next_question_id !== null) {
-                $nextQuestion    = Question::where('id', $answer->next_question_id)->first();
-                $nextQuestion->answers;
+                $nextQuestion    = Question::where('id', $answer->next_question_id)->with('answers')->first();
             } else {
                 $result = $this->createResult();
 
