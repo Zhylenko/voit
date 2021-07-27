@@ -425,13 +425,13 @@ function postTestFormRequests(radioGroupClass, answerGroupClass, submitBtnID, mo
 
         const question = document.getElementById('test-question');
 
-        modalBtn.addEventListener('click', formSend);
+        modalBtn.addEventListener('click', formSend.bind(null, '', true));
 
-        async function formSend(e) {
-                e.preventDefault();
+        async function formSend(input, isFirst, event) {
+                event.preventDefault();
 
                 let dataForm = new FormData();
-                dataForm.set('answer', '');
+                dataForm.set('answer', input);
 
                 let response = await fetch(url, {
                         credentials: 'same-origin',
@@ -449,6 +449,7 @@ function postTestFormRequests(radioGroupClass, answerGroupClass, submitBtnID, mo
                         question.textContent = result.question;
                 }
         }
+
 }
 /* ------------------------------------------------------------------------------------------------------------------ */
 
