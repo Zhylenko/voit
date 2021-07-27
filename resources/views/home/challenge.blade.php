@@ -1,5 +1,5 @@
 @section('challenge')
-<div class="overlay__test" style="display: none;">
+<div class="overlay__test">
 
     <div class="popup__test" id="it-test" style="display: block;">
 
