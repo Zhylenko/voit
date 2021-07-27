@@ -5,6 +5,7 @@
                 'contact-send':     `{{ Route('contact-send') }}`,
                 'auth-register':    `{{ Route('auth-register') }}`,
                 'auth-login':       `{{ Route('auth-login') }}`,
+                'test':             ``,
             },
             'password_timeout': `{{ config('auth.password_timeout') }}`,
         }

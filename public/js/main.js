@@ -1,8 +1,11 @@
 window.onload = function() {
+        const scroll = calcScroll();
+        document.body.style.marginRight = `${scroll}px`;
         const preloader = document.querySelector('.loader');
         preloader.style.top = '-100%';
         setTimeout(() => {
                 document.body.style.overflow = 'auto';
+                document.body.style.marginRight = `0px`;
         }, 1200);
 }
 
@@ -14,6 +17,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
         postLoginFormRequests('login-form', '.form-control', '.form-error' , config.endPoints['auth-login']);
         postRegisterEmailRequests('register-form', '.form-control', '.form-error', config.endPoints['auth-register']);
         postRegisterFormRequests('register-form', '.form-control', '.form-error', config.endPoints['auth-login']);
+        postTestFormRequests('.popup__group', '.answer', 'next', 'popup-Btn', config.endPoints['test']);
 
         accordionAboutMenu('.accordion__item');
         accordionProgrammMenu('.programm__menu-item','.programm__menu-btn', 913);
@@ -408,6 +412,41 @@ function postRegisterFormRequests(formID, inputsReqClass, errorLabelsClass, url)
                         }  
                         registerButton.disabled = false;
                         form.classList.remove('_sending');     
+                }
+        }
+}
+
+function postTestFormRequests(radioGroupClass, answerGroupClass, submitBtnID, modalBtnID, url) {
+        
+        const radioBtns = document.querySelectorAll(radioGroupClass),
+                answers = document.querySelectorAll(answerGroupClass),
+                submitBtn = document.getElementById(submitBtnID),
+                modalBtn = document.getElementById(modalBtnID);
+
+        const question = document.getElementById('test-question');
+
+        modalBtn.addEventListener('click', formSend);
+
+        async function formSend(e) {
+                e.preventDefault();
+
+                let dataForm = new FormData();
+                dataForm.set('answer', '');
+
+                let response = await fetch(url, {
+                        credentials: 'same-origin',
+                        method: 'POST',
+                        body: dataForm,
+                        headers: new Headers({
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': token
+                        })
+                });
+
+                if(response.ok) {
+
+                        let result = await response.json();
+                        question.textContent = result.question;
                 }
         }
 }
