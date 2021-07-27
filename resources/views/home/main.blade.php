@@ -1,4 +1,5 @@
 @include('layouts.auth')
+@include('home.challenge')
 
 @section('main')
 <section class="home">
@@ -17,13 +18,17 @@
                     </div>
 
                     <button class="left__bottom-btn but-init popup-btn" id="popup-Btn">
-                        Пройти Тест
+                        {{ ($passed === true) ? 'Тест пройден' : 'Пройти Тест' }}
                         <img src="{{ asset('img/paper-plane.svg') }}" alt="plane">
                     </button>
                 </div>
             </div>
-
+            
+            @if(isset($auth) && $auth === true)
+            @yield('challenge')
+            @else
             @yield('auth')
+            @endif
 
             <div class="content__right">
                 <img src="{{ asset('img/header-image.svg') }}" alt="graphic">

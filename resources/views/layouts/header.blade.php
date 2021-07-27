@@ -1,7 +1,12 @@
 @include('layouts.navbar')
+@include('layouts.preloader')
+
 @section('header')
     <!-- Header -->
     <header class="header">
+
+		@yield('preloader')
+
 		<div class="container">
 			<div class="header__top fix">
 				<div class="header__group">
@@ -34,9 +39,11 @@
 							<a class="account__btn log-in" href="{{ Route('account') }}">
 								<img class="account__img" src="{{ asset('img/user.svg') }}" alt="user">
 							</a>
+							@if(isset($auth) && $auth === true)
 							<a class="account__btn log-out" href="{{ Route('auth-logout') }}">
 								<img class="account__img" src="{{ asset('img/logout.svg') }}" alt="user">
 							</a>
+							@endif
 						</div>
 					</div>
 				</div>

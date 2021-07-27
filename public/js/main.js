@@ -1,3 +1,11 @@
+window.onload = function() {
+        const preloader = document.querySelector('.loader');
+        preloader.style.top = '-100%';
+        setTimeout(() => {
+                document.body.style.overflow = 'auto';
+        }, 1200);
+}
+
 window.addEventListener('DOMContentLoaded', ()=>{
 
         mobileMenu('.menu-hamburger', '.menu', '.menu__link');
@@ -102,6 +110,7 @@ function mobileMenu(buttonClass, menuClass, menuLinksClass) {
 
         btn.addEventListener('click', (e) => {
                 e.preventDefault();
+                const preloader = document.querySelector('.loader');
 
                 if(isOpen) {
                         btn.classList.add('active');
@@ -149,6 +158,7 @@ function postContactFormRequests(formID, formReq, errorLabelsClass ,url) {
 
     async function formSend(e) {
         e.preventDefault();
+        const submitBtn = contactForm.children[5].children[0];
         submitBtn.disabled = true;
 
         const checkError = document.querySelector('.checkbox-error');

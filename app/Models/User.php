@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Http\Requests\RegisterRequest;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Model
 {
@@ -38,6 +39,13 @@ class User extends Model
     public function verifyUser()
     {
         $this->verified_at  = time();
+
+        $this->save();
+    }
+
+    public function updateCookieHash($hash = [])
+    {
+        $this->cookie_hash  = $hash;
 
         $this->save();
     }

@@ -5,8 +5,8 @@
 @section('styles')
 @endsection
 
-@include('home.main')
-@include('home.about')
+@include('home.main', ['passed' => $passed])
+@include('home.about', ['courses' => $courses])
 @include('home.reviews', ['reviews' => $reviews])
 @include('layouts.footer')
 

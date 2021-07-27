@@ -15,6 +15,40 @@
 
                     <h1 class="intro__title">Мои заказы</h1>
 
+                    @if(isset($auth) && $auth === true)
+                    <div class="programm__inner cabinet__inner">
+                        <div class="programm__menu cabinet-menu">
+                            @if($courses !== null)
+                            @foreach($courses as $course)
+                            <div class="programm__menu-item cabinet__item {{ ($loop->index == 0) ? 'active' : '' }}">
+                                <div class="programm__menu-line cabinet-line">
+                                    <div class="programm__menu-title"><span>Курс "{{ $course->name }}"</span></div>
+                                    <button class="programm__menu-btn">
+                                        <img src="{{ asset('img/arrow-btn.svg') }}" alt="arrow">
+                                    </button>
+                                </div>
+
+                                <div class="programm__menu-block cabinet__menu">
+                                    <div class="programm__subblock cabinet__subblock">
+                                        <div class="programm__subblock-sup">
+                                            КУРС "{{ $course->name }}"
+                                        </div>
+                                        @foreach($course->links as $link)
+                                        <div class="cabinet__info-box">
+                                            <div class="programm__subblock-desc cabinet-desc">
+                                                {{ $link->url }}
+                                            </div>
+                                            <a class="but-init cabinet__link" href="{{ $link->url }}">Перейти</a>
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                            @endif
+                        </div>
+                    </div>
+                    @else
                     <div class="intro__empty">
                         <div class="intro__box">
                             <img class="empty-box" src="{{ asset('img/empty-box.png') }}" alt="">
@@ -26,136 +60,6 @@
                         </div>
 
                         @yield('auth')
-                    </div>
-
-                    @if(1)
-                    <div class="programm__inner cabinet__inner" style="display: none;">
-                        <div class="programm__menu cabinet-menu">
-
-                            <div class="programm__menu-item cabinet__item active">
-
-                                <div class="programm__menu-line cabinet-line">
-                                    <div class="programm__menu-title"><span>Курс 1</span></div>
-                                    <button class="programm__menu-btn">
-                                        <img src="{{ asset('img/arrow-btn.svg') }}" alt="arrow">
-                                    </button>
-                                </div>
-
-                                <div class="programm__menu-block cabinet__menu">
-                                    <div class="programm__subblock cabinet__subblock">
-                                        <div class="programm__subblock-sup">
-                                            КУРС #1
-                                        </div>
-
-                                        <div class="cabinet__info-box">
-                                            <div class="programm__subblock-desc cabinet-desc">
-                                                Видеокурс <span class="course-no">1</span>: <span class="cabinet__name">Вход</span>
-                                            </div>
-                                            <a class="but-init cabinet__link" href="#">Смотреть</a>
-                                        </div>
-
-                                        <div class="cabinet__info-box">
-                                            <div class="programm__subblock-desc cabinet-desc">
-                                                Видеокурс <span class="course-no">2</span>: <span class="cabinet__name">Профессии</span>
-                                            </div>
-                                            <a class="but-init cabinet__link" href="#">Смотреть</a>
-                                        </div>
-
-                                        <div class="cabinet__info-box">
-                                            <div class="programm__subblock-desc cabinet-desc">
-                                                <span class="course-file">Шаблон резюме</span>
-                                            </div>
-                                            <button class="but-init cabinet__link download-btn">Скачать</button>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="programm__menu-item">
-
-                                <div class="programm__menu-line cabinet-line">
-                                    <div class="programm__menu-title"><span>Курс 2</span></div>
-                                    <button class="programm__menu-btn">
-                                        <img src="{{ asset('img/arrow-btn.svg') }}" alt="arrow">
-                                    </button>
-                                </div>
-
-                                <div class="programm__menu-block">
-                                    <div class="programm__subblock cabinet__subblock">
-                                        <div class="programm__subblock-sup">
-                                            КУРС #2
-                                        </div>
-
-                                        <div class="cabinet__info-box">
-                                            <div class="programm__subblock-desc cabinet-desc">
-                                                Видеокурс <span class="course-no">1</span>: <span class="cabinet__name">Вход</span>
-                                            </div>
-                                            <a class="but-init cabinet__link" href="#">Смотреть</a>
-                                        </div>
-
-                                        <div class="cabinet__info-box">
-                                            <div class="programm__subblock-desc cabinet-desc">
-                                                Видеокурс <span class="course-no">2</span>: <span class="cabinet__name">Профессии</span>
-                                            </div>
-                                            <a class="but-init cabinet__link" href="#">Смотреть</a>
-                                        </div>
-
-                                        <div class="cabinet__info-box">
-                                            <div class="programm__subblock-desc cabinet-desc">
-                                                <span class="course-file">Шаблон резюме</span>
-                                            </div>
-                                            <button class="but-init cabinet__link download-btn">Скачать</button>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="programm__menu-item">
-
-                                <div class="programm__menu-line cabinet-line">
-                                    <div class="programm__menu-title"><span>Курс 3</span></div>
-                                    <button class="programm__menu-btn">
-                                        <img src="{{ asset('img/arrow-btn.svg') }}" alt="arrow">
-                                    </button>
-                                </div>
-
-                                <div class="programm__menu-block">
-                                    <div class="programm__subblock cabinet__subblock">
-                                        <div class="programm__subblock-sup">
-                                            КУРС #3
-                                        </div>
-
-                                        <div class="cabinet__info-box">
-                                            <div class="programm__subblock-desc cabinet-desc">
-                                                Видеокурс <span class="course-no">1</span>: <span class="cabinet__name">Вход</span>
-                                            </div>
-                                            <a class="but-init cabinet__link" href="#">Смотреть</a>
-                                        </div>
-
-                                        <div class="cabinet__info-box">
-                                            <div class="programm__subblock-desc cabinet-desc">
-                                                Видеокурс <span class="course-no">2</span>: <span class="cabinet__name">Профессии</span>
-                                            </div>
-                                            <a class="but-init cabinet__link" href="#">Смотреть</a>
-                                        </div>
-
-                                        <div class="cabinet__info-box">
-                                            <div class="programm__subblock-desc cabinet-desc">
-                                                <span class="course-file">Шаблон резюме</span>
-                                            </div>
-                                            <button class="but-init cabinet__link download-btn">Скачать</button>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
                     </div>
                     @endif
 
