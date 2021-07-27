@@ -8,6 +8,8 @@ class OfferController extends Controller
 {
     public function index(Request $request)
     {
-        return view('offer.index');
+        return view('offer.index', [
+            'auth'      => $request->auth,
+        ]);
     }
 }

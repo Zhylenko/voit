@@ -1,10 +1,9 @@
-document.onreadystatechange = function(e) {
-        if (document.readyState == "interactive") {
-          var all = document.getElementsByTagName("*");
-          for (var i = 0, max = all.length; i < max; i++) {
-            console.log(all[i]);
-          }
-        }
+window.onload = function() {
+        const preloader = document.querySelector('.loader');
+        preloader.style.top = '-100%';
+        setTimeout(() => {
+                document.body.style.overflow = 'auto';
+        }, 1200);
 }
 
 window.addEventListener('DOMContentLoaded', ()=>{
@@ -111,6 +110,7 @@ function mobileMenu(buttonClass, menuClass, menuLinksClass) {
 
         btn.addEventListener('click', (e) => {
                 e.preventDefault();
+                const preloader = document.querySelector('.loader');
 
                 if(isOpen) {
                         btn.classList.add('active');

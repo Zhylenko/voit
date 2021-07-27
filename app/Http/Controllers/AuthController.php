@@ -37,11 +37,23 @@ class AuthController extends Controller
                 $user->updatePassword($request);
 
             }else {
-                return 'timeout error';
+                $json = [
+                    'message' => '',
+                    'errors' => [
+                        'timeout' => trans('auth.timeout'),
+                    ]
+                ];
+                return response()->json($json, 403);
             }
 
         }else {
-            return 'user already exists';
+            $json = [
+                'message' => '',
+                'errors' => [
+                    'email' => trans('auth.exists'),
+                ]
+            ];
+            return response()->json($json, 403);
         }
 
         Mail::to($request->email)
@@ -53,20 +65,61 @@ class AuthController extends Controller
         $user = User::where('email', '=', $request->email)->first();
 
         if(!password_verify($request->password, $user->password)) {
-            return 'wrong password';
+            $json = [
+                'message' => '',
+                'errors' => [
+                    'email' => trans('auth.failed'),
+                ]
+            ];
+            return response()->json($json, 403);
         }
 
         if ($user->verified_at === null) {
             $user->verifyUser();
         }
 
-        $cookie = Cookie::make('auth', $user->id, config('auth.cookie_life'));
-        return response('')->withCookie($cookie);
+        $hash   = password_hash($user->email, PASSWORD_BCRYPT);
+        $device = substr($hash, -6);
+
+        $cookieHash = $user->cookie_hash;
+        $cookieHash[$device] = $hash;
+
+        $user->updateCookieHash($cookieHash);
+
+        $cookieData = json_encode([
+            'id'    => $user->id,
+            'hash'  => $hash,
+        ]);
+
+        $cookieAuth     = Cookie::make('auth', $cookieData, config('auth.cookie_life'));
+        $cookieDevice   = Cookie::make('device', $device, config('auth.cookie_life'));
+
+        return response('')
+                    ->withCookie($cookieAuth)
+                    ->withCookie($cookieDevice);
     }
 
     public function logout(Request $request)
     {
-        return redirect(Route('index'))->withCookie(Cookie::forget('auth'));
+        if(Cookie::get('auth') !== null && Cookie::get('device') !== null) {
+            $auth    = json_decode(Cookie::get('auth'), 1);
+            $device  = Cookie::get('device');
+
+            $id      = $auth['id'];
+            $hash    = $auth['hash'];
+
+            $user       = User::where('id', '=', $id)->first();
+            $cookieHash = $user->cookie_hash;
+
+            $cookieHash = array_diff($cookieHash, [$device => $hash]);
+
+            $user->updateCookieHash($cookieHash);
+        }
+        
+        return redirect()
+                    ->back()
+                    ->withCookie(Cookie::forget('device'))
+                    ->withCookie(Cookie::forget('auth'));
     }
 
     protected function passwordGenerator()

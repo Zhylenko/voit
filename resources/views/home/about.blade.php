@@ -1,6 +1,6 @@
 @include('home.for')
 @include('home.program')
-@include('home.products')
+@include('home.courses', ['courses' => $courses])
 
 @section('about')
 <article class="four-section-bg">
@@ -62,6 +62,6 @@
 
     @yield('program')
 
-    @yield('products')
+    @yield('courses')
 </article>
 @endsection
