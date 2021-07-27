@@ -1,8 +1,11 @@
 window.onload = function() {
+        const scroll = calcScroll();
+        document.body.style.marginRight = `${scroll}px`;
         const preloader = document.querySelector('.loader');
         preloader.style.top = '-100%';
         setTimeout(() => {
                 document.body.style.overflow = 'auto';
+                document.body.style.marginRight = `0px`;
         }, 1200);
 }
 
@@ -411,6 +414,7 @@ function postRegisterFormRequests(formID, inputsReqClass, errorLabelsClass, url)
                 }
         }
 }
+
 /* ------------------------------------------------------------------------------------------------------------------ */
 
 
