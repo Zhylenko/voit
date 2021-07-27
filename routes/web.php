@@ -15,21 +15,41 @@ use Illuminate\Support\Facades\Route;
 
 //Home page
 Route::get('/', 'HomeController@index')
+    ->middleware('auth')
+    ->middleware('challenge.passed')
     ->name('index');
 
 //Offer page
 Route::get('/offer', 'OfferController@index')
+    ->middleware('auth')
     ->name('offer');
 
 //Account page
 Route::get('/account', 'AccountController@index')
+    ->middleware('auth')
     ->name('account');
 
 //Send contact data
 Route::post('/contact/send', 'ContactController@send')
-        ->name('contact-send');
+    ->name('contact-send');
 
 
+/*
+|--------------------------------------------------------------------------
+| Challenges
+|--------------------------------------------------------------------------
+|
+| Challenges routes
+|
+*/
+
+//Get question
+Route::get('/challenge/get', 'ChallengeController@get')
+    ->middleware('auth')
+    ->middleware('challenge.auth')
+    ->middleware('challenge.exists')
+    ->middleware('challenge.passed')
+    ->name('challenge-get');
 
 
 /*
@@ -52,3 +72,17 @@ Route::post('/auth/register', 'AuthController@register')
 //Logout page
 Route::get('/auth/logout', 'AuthController@logout')
     ->name('auth-logout');
+
+
+/*
+|--------------------------------------------------------------------------
+| Courses
+|--------------------------------------------------------------------------
+|
+| Courses routes
+|
+*/
+
+//Course payment
+Route::get('/course/payment', 'CourseController@payment')
+    ->name('course-payment');

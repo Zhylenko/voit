@@ -1,3 +1,11 @@
+window.onload = function() {
+        const preloader = document.querySelector('.loader');
+        preloader.style.top = '-100%';
+        setTimeout(() => {
+                document.body.style.overflow = 'auto';
+        }, 1200);
+}
+
 window.addEventListener('DOMContentLoaded', ()=>{
 
         mobileMenu('.menu-hamburger', '.menu', '.menu__link');
@@ -102,6 +110,7 @@ function mobileMenu(buttonClass, menuClass, menuLinksClass) {
 
         btn.addEventListener('click', (e) => {
                 e.preventDefault();
+                const preloader = document.querySelector('.loader');
 
                 if(isOpen) {
                         btn.classList.add('active');
