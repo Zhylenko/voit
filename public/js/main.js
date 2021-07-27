@@ -17,7 +17,6 @@ window.addEventListener('DOMContentLoaded', ()=>{
         postLoginFormRequests('login-form', '.form-control', '.form-error' , config.endPoints['auth-login']);
         postRegisterEmailRequests('register-form', '.form-control', '.form-error', config.endPoints['auth-register']);
         postRegisterFormRequests('register-form', '.form-control', '.form-error', config.endPoints['auth-login']);
-        postTestFormRequests('.popup__group', '.answer', 'next', 'popup-Btn', config.endPoints['test']);
 
         accordionAboutMenu('.accordion__item');
         accordionProgrammMenu('.programm__menu-item','.programm__menu-btn', 913);
@@ -416,41 +415,6 @@ function postRegisterFormRequests(formID, inputsReqClass, errorLabelsClass, url)
         }
 }
 
-function postTestFormRequests(radioGroupClass, answerGroupClass, submitBtnID, modalBtnID, url) {
-        
-        const radioBtns = document.querySelectorAll(radioGroupClass),
-                answers = document.querySelectorAll(answerGroupClass),
-                submitBtn = document.getElementById(submitBtnID),
-                modalBtn = document.getElementById(modalBtnID);
-
-        const question = document.getElementById('test-question');
-
-        modalBtn.addEventListener('click', formSend.bind(null, '', true));
-
-        async function formSend(input, isFirst, event) {
-                event.preventDefault();
-
-                let dataForm = new FormData();
-                dataForm.set('answer', input);
-
-                let response = await fetch(url, {
-                        credentials: 'same-origin',
-                        method: 'POST',
-                        body: dataForm,
-                        headers: new Headers({
-                                'Accept': 'application/json',
-                                'X-CSRF-TOKEN': token
-                        })
-                });
-
-                if(response.ok) {
-
-                        let result = await response.json();
-                        question.textContent = result.question;
-                }
-        }
-
-}
 /* ------------------------------------------------------------------------------------------------------------------ */
 
 
