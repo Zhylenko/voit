@@ -60,37 +60,5 @@
             </form>
 
         </div>
-
-
-        <div class="popup__test" style="display: none;">
-
-            <div class="popup__top">
-                <img src="{{ asset('img/popup.png') }}" alt="">
-                <h1 class="popup__title">Тест</h1>
-                <button class="popup__close reg-btn test-close">
-                </button>
-            </div>
-
-            <div class="popup__question">
-                Question Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, molestiae fuga optio ducimus,
-                ratione, eaque blanditiis earum voluptates laudantium autem impedit excepturi tenetur magni nam. Minus
-                possimus dolores aut illo?
-            </div>
-
-            <div class="popup__group">
-                <button class="popup__group-btn" type="submit" style="background-image: url({{ asset('img/lines.svg') }});">
-                    Да
-                </button>
-                <button class="popup__group-btn" type="submit" style="background-image: url({{ asset('img/lines.svg') }});">
-                    Нет
-                </button>
-                <button class="popup__group-btn" type="submit" style="background-image: url({{ asset('img/lines.svg') }});">
-                    Может быть
-                </button>
-            </div>
-
-            <button class="popup__next">Далее</button>
-
-        </div>
     </div>
 @endsection
