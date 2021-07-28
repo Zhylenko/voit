@@ -30,6 +30,9 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
 
             if(isFirst) input = '';
             else {
+                radioBtns = document.querySelectorAll(radioGroupClass);
+                answers = document.querySelectorAll(answerGroupClass);
+                
                 for(let i = 0; i < answers.length; i++) {
                     if(answers[i].checked) {
                         input = radioBtns[i].children[1].textContent;
