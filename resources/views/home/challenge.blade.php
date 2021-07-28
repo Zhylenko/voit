@@ -11,7 +11,6 @@
         </div>
 
         <div class="popup__question" id="test-question">
-            Question Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, molestiae fuga optio ducimus, ratione, eaque blanditiis earum voluptates laudantium autem impedit excepturi tenetur magni nam. Minus possimus dolores aut illo?
         </div>
         <div class="form-error test-error">Необходимо заполнить пустое поле</div>
         <div class="popup__group">

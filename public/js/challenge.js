@@ -20,7 +20,7 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
     async function formSend(isFirst, event) {
             event.preventDefault();
             
-            if(!isFirst) question = document.getElementById('test-question');
+            question = document.getElementById('test-question');
 
             let input = '';
 
@@ -39,7 +39,7 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
             let dataForm = new FormData();
             dataForm.set('answer', input);
            
-            if(!isFirst)  dataForm.set('question', question.textContent);
+            dataForm.set('question', question.textContent);
 
             let response = await fetch(url, {
                     credentials: 'same-origin',
@@ -54,7 +54,7 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
             if(response.ok) {
 
                     let result = await response.json();
-                    question.textContent = result.answers.answer;
+                    question.textContent = result.question;
                     console.log(result);
 
                     if(isFirst) modal.style.display = 'block';
