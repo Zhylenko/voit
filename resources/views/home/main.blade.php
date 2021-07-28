@@ -25,7 +25,9 @@
             </div>
             
             @if(isset($auth) && $auth === true)
-            @yield('challenge')
+                @if($passed !== true)
+                @yield('challenge')
+                @endif
             @else
             @yield('auth')
             @endif

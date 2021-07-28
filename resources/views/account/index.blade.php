@@ -36,7 +36,7 @@
                                         @foreach($course->links as $link)
                                         <div class="cabinet__info-box">
                                             <div class="programm__subblock-desc cabinet-desc">
-                                                {{ $link->url }}
+                                                {{ $link->name }}
                                             </div>
                                             <a class="but-init cabinet__link" href="{{ $link->url }}">Перейти</a>
                                         </div>
