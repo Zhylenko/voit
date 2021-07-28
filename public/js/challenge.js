@@ -54,8 +54,8 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
             if(response.ok) {
 
                     let result = await response.json();
-                    // question.textContent = result.result;
-                    console.log(result.result);
+                    question.textContent = result.answers.answer;
+                    console.log(result);
 
                     if(isFirst) modal.style.display = 'block';
                     
