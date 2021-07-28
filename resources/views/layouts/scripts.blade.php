@@ -15,6 +15,6 @@
     <!-- Libraries -->
     <script src="{{ asset('js/libs.min.js') }}"></script>
     <!-- Main scripts -->
-    <script src="{{ asset('js/test.js') }}"></script>
+    <script src="{{ asset('js/challenge.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
 @endsection

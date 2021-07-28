@@ -74,9 +74,11 @@ function removeTest(modalOverlayClass, closeBtnClass, errorLabelClass) {
         closeBtn = document.querySelector(closeBtnClass),
         errorLabel = document.querySelector(errorLabelClass);
 
-    closeBtn.addEventListener('click', () => {
+    if(closeBtn !== null) {
+        closeBtn.addEventListener('click', () => {
 
-        errorLabel.style.display = 'none';
-        modal.style.display = 'none';
-    });
+            errorLabel.style.display = 'none';
+            modal.style.display = 'none';
+        });
+    }
 }
