@@ -1,4 +1,5 @@
 postTestFormRequests('.overlay__test', '.form__radio-btn', '.answer', 'next', 'popup-Btn', config.endPoints['test']);
+removeTest('.overlay__test', '.test-close', '.test-error');
 
 function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupClass, submitBtnID, modalBtnID, url) {
         
@@ -62,4 +63,17 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
                 if(!isFirst) submitBtn.disabled = false;
             }
     }
+}
+
+function removeTest(modalOverlayClass, closeBtnClass, errorLabelClass) {
+
+    const modal = document.querySelector(modalOverlayClass),
+        closeBtn = document.querySelector(closeBtnClass),
+        errorLabel = document.querySelector(errorLabelClass);
+
+    closeBtn.addEventListener('click', () => {
+
+        errorLabel.style.display = 'none';
+        modal.style.display = 'none';
+    });
 }
