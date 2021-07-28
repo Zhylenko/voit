@@ -255,7 +255,7 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
                         if(response.ok) {
 
                                 form.classList.remove("_sending");
-                                Reset(dataForm);
+                                Reset(form);
                                 submitBtn.disabled = false;
                                 location.reload();
 
