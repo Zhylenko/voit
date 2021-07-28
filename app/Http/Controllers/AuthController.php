@@ -18,7 +18,7 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $request)
     {
-        $user = User::where('email', '=', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
         $request->password = $this->passwordGenerator();
 
@@ -108,7 +108,7 @@ class AuthController extends Controller
             $id      = $auth['id'];
             $hash    = $auth['hash'];
 
-            $user       = User::where('id', '=', $id)->first();
+            $user       = User::where('id', $id)->first();
             $cookieHash = $user->cookie_hash;
 
             $cookieHash = array_diff($cookieHash, [$device => $hash]);
