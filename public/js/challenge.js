@@ -10,6 +10,7 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
             modal = document.querySelector(modalOverlayClass);
     
     let errorLabel = document.querySelector('.test-error');
+    let question = null;
 
     if(modalBtn !== null && submitBtn !== null) {
         modalBtn.addEventListener('click', formSend.bind(null, true));
@@ -18,7 +19,9 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
 
     async function formSend(isFirst, event) {
             event.preventDefault();
-            if(!isFirst) const question = document.getElementById('test-question');
+            
+            if(!isFirst) question = document.getElementById('test-question');
+
             let input = '';
 
             errorLabel.style.display = 'none';
