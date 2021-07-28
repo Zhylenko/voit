@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 
@@ -12,9 +13,17 @@ class AccountController extends Controller
 {
     public function index(Request $request)
     {
-        $userId         = json_decode(Cookie::get('auth'), 1)['id'];
-        //$usersCourses   = UsersCourse::where([['id', $userId], ['active', 1]])->with('links')->get();
-        $usersCourses   = Course::with('links')->get();
+        $usersCourses = false;
+        
+        if ($request->auth === true) {
+            $userId         = json_decode(Cookie::get('auth'), 1)['id'];
+            $user           = User::where('id', $userId)->with('courses')->first();
+            $usersCourses   = $user->courses;
+
+            foreach ($usersCourses as $course) {
+                $course->links;
+            }
+        }
 
         return view('account.index', [
             'auth'      => $request->auth,

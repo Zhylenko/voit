@@ -13,13 +13,7 @@ use App\Models\Result;
 use App\Models\User;
 use App\Models\UsersChallenge;
 
-/**
 
-Первый вопрос
-Сделать проверку, прошёл ли юзер активный тест, учитывая посредник middleware.
-Когда тест пройден, не выводить окно с тестом, скрипты и деактивировать кнопку
-
- **/
 class ChallengeController extends Controller
 {
     public function get(Request $request)
@@ -28,26 +22,30 @@ class ChallengeController extends Controller
             $json = [
                 'message' => '',
                 'errors' => [
-                    'answer' => trans('challenge.passed'),
+                    'question' => trans('challenge.passed'),
                 ]
             ];
             return response()->json($json, 403);
         }
-        
-        if ($request->answer === null) {
+
+        if ($request->answer === null && $request->question  === null) {
             //First question
             $challenge       = Challenge::where('active', 1)->first();
-            $nextQuestion    = $challenge->questions->with('answers')->where('id', 0)->first();
+            $nextQuestion    = Question::where('challenge_id', $challenge->id)
+                                        ->with('answers')
+                                        ->where('first', 1)
+                                        ->first();
 
             $scoreCookie     = $this->createScoreCookie();
         } else {
-            $answer          = Answer::where('answer', $request->answer)->first();
+            $questionId      = Question::where('question', $request->question)->first('id');
+            $answer          = Answer::where([['answer', $request->answer], ['question_id', $questionId]])->first();
 
             if ($answer === null) {
                 $json = [
                     'message' => '',
                     'errors' => [
-                        'answer' => trans('challenge.not.exists'),
+                        'question' => trans('challenge.not.exists'),
                     ]
                 ];
                 return response()->json($json, 403);
@@ -60,7 +58,7 @@ class ChallengeController extends Controller
                 $json = [
                     'message' => '',
                     'errors' => [
-                        'answer' => trans('challenge.answered'),
+                        'question' => trans('challenge.answered'),
                     ]
                 ];
                 return response()->json($json, 403);
