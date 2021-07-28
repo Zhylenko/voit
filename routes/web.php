@@ -44,7 +44,7 @@ Route::post('/contact/send', 'ContactController@send')
 */
 
 //Get question
-Route::get('/challenge/get', 'ChallengeController@get')
+Route::post('/challenge/get', 'ChallengeController@get')
     ->middleware('auth')
     ->middleware('challenge.auth')
     ->middleware('challenge.exists')

@@ -5,7 +5,7 @@
                 'contact-send':     `{{ Route('contact-send') }}`,
                 'auth-register':    `{{ Route('auth-register') }}`,
                 'auth-login':       `{{ Route('auth-login') }}`,
-                'test':             ``,
+                'test':             `{{ Route('challenge-get') }}`,
             },
             'password_timeout': `{{ config('auth.password_timeout') }}`,
         }
@@ -14,7 +14,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- Libraries -->
     <script src="{{ asset('js/libs.min.js') }}"></script>
-    <!-- Main scripts -->
+    @if($passed !== true)
+    <!-- Challenge -->
     <script src="{{ asset('js/challenge.js') }}"></script>
+    @endif
+    <!-- Main scripts -->
     <script src="{{ asset('js/main.js') }}"></script>
 @endsection
