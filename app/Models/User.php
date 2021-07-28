@@ -49,4 +49,10 @@ class User extends Model
 
         $this->save();
     }
+
+    public function courses()
+    {
+        return $this->belongsToMany('App\Models\Course', 'App\Models\UsersCourse');
+    }
+
 }

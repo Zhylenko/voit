@@ -6,7 +6,7 @@ use App\Models\Challenge as ModelsChallenge;
 
 use Closure;
 
-class ChallangeExists
+class ChallengeExists
 {
     /**
      * Handle an incoming request.

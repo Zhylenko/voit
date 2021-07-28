@@ -11,8 +11,10 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
     
     let errorLabel = document.querySelector('.test-error');
 
-    modalBtn.addEventListener('click', formSend.bind(null, true));
-    submitBtn.addEventListener('click', formSend.bind(null, false));
+    if(modalBtn !== null && submitBtn !== null) {
+        modalBtn.addEventListener('click', formSend.bind(null, true));
+        submitBtn.addEventListener('click', formSend.bind(null, false));
+    }
 
     async function formSend(isFirst, event) {
             event.preventDefault();
@@ -48,7 +50,8 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
             if(response.ok) {
 
                     let result = await response.json();
-                    question.textContent = result.result;
+                    // question.textContent = result.result;
+                    console.log(result.result);
 
                     if(isFirst) modal.style.display = 'block';
                     
