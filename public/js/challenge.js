@@ -18,7 +18,7 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
 
     async function formSend(isFirst, event) {
             event.preventDefault();
-            const question = document.getElementById('test-question');
+            if(!isFirst) const question = document.getElementById('test-question');
             let input = '';
 
             errorLabel.style.display = 'none';
@@ -35,7 +35,8 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
 
             let dataForm = new FormData();
             dataForm.set('answer', input);
-            dataForm.set('question', question.textContent);
+           
+            if(!isFirst)  dataForm.set('question', question.textContent);
 
             let response = await fetch(url, {
                     credentials: 'same-origin',
