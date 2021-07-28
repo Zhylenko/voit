@@ -27,6 +27,7 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
                         input = radioBtns[i].children[1].textContent;
                     }
                 }
+                submitBtn.disabled = true;
             }
 
             let dataForm = new FormData();
@@ -50,11 +51,15 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
 
                     if(isFirst) modal.style.display = 'block';
                     
+                    if(!isFirst) submitBtn.disabled = false;
+                    
             } else {
 
                 let result = await response.json();
                 errorLabel.textContent = result.errors.question;
                 errorLabel.style.display = 'block';
+
+                if(!isFirst) submitBtn.disabled = false;
             }
     }
 }
