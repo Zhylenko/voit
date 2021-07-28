@@ -5,7 +5,7 @@
                 'contact-send':     `{{ Route('contact-send') }}`,
                 'auth-register':    `{{ Route('auth-register') }}`,
                 'auth-login':       `{{ Route('auth-login') }}`,
-                'test':             `{{ Route('challenge-get') }}`,
+                'challenge-get':    `{{ Route('challenge-get') }}`,
             },
             'password_timeout': `{{ config('auth.password_timeout') }}`,
         }
