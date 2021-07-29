@@ -541,16 +541,19 @@ function modalStartedOpener(overlayModalClass, modalBtnClass, modalClsBtnClass, 
                                 document.body.style.marginRight = `${scroll}px`; 
                         });
                 }) 
-        }
+        } 
 
         if(modalCloseBtn != null) {
 
                 modalCloseBtn.forEach((btnItem) => {
+                        
+                        if(!btnItem.classList.contains('test-close')) {
+                                btnItem.addEventListener('click', ()=>{
 
-                        btnItem.addEventListener('click', ()=>{
+                                        modalRemover(modalWindow, styleHeader, media);    
+                                })
+                        }
 
-                                modalRemover(modalWindow, styleHeader, media);    
-                        })
                 })
         }
 }
