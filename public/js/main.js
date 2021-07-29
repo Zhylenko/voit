@@ -228,14 +228,13 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
               inputs = document.querySelectorAll(reqsInputs),
               label = document.querySelectorAll(errorLabelsClass);
 
-        let submitBtn = null;
-
-        if(form !== null && submitBtn !== null) {
+        if(form !== null) {
                 
-                if(form.children[3] !== null) submitBtn = form.children[3];
+                if(form.children[3] !== null) let submitBtn = form.children[3];
+                else let submitBtn = null;
 
                 form.addEventListener('submit', formSend);
-        }
+        } 
 
         async function formSend(e) {
                 e.preventDefault();
