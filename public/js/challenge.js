@@ -57,11 +57,10 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
             if(response.ok) {
 
                     let result = await response.json();
+                    submitBtn.disabled = false;
 
                     if(Object.keys(result).includes('result')) {
                         question.textContent = result.result.name;
-                        
-                        submitBtn.disabled = false;
 
                         setTimeout(() => {
                             location.reload();
@@ -74,20 +73,15 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
                         for(let index = 0; index < result.answers.length; index++) {
                             group.insertAdjacentHTML('beforeend', generateAnswers(index+1, index+1, result.answers[index].answer));
                         }
-
-                        submitBtn.disabled = false;
                     }
-
-                    console.log(result);
             
                     
             } else {
 
                 let result = await response.json();
+                submitBtn.disabled = false;
                 errorLabel.textContent = result.errors.question;
                 errorLabel.style.display = 'block';
-
-                submitBtn.disabled = false;
             }
     }
 }
