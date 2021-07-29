@@ -3,9 +3,7 @@ removeTest('.overlay__test', '.test-close', '.test-error');
 
 function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupClass, submitBtnID, modalBtnID, modalGroupClass ,url) {
         
-    const radioBtns = document.querySelectorAll(radioGroupClass),
-            answers = document.querySelectorAll(answerGroupClass),
-            submitBtn = document.getElementById(submitBtnID),
+    const   submitBtn = document.getElementById(submitBtnID),
             modalBtn = document.getElementById(modalBtnID),
             modal = document.querySelector(modalOverlayClass),
             group = document.querySelector(modalGroupClass);
@@ -30,8 +28,8 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
 
             if(isFirst) input = '';
             else {
-                radioBtns = document.querySelectorAll(radioGroupClass);
-                answers = document.querySelectorAll(answerGroupClass);
+                let radioBtns = document.querySelectorAll(radioGroupClass);
+                let answers = document.querySelectorAll(answerGroupClass);
                 
                 for(let i = 0; i < answers.length; i++) {
                     if(answers[i].checked) {
