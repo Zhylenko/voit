@@ -227,15 +227,13 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
         const form = document.getElementById(formID),
               inputs = document.querySelectorAll(reqsInputs),
               label = document.querySelectorAll(errorLabelsClass);
-
-        let submitBtn = null;
+        
+        let submitBtn = document.querySelector('#contact-submit')
 
         if(form !== null && submitBtn !== null) {
-                
-                if(form.children[3] !== null) submitBtn = form.children[3];
 
                 form.addEventListener('submit', formSend);
-        }
+        } 
 
         async function formSend(e) {
                 e.preventDefault();

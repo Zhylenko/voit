@@ -3,9 +3,7 @@ removeTest('.overlay__test', '.test-close', '.test-error');
 
 function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupClass, submitBtnID, modalBtnID, modalGroupClass ,url) {
         
-    const radioBtns = document.querySelectorAll(radioGroupClass),
-            answers = document.querySelectorAll(answerGroupClass),
-            submitBtn = document.getElementById(submitBtnID),
+    const   submitBtn = document.getElementById(submitBtnID),
             modalBtn = document.getElementById(modalBtnID),
             modal = document.querySelector(modalOverlayClass),
             group = document.querySelector(modalGroupClass);
@@ -22,24 +20,27 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
             event.preventDefault();
             
             question = document.getElementById('test-question');
-            group.innerHTML = '';
 
             let input = '';
 
             errorLabel.style.display = 'none';
 
             if(isFirst) input = '';
-            else {
-                radioBtns = document.querySelectorAll(radioGroupClass);
-                answers = document.querySelectorAll(answerGroupClass);
+            if(isFirst === false) {
+                let radioBtns = document.querySelectorAll(radioGroupClass);
+                let answers = document.querySelectorAll(answerGroupClass);
                 
                 for(let i = 0; i < answers.length; i++) {
                     if(answers[i].checked) {
                         input = radioBtns[i].children[1].textContent;
                     }
                 }
+
                 submitBtn.disabled = true;
             }
+
+            console.log(isFirst);
+            console.log(input);
 
             let dataForm = new FormData();
             dataForm.set('answer', input);
@@ -61,8 +62,10 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
                     let result = await response.json();
                     question.textContent = result.question;
 
+                    group.innerHTML = '';
+
                     for(let index = 0; index < result.answers.length; index++) {
-                        group.insertAdjacentHTML('beforeend', generateAnswers(index+1, index+1, result.answers.answer));
+                        group.insertAdjacentHTML('beforeend', generateAnswers(index+1, index+1, result.answers[index].answer));
                     }
                     
                     console.log(result);
