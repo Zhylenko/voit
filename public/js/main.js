@@ -231,8 +231,6 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
         let submitBtn = document.querySelector('#contact-submit')
 
         if(form !== null && submitBtn !== null) {
-                
-                // if(form.children[3] !== null) submitBtn = form.children[3];
 
                 form.addEventListener('submit', formSend);
         } 

@@ -27,7 +27,7 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
             errorLabel.style.display = 'none';
 
             if(isFirst) input = '';
-            else {
+            if(!isFirst) {
                 let radioBtns = document.querySelectorAll(radioGroupClass);
                 let answers = document.querySelectorAll(answerGroupClass);
                 
@@ -36,6 +36,8 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
                         input = radioBtns[i].children[1].textContent;
                     }
                 }
+
+                console.log(radioBtns);
                 submitBtn.disabled = true;
             }
 
