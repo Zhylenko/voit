@@ -17,7 +17,7 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
 
     async function formSend(isFirst, event) {
             event.preventDefault();
-            
+            submitBtn.disabled = true;
             question = document.getElementById('test-question');
 
             let input = '';
@@ -34,8 +34,6 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
                         input = radioBtns[i].children[1].textContent;
                     }
                 }
-
-                submitBtn.disabled = true;
             }
 
             console.log(isFirst);
@@ -63,7 +61,7 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
                     if(Object.keys(result).includes('result')) {
                         question.textContent = result.result.name;
                         
-                        if(!isFirst) submitBtn.disabled = false;
+                        submitBtn.disabled = false;
 
                         setTimeout(() => {
                             location.reload();
@@ -77,7 +75,7 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
                             group.insertAdjacentHTML('beforeend', generateAnswers(index+1, index+1, result.answers[index].answer));
                         }
 
-                        if(!isFirst) submitBtn.disabled = false;
+                        submitBtn.disabled = false;
                     }
 
                     console.log(result);
@@ -89,7 +87,7 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
                 errorLabel.textContent = result.errors.question;
                 errorLabel.style.display = 'block';
 
-                if(!isFirst) submitBtn.disabled = false;
+                submitBtn.disabled = false;
             }
     }
 }
