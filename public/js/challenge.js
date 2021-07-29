@@ -99,8 +99,13 @@ function openTest(modalOverlayClass, modalBtnID) {
     const modal = document.querySelector(modalOverlayClass),
           modalBtn = document.getElementById(modalBtnID);
 
+    const scroll = calcScroll();
+
     modalBtn.addEventListener('click', ()=> {
         modal.style.display = 'block';
+
+        document.body.style.overflowY = 'hidden';
+        document.body.style.marginRight = `${scroll}px`; 
     })
 }
 
@@ -115,6 +120,8 @@ function removeTest(modalOverlayClass, closeBtnClass, errorLabelClass) {
 
             errorLabel.style.display = 'none';
             modal.style.display = 'none';
+            document.body.style.overflowY = 'scroll';
+            document.body.style.marginRight = `0px`; 
         });
     }
 }
@@ -126,4 +133,21 @@ function generateAnswers(index, value, text) {
         <label for="radio-${index}" style="background-image: url(./img/lines.svg);">${text}</label>
     </div>
     `;
+}
+
+function calcScroll() {
+        
+    let div = document.createElement('div');
+
+    div.style.width = '50px';
+    div.style.height = '50px';
+    div.style.overflowY = 'scroll';
+    div.style.visibility = 'hidden';
+
+    document.body.appendChild(div);
+
+    let scrollWidth = div.offsetWidth - div.clientWidth;
+    div.remove();
+
+    return scrollWidth;
 }
