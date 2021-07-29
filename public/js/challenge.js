@@ -61,7 +61,8 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
                     let result = await response.json();
 
                     if(Object.keys(result).includes('result')) {
-                        question.textContent = result.result;
+                        question.textContent = result.result.name;
+                        
                         if(!isFirst) submitBtn.disabled = false;
 
                         setTimeout(() => {
