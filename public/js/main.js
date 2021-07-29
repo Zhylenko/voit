@@ -227,11 +227,12 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
         const form = document.getElementById(formID),
               inputs = document.querySelectorAll(reqsInputs),
               label = document.querySelectorAll(errorLabelsClass);
+        
+        let submitBtn = document.querySelector('#contact-submit')
 
-        if(form !== null) {
+        if(form !== null && submitBtn !== null) {
                 
-                if(form.children[3] !== null) let submitBtn = form.children[3];
-                else let submitBtn = null;
+                // if(form.children[3] !== null) submitBtn = form.children[3];
 
                 form.addEventListener('submit', formSend);
         } 

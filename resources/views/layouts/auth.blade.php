@@ -56,7 +56,7 @@
                 <button class="timer" type="submit" id="timer" style="display: none;">Отправить код повторно</button>
 
                 <button class="popup__reg-btn but-init reg-btn register" type="submit" value="Reset" style="display: block;">Отправить код</button>
-                <button class="popup__reg-btn but-init reg-btn register" type="button" value="Reset" style="display: none;">Зарегистрироваться</button>
+                <button class="popup__reg-btn but-init reg-btn register" id="contact-submit" type="button" value="Reset" style="display: none;">Зарегистрироваться</button>
             </form>
 
         </div>
