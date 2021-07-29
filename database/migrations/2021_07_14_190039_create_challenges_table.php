@@ -16,7 +16,7 @@ class CreateChallengesTable extends Migration
         Schema::create('challenges', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->boolean('active');
+            $table->boolean('active')->nullable();
             $table->timestamps();
         });
     }

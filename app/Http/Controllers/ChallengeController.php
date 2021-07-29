@@ -38,8 +38,8 @@ class ChallengeController extends Controller
 
             $scoreCookie     = $this->createScoreCookie();
         } else {
-            $questionId      = Question::where('question', $request->question)->first('id');
-            $answer          = Answer::where([['answer', $request->answer], ['question_id', $questionId]])->first();
+            $question      = Question::where('question', $request->question)->first();
+            $answer          = Answer::where([['answer', $request->answer], ['question_id', $question->id]])->first();
 
             if ($answer === null) {
                 $json = [
