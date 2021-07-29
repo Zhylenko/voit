@@ -32,14 +32,14 @@ class ChallengeController extends Controller
             //First question
             $challenge       = Challenge::where('active', 1)->first();
             $nextQuestion    = Question::where('challenge_id', $challenge->id)
-                                        ->with('answers')
-                                        ->where('first', 1)
-                                        ->first();
+                ->with('answers')
+                ->where('first', 1)
+                ->first();
 
             $scoreCookie     = $this->createScoreCookie();
         } else {
             $question      = Question::where('question', $request->question)->first();
-            $answer          = Answer::where([['answer', $request->answer], ['question_id', $question->id]])->first();
+            $answer        = Answer::where([['answer', $request->answer], ['question_id', $question->id]])->first();
 
             if ($answer === null) {
                 $json = [
@@ -94,7 +94,6 @@ class ChallengeController extends Controller
         $user           = User::where('id', $authCookie['id'])->first();
         $challenge      = Challenge::where('active', 1)->first();
         $score          = $this->getScore();
-        return response()->json($score, 200);
         $result         = $this->calculateResult($score);
 
         $usersChallenge = new UsersChallenge;
@@ -127,13 +126,16 @@ class ChallengeController extends Controller
         $resultsCount   = count($results);
 
         for ($i = 0; $i < $resultsCount; $i++) {
-            if (($i + 1) != $resultsCount) {
-                if ($score >= $results[$i]->score && $score < $results[$i + 1]->score) {
+            if (($i - 1) >= 0) {
+                if ($score > $results[$i - 1]->score && $score <= $results[$i]->score) {
                     $result = $results[$i];
                     break;
                 }
-            } else {
-                $result = $results[$i];
+            }else{
+                if ($score > 0 && $score <= $results[$i]->score) {
+                    $result = $results[$i];
+                    break;
+                }
             }
         }
 
