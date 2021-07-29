@@ -20,7 +20,6 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
             event.preventDefault();
             
             question = document.getElementById('test-question');
-            group.innerHTML = '';
 
             let input = '';
 
@@ -62,6 +61,8 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
 
                     let result = await response.json();
                     question.textContent = result.question;
+
+                    group.innerHTML = '';
 
                     for(let index = 0; index < result.answers.length; index++) {
                         group.insertAdjacentHTML('beforeend', generateAnswers(index+1, index+1, result.answers[index].answer));
