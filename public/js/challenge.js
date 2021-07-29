@@ -1,18 +1,17 @@
 postTestFormRequests('.overlay__test', '.form__radio-btn', '.answer', 'next', 'popup-Btn', '.popup__group', config.endPoints['challenge-get']);
 removeTest('.overlay__test', '.test-close', '.test-error');
+openTest('.overlay__test', 'popup-Btn');
 
 function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupClass, submitBtnID, modalBtnID, modalGroupClass ,url) {
         
     const   submitBtn = document.getElementById(submitBtnID),
-            modalBtn = document.getElementById(modalBtnID),
-            modal = document.querySelector(modalOverlayClass),
             group = document.querySelector(modalGroupClass);
     
     let errorLabel = document.querySelector('.test-error');
     let question = null;
 
-    if(modalBtn !== null && submitBtn !== null) {
-        modalBtn.addEventListener('click', formSend.bind(null, true));
+    if(submitBtn !== null) {
+        window.addEventListener('DOMContentLoaded', formSend.bind(null, true));
         submitBtn.addEventListener('click', formSend.bind(null, false));
     }
 
@@ -60,19 +59,29 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
             if(response.ok) {
 
                     let result = await response.json();
-                    question.textContent = result.question;
 
-                    group.innerHTML = '';
+                    if(Object.keys(result).includes('result')) {
+                        question.textContent = result.result.name;
+                        
+                        if(!isFirst) submitBtn.disabled = false;
 
-                    for(let index = 0; index < result.answers.length; index++) {
-                        group.insertAdjacentHTML('beforeend', generateAnswers(index+1, index+1, result.answers[index].answer));
+                        setTimeout(() => {
+                            location.reload();
+                        }, 3000);
+
+                    } else {
+                        question.textContent = result.question;
+                        group.innerHTML = '';
+
+                        for(let index = 0; index < result.answers.length; index++) {
+                            group.insertAdjacentHTML('beforeend', generateAnswers(index+1, index+1, result.answers[index].answer));
+                        }
+
+                        if(!isFirst) submitBtn.disabled = false;
                     }
-                    
-                    console.log(result);
 
-                    if(isFirst) modal.style.display = 'block';
-                    
-                    if(!isFirst) submitBtn.disabled = false;
+                    console.log(result);
+            
                     
             } else {
 
@@ -83,6 +92,21 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
                 if(!isFirst) submitBtn.disabled = false;
             }
     }
+}
+
+function openTest(modalOverlayClass, modalBtnID) {
+
+    const modal = document.querySelector(modalOverlayClass),
+          modalBtn = document.getElementById(modalBtnID);
+
+    const scroll = calcScroll();
+
+    modalBtn.addEventListener('click', ()=> {
+        modal.style.display = 'block';
+
+        document.body.style.overflowY = 'hidden';
+        document.body.style.marginRight = `${scroll}px`; 
+    })
 }
 
 function removeTest(modalOverlayClass, closeBtnClass, errorLabelClass) {
@@ -96,6 +120,8 @@ function removeTest(modalOverlayClass, closeBtnClass, errorLabelClass) {
 
             errorLabel.style.display = 'none';
             modal.style.display = 'none';
+            document.body.style.overflowY = 'scroll';
+            document.body.style.marginRight = `0px`; 
         });
     }
 }
@@ -107,4 +133,21 @@ function generateAnswers(index, value, text) {
         <label for="radio-${index}" style="background-image: url(./img/lines.svg);">${text}</label>
     </div>
     `;
+}
+
+function calcScroll() {
+        
+    let div = document.createElement('div');
+
+    div.style.width = '50px';
+    div.style.height = '50px';
+    div.style.overflowY = 'scroll';
+    div.style.visibility = 'hidden';
+
+    document.body.appendChild(div);
+
+    let scrollWidth = div.offsetWidth - div.clientWidth;
+    div.remove();
+
+    return scrollWidth;
 }
