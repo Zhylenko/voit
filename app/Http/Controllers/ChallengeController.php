@@ -74,7 +74,7 @@ class ChallengeController extends Controller
 
                 $json = [
                     'message' => '',
-                    'result' => $result,
+                    'result' => $result->name,
                 ];
                 return response()
                     ->json($json, 200)
