@@ -29,7 +29,7 @@ class Auth
             $id      = $cookieAuth['id'];
             $hash    = $cookieAuth['hash'];
 
-            $user       = User::where('id', '=', $id)->first();
+            $user       = User::where('id', $id)->first();
             $cookieHash = $user->cookie_hash;
 
             if($cookieHash[$cookieDevice] == $hash){

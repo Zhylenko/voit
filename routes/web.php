@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 //Home page
 Route::get('/', 'HomeController@index')
     ->middleware('auth')
+    ->middleware('challenge.exists')
     ->middleware('challenge.passed')
     ->name('index');
 
@@ -27,6 +28,7 @@ Route::get('/offer', 'OfferController@index')
 //Account page
 Route::get('/account', 'AccountController@index')
     ->middleware('auth')
+    ->middleware('challenge.passed')
     ->name('account');
 
 //Send contact data

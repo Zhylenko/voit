@@ -94,6 +94,7 @@ class ChallengeController extends Controller
         $user           = User::where('id', $authCookie['id'])->first();
         $challenge      = Challenge::where('active', 1)->first();
         $score          = $this->getScore();
+        return response()->json($score, 200);
         $result         = $this->calculateResult($score);
 
         $usersChallenge = new UsersChallenge;

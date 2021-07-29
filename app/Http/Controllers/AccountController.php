@@ -27,6 +27,7 @@ class AccountController extends Controller
 
         return view('account.index', [
             'auth'      => $request->auth,
+            'passed'    => $request->passed,
             'courses'   => $usersCourses,
         ]);
     }
