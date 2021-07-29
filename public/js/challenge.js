@@ -60,7 +60,7 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
                     question.textContent = result.question;
 
                     for(let index = 0; index < result.answers.length; index++) {
-                        group.insertAdjacentHTML('beforeend', generateAnswers(index+1, index+1, result.answers[i].answer));
+                        group.insertAdjacentHTML('beforeend', generateAnswers(index+1, index+1, result.answers[index].answer));
                     }
                     
                     console.log(result);
