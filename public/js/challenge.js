@@ -1,6 +1,9 @@
 postTestFormRequests('.overlay__test', '.form__radio-btn', '.answer', 'next', 'popup-Btn', '.popup__group', config.endPoints['challenge-get']);
-removeTest('.overlay__test', '.test-close', '.test-error');
-openTest('.overlay__test', 'popup-Btn');
+
+window.addEventListener('DOMContentLoaded', () => {
+    removeTest('.overlay__test', '.test-close', '.test-error');
+    openTest('.overlay__test', 'popup-Btn');
+});
 
 function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupClass, submitBtnID, modalBtnID, modalGroupClass ,url) {
         
@@ -60,7 +63,8 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
                     submitBtn.disabled = false;
 
                     if(Object.keys(result).includes('result')) {
-                        question.textContent = result.result.name;
+                        group.innerHTML = '';
+                        question.textContent = result.result;
 
                         setTimeout(() => {
                             location.reload();
@@ -109,6 +113,12 @@ function removeTest(modalOverlayClass, closeBtnClass, errorLabelClass) {
 
     if(closeBtn !== null) {
         closeBtn.addEventListener('click', () => {
+            const answers = document.querySelectorAll('.answer');
+            if(answers !== null) {
+                answers.forEach((item) => {
+                    item.checked = false;
+                })
+            }
 
             errorLabel.style.display = 'none';
             modal.style.display = 'none';
