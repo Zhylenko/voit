@@ -65,6 +65,7 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
                     if(Object.keys(result).includes('result')) {
                         group.innerHTML = '';
                         question.textContent = result.result;
+                        submitBtn.disabled = true;
 
                         setTimeout(() => {
                             location.reload();
