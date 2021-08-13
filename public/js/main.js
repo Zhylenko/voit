@@ -1,8 +1,12 @@
 window.onload = function() {
         const scroll = calcScroll();
-        document.body.style.marginRight = `${scroll}px`;
+        if(document.body.clientHeight > 1000) {
+                document.body.style.marginRight = `${scroll}px`;
+        } else {
+                document.body.style.marginRight = `0px`;
+        }
         const preloader = document.querySelector('.loader');
-        preloader.style.top = '-100%';
+        preloader.style.top = '-130%';
         setTimeout(() => {
                 document.body.style.overflow = 'auto';
                 document.body.style.marginRight = `0px`;
