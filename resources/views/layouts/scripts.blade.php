@@ -8,6 +8,7 @@
                 'challenge-get':    `{{ Route('challenge-get') }}`,
             },
             'password_timeout': `{{ config('auth.password_timeout') }}`,
+            'course-purchase':  `{{  }}`,
         }
     </script>
     <!-- JQuery -->

@@ -16,6 +16,12 @@
                 <div class="price__cards">
                     @foreach($courses as $course)
                     <div class="price__item {{ ($course->big) ? 'price__item-big' : '' }}">
+                        @if($course->big)
+                        <div class="price__bookmark">
+                          <img src="{{ asset('img/bookmark.svg') }}" alt="">
+                          <span>Рекомендуем</span>
+                        </div>
+                        @endif
                         <div class="price__block">
                             <div class="price__logo">
                                 <img src="{{ asset('img/pr-logo-' . ($loop->index + 1) . '.svg') }}" alt="">
