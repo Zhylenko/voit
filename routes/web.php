@@ -91,5 +91,5 @@ Route::get('/course/payment', 'CourseController@payment')
     ->name('course-payment');
 
 //Course send
-Route::post('/course/handle', 'CourseController@handle')
-    ->name('course-handle');
+Route::post('/course/handler', 'CourseController@handler')
+    ->name('course-handler');

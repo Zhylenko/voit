@@ -67,7 +67,9 @@ class CourseController extends Controller
 
     public function handle(Request $request)
     {
-        return WayForPay::handleServiceUrl($request->all(), function (\WayForPay\SDK\Domain\Transaction $transaction, $success) {
+        $request = json_decode($request->getContent(), true);
+
+        return WayForPay::handleServiceUrl($request, function (\WayForPay\SDK\Domain\TransactionService $transaction, $success) {
             $purchase           = Purchase::where('order_id', $transaction->getOrderReference())->first();
             $transactionStatus  = $transaction->getStatus();
 
