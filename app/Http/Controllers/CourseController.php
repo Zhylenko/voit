@@ -86,7 +86,7 @@ class CourseController extends Controller
                 $usersCourse = new UsersCourse();
                 $usersCourse->addUser($user, $course);
 
-                Mail::to(config('personal.mail.to'))
+                Mail::to($user->email)
                     ->send(new CourseMail($course, $user));
 
                 return $success();
