@@ -65,7 +65,7 @@ class CourseController extends Controller
         ]);
     }
 
-    public function handle(Request $request)
+    public function handler(Request $request)
     {
         $request = json_decode($request->getContent(), true);
 
@@ -98,7 +98,7 @@ class CourseController extends Controller
 
     protected function generatePurchaseForm($orderId, WayForPayClient $client, ProductCollection $products, $amount = 1)
     {
-        $data   = WayForPay::purchase($orderId, $amount, $client, $products, 'UAH', null, 'RU', null, null, Route('course-handle'))->getAsString('', '');
+        $data   = WayForPay::purchase($orderId, $amount, $client, $products, 'UAH', null, 'RU', null, null, Route('course-handler'))->getAsString('', '');
 
         return $data;
     }
