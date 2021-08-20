@@ -87,4 +87,9 @@ Route::get('/auth/logout', 'AuthController@logout')
 
 //Course payment
 Route::get('/course/payment', 'CourseController@payment')
+    ->middleware('auth')
     ->name('course-payment');
+
+//Course send
+Route::post('/course/handle', 'CourseController@handle')
+    ->name('course-handle');
