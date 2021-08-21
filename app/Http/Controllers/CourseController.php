@@ -83,11 +83,16 @@ class CourseController extends Controller
                 $userId      = $purchase->user_id;
                 $user        = User::where('id', $userId)->first();
 
-                $usersCourse = new UsersCourse();
-                $usersCourse->addUser($user, $course);
+                $usersCourse = UsersCourse::where([['user_id', $userId], ['course_id', $courseId]])->first();
 
-                Mail::to($user->email)
-                    ->send(new CourseMail($course, $user));
+                if (empty($usersCourse)) {
+                    $usersCourse = new UsersCourse();
+                    $usersCourse->addUser($user, $course);
+
+                    Mail::to($user->email)
+                        ->send(new CourseMail($course, $user));
+                }
+
 
                 return $success();
             }
