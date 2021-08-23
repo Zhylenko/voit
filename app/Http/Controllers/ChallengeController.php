@@ -94,7 +94,7 @@ class ChallengeController extends Controller
         $user           = User::where('id', $authCookie['id'])->first();
         $challenge      = Challenge::where('active', 1)->first();
         $score          = $this->getScore();
-        $result         = $this->calculateResult($score);
+        $result         = $this->calculateResult($challenge, $score);
 
         $usersChallenge = new UsersChallenge;
 
@@ -120,9 +120,9 @@ class ChallengeController extends Controller
         return $result;
     }
 
-    protected function calculateResult($score = 0)
+    protected function calculateResult(Challenge $challenge, $score = 0)
     {
-        $results        = Result::all();
+        $results        = Result::where('challenge_id', $challenge->id)->get();
         $resultsCount   = count($results);
 
         for ($i = 0; $i < $resultsCount; $i++) {
