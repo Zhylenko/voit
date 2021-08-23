@@ -60,7 +60,7 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
             if(response.ok) {
 
                     let result = await response.json();
-                    submitBtn.disabled = false;
+                    submitBtn.disabled = true;
 
                     if(Object.keys(result).includes('result')) {
                         group.innerHTML = '';
@@ -68,6 +68,7 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
 
                         setTimeout(() => {
                             location.reload();
+                            submitBtn.disabled = false;
                         }, 3000);
 
                     } else {
