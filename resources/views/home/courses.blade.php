@@ -18,8 +18,8 @@
                     <div class="price__item {{ ($course->big) ? 'price__item-big' : '' }}">
                         @if($course->big)
                         <div class="price__bookmark">
-                          <img src="{{ asset('img/bookmark.svg') }}" alt="">
-                          <span>Рекомендуем</span>
+                            <img src="{{ asset('img/bookmark.svg') }}" alt="">
+                            <span>Рекомендуем</span>
                         </div>
                         @endif
                         <div class="price__block">
@@ -49,7 +49,13 @@
                             </ul>
 
                             <div class="price__block-btn">
+                                @if(isset($auth) && $auth === true)
+                                <a href="{{ Route('course-payment', ['name' => $course->name]) }}">
+                                    <button class="price__block-btn_book but-init popup-btn" type="submit">Купить</button>
+                                </a>
+                                @else
                                 <button class="price__block-btn_book but-init popup-btn" type="submit">Купить</button>
+                                @endif
                             </div>
                         </div>
                     </div>
