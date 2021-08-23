@@ -16,6 +16,7 @@ class CreateResultsTable extends Migration
         Schema::create('results', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('challenge_id');
             $table->string('score');
             $table->timestamps();
         });
