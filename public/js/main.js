@@ -1,8 +1,15 @@
 window.onload = function() {
+        const scroll = calcScroll();
+        if(document.body.clientHeight > 1000) {
+                document.body.style.marginRight = `${scroll}px`;
+        } else {
+                document.body.style.marginRight = `0px`;
+        }
         const preloader = document.querySelector('.loader');
-        preloader.style.top = '-100%';
+        preloader.style.top = '-130%';
         setTimeout(() => {
                 document.body.style.overflow = 'auto';
+                document.body.style.marginRight = `0px`;
         }, 1200);
 }
 
@@ -14,7 +21,6 @@ window.addEventListener('DOMContentLoaded', ()=>{
         postLoginFormRequests('login-form', '.form-control', '.form-error' , config.endPoints['auth-login']);
         postRegisterEmailRequests('register-form', '.form-control', '.form-error', config.endPoints['auth-register']);
         postRegisterFormRequests('register-form', '.form-control', '.form-error', config.endPoints['auth-login']);
-        postBuySend('.price__block-title', '.price__block-btn_book', '');
 
         accordionAboutMenu('.accordion__item');
         accordionProgrammMenu('.programm__menu-item','.programm__menu-btn', 913);
@@ -224,10 +230,14 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
 
         const form = document.getElementById(formID),
               inputs = document.querySelectorAll(reqsInputs),
-              label = document.querySelectorAll(errorLabelsClass),
-              submitBtn = form.children[3];
+              label = document.querySelectorAll(errorLabelsClass);
 
-        if(form !== null) form.addEventListener('submit', formSend);
+        let submitBtn = document.querySelector('#contact-submit');
+
+        if(form !== null && submitBtn !== null) {
+
+                form.addEventListener('submit', formSend);
+        } 
 
         async function formSend(e) {
                 e.preventDefault();
@@ -253,7 +263,7 @@ function postLoginFormRequests(formID, reqsInputs, errorLabelsClass, url) {
                         if(response.ok) {
 
                                 form.classList.remove("_sending");
-                                Reset(dataForm);
+                                Reset(form);
                                 submitBtn.disabled = false;
                                 location.reload();
 
@@ -413,43 +423,6 @@ function postRegisterFormRequests(formID, inputsReqClass, errorLabelsClass, url)
         }
 }
 
-function postBuySend(courseNameSelector, btnSubmitSelector, url) {
-
-        const course = document.querySelectorAll(courseNameSelector),
-                btn = document.querySelectorAll(btnSubmitSelector);
-
-        
-        for(let index = 0; index < btn.length; index++) {
-                btn[index].addEventListener('click', send);
-
-                async function send(e) {
-                        e.preventDefault();
-                        let courseName = course[index].textContent.replace(/[\n\r]+|[\s]{2,}/g, ' ').trim();
-                        let button = btn[index];
-                        button.disabled = true;
-
-                        let dataForm = new FormData();
-                        dataForm.set('course', courseName);
-
-                        let response = await fetch(url, {
-                                credentials: 'same-origin',
-                                method: 'POST',
-                                body: dataForm,
-                                headers: new Headers({
-                                        'Accept': 'application/json',
-                                        'X-CSRF-TOKEN': token
-                                })
-                        });
-
-                        if(response.ok) {
-                                button.disabled = true;
-                        } else {
-                                let result = await response.json();
-                                alert(result);
-                        }
-                }
-        }
-}
 /* ------------------------------------------------------------------------------------------------------------------ */
 
 
@@ -578,10 +551,12 @@ function modalStartedOpener(overlayModalClass, modalBtnClass, modalClsBtnClass, 
 
                 modalCloseBtn.forEach((btnItem) => {
 
-                        btnItem.addEventListener('click', ()=>{
+                        if(!btnItem.classList.contains('test-close')) {
+                                btnItem.addEventListener('click', ()=>{
 
-                                modalRemover(modalWindow, styleHeader, media);    
-                        })
+                                        modalRemover(modalWindow, styleHeader, media);    
+                                })
+                        }
                 })
         }
 }
