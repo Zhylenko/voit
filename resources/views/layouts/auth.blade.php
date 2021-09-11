@@ -25,6 +25,10 @@
                     нет учетной записи.
                 </div>
 
+                <div class="popup__login-btn">
+                    <a class="login-btn reset-btn" href="/" id="reset-btn" type="button">Забыли пароль?</a>
+                </div>
+
                 <button class="popup__reg-btn but-init log-btn" type="submit" value="Reset">Авторизоваться</button>
 
             </form>
@@ -52,6 +56,7 @@
                     <div class="form-error"></div>
                 </div>
 
+                <span class="time" style="display: none;">Поторная отправка: </span>
                 <span class="js-timeout" style="display: none;">1:00</span>
                 <button class="timer" type="submit" id="timer" style="display: none;">Отправить код повторно</button>
 

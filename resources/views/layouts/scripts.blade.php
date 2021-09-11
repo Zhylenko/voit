@@ -6,6 +6,7 @@
                 'auth-register':    `{{ Route('auth-register') }}`,
                 'auth-login':       `{{ Route('auth-login') }}`,
                 'challenge-get':    `{{ Route('challenge-get') }}`,
+                'auth-recover':     `{{   }}`,
             },
             'password_timeout': `{{ config('auth.password_timeout') }}`,
         }
