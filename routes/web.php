@@ -75,6 +75,10 @@ Route::post('/auth/register', 'AuthController@register')
 Route::get('/auth/logout', 'AuthController@logout')
     ->name('auth-logout');
 
+//Password reset
+Route::get('/auth/reset', 'AuthController@reset')
+    ->name('auth-reset');
+
 
 /*
 |--------------------------------------------------------------------------

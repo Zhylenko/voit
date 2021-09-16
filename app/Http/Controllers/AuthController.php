@@ -122,6 +122,12 @@ class AuthController extends Controller
                     ->withCookie(Cookie::forget('auth'));
     }
 
+    public function reset(RegisterRequest $request)
+    {
+        $email = $request->email;
+        
+    }
+
     protected function passwordGenerator()
     {
         $alphabet   = "abcdefghijklmnopqrstuvwxyz";
