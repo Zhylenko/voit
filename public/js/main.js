@@ -23,7 +23,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
         postRegisterFormRequests('register-form', '.form-control', '.form-error', config.endPoints['auth-login']);
 
         postRecoverEmailRequests('recover-form', '.form-control', '.form-error', config.endPoints['auth-register']);
-        postRecoverFormRequests('recover-form', '.form-control', '.form-error', config.endPoints['auth-recover']);
+        postRecoverFormRequests('recover-form', '.form-control', '.form-error', config.endPoints['auth-reset']);
 
         accordionAboutMenu('.accordion__item');
         accordionProgrammMenu('.programm__menu-item','.programm__menu-btn', 913);
@@ -666,11 +666,14 @@ function modalStartedOpener(overlayModalClass, modalBtnClass, modalClsBtnClass, 
               modalStarted = document.querySelector(startedModalWindowClass),
               media = window.matchMedia(`(max-width: ${mediaWidth}px)`);
 
-        const header = document.querySelector('article'),
+        const header = null,
               scroll = calcScroll(),
               styleHeader = null;
 
-        if(header !== null) styleHeader = getComputedStyle(header);
+        if(header !== null) {
+                styleHeader = getComputedStyle(header);
+                header = document.querySelector('article');
+        };
 
         if(modalWindow !== null && modalOpenBtn != null) {
 
