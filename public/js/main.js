@@ -29,6 +29,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
 
         modalStartedOpener('.overlay__popup','popup-btn', '.popup__close','.popup__login', 769);
         modalRegisterOpener('register-btn','.popup__reg', '.popup__login');
+        modalRegisterOpener('reset-btn','.popup__reset', '.popup__login');
 
         addTimer('timer');
 
@@ -658,6 +659,8 @@ function modalRemover(overlayModal, styleCalc, mediaWidth) {
               modalLogin = modalWindow.children[0].children[1],
               modalRegister = modalWindow.children[1].children[1],
               modalRegisterGroup = document.querySelector('.popup__reg'),
+              modalReset = modalWindow.children[2].children[1],
+              modalRegisterGroup = document.querySelector('.popup__reg'),
               codeInput = document.querySelector('._code'),
               registerSendButtons = document.querySelectorAll('.register'),
               timer = document.getElementById('timer');
@@ -665,9 +668,11 @@ function modalRemover(overlayModal, styleCalc, mediaWidth) {
               clearErrors(inputs, labels);
               Reset(modalLogin);
               Reset(modalRegister);
+              Reset(modalReset);
 
               modalWindow.classList.remove('active');
               modalRegisterGroup.style.display = 'none';
+              modalResetGroup.style.display = 'none';
               codeInput.style.display = 'none';
               registerSendButtons[0].style.display = 'block';
               registerSendButtons[1].style.display = 'none';
