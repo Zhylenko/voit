@@ -660,7 +660,7 @@ function modalRemover(overlayModal, styleCalc, mediaWidth) {
               modalRegister = modalWindow.children[1].children[1],
               modalRegisterGroup = document.querySelector('.popup__reg'),
               modalReset = modalWindow.children[2].children[1],
-              modalRegisterGroup = document.querySelector('.popup__reg'),
+              modalResetGroup = document.querySelector('.popup__reset'),
               codeInput = document.querySelector('._code'),
               registerSendButtons = document.querySelectorAll('.register'),
               timer = document.getElementById('timer');
