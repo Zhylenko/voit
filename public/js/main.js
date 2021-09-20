@@ -22,8 +22,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
         postRegisterEmailRequests('register-form', '.form-control', '.form-error', config.endPoints['auth-register']);
         postRegisterFormRequests('register-form', '.form-control', '.form-error', config.endPoints['auth-login']);
 
-        postRecoverEmailRequests('recover-form', '.form-control', '.form-error', config.endPoints['auth-register']);
-        postRecoverFormRequests('recover-form', '.form-control', '.form-error', config.endPoints['auth-reset']);
+        postResetEmailRequests('reset-form', '.form-control', '.form-error', config.endPoints['auth-reset']);
 
         accordionAboutMenu('.accordion__item');
         accordionProgrammMenu('.programm__menu-item','.programm__menu-btn', 913);
@@ -428,132 +427,62 @@ function postRegisterFormRequests(formID, inputsReqClass, errorLabelsClass, url)
         }
 }
 
-function postRecoverEmailRequests(formID, inputsReqClass, errorLabelsClass ,url) {
-
-    const form = document.getElementById(formID),
-          inputs = document.querySelectorAll(inputsReqClass),
-          btns = document.querySelectorAll('.register'),
-          sendCodeButton = btns[0],
-          registerButton = btns[1],
-          label = document.querySelectorAll(errorLabelsClass);
-
-    if(form !== null) form.addEventListener('submit', formSend);
-
-    async function formSend(e) {
-        e.preventDefault();
-        sendCodeButton.disabled = true;
-
-        clearErrors(inputs, label);
-        
-                let dataForm = new FormData();
-                dataForm.set('email', inputs[0].value);
-                form.classList.add('_sending');
-
-                let response = await fetch(url, {
-                        credentials: 'same-origin',
-                        method: 'POST',
-                        body: dataForm,
-                        headers: new Headers({
-                                'Accept': 'application/json',
-                                'X-CSRF-TOKEN': token
-                        })
-                });
-
-                if(response.ok) {
-
-                        form.classList.remove('_sending');
-
-                        inputs[1].style.display = 'block';
-                        sendCodeButton.disabled = false;
-                        sendCodeButton.style.display = 'none';
-                        registerButton.style.display = 'block'; 
-
-                        $('.js-timeout').show();
-                        $('.js-timeout').text(config.password_timeout);
-                        countdown();
-
-                } else {                       
-                        let result = await response.json();
-
-                        for(let error in result.errors) {
-                                
-                                if(error === 'email') {
-                                        inputs[0].classList.add('_error');
-                                        label[0].textContent = result.errors[error];
-                                        label[0].style.display = 'block';
-                                } 
-                        }
-                        sendCodeButton.disabled = false;
-                        form.classList.remove('_sending');      
-                }
-        }
-}
-
-function postRecoverFormRequests(formID, inputsReqClass, errorLabelsClass, url) {
+function postResetEmailRequests(formID, inputsReqClass, errorLabelsClass ,url) {
 
         const form = document.getElementById(formID),
               inputs = document.querySelectorAll(inputsReqClass),
-              btns = document.querySelectorAll('.register'),
+              btns = document.querySelectorAll('.reset'),
               sendCodeButton = btns[0],
-              registerButton = btns[1],
               label = document.querySelectorAll(errorLabelsClass);
-
-        if(form !== null) {
-                registerButton.addEventListener('click', formSend);
-        }
-
+    
+        if(form !== null) form.addEventListener('submit', formSend);
+    
         async function formSend(e) {
-                e.preventDefault();
-                registerButton.disabled = true;
-
-                clearErrors(inputs, label);
-
-                let dataForm = new FormData();
-                dataForm.set('email', inputs[0].value);
-                dataForm.set('password', inputs[1].value);
-                form.classList.add('_sending');
-
+            e.preventDefault();
+            sendCodeButton.disabled = true;
+    
+            clearErrors(inputs, label);
+            
+                    let dataForm = new FormData();
+                    dataForm.set('email', inputs[4].value);
+                    form.classList.add('_sending');
+    
                     let response = await fetch(url, {
-                        credentials: 'same-origin',
-                        method: 'POST',
-                        body: dataForm,
-                        headers: new Headers({
-                                'Accept': 'application/json',
-                                'X-CSRF-TOKEN': token
-                        })
+                            credentials: 'same-origin',
+                            method: 'POST',
+                            body: dataForm,
+                            headers: new Headers({
+                                    'Accept': 'application/json',
+                                    'X-CSRF-TOKEN': token
+                            })
                     });
     
                     if(response.ok) {
-
-                        form.classList.remove('_sending');
-
-                        inputs[1].style.display = 'none';
-                        registerButton.disabled = false;
-                        sendCodeButton.style.display = 'block';
-                        registerButton.style.display = 'none'; 
-
-                        Reset(form);
-                        location.reload();
-
+    
+                            form.classList.remove('_sending');
+    
+                            sendCodeButton.disabled = false;
+    
+                            $('.js-timeout').show();
+                            $('.js-timeout').text(config.password_timeout);
+                            countdown();
+                            location.reload();
+    
                     } else {                       
-                        let result = await response.json();
-                        for(let error in result.errors) {
-                                        
-                                if(error === 'email') {
-                                        inputs[0].classList.add('_error');
-                                        label[0].textContent = result.errors[error];
-                                        label[0].style.display = 'block';
-                                } 
-                                if(error === 'password') {
-                                        inputs[1].classList.add('_error');
-                                        label[1].textContent = result.errors[error];
-                                        label[1].style.display = 'block';
-                                }
-                        }  
-                        registerButton.disabled = false;
-                        form.classList.remove('_sending');     
-                }
-        }
+                            let result = await response.json();
+    
+                            for(let error in result.errors) {
+                                    
+                                    if(error === 'email') {
+                                            inputs[4].classList.add('_error');
+                                            label[4].textContent = result.errors[error];
+                                            label[4].style.display = 'block';
+                                    } 
+                            }
+                            sendCodeButton.disabled = false;
+                            form.classList.remove('_sending');      
+                    }
+            }
 }
 
 /* ------------------------------------------------------------------------------------------------------------------ */
@@ -666,7 +595,7 @@ function modalStartedOpener(overlayModalClass, modalBtnClass, modalClsBtnClass, 
               modalStarted = document.querySelector(startedModalWindowClass),
               media = window.matchMedia(`(max-width: ${mediaWidth}px)`);
 
-        const header = null,
+        let header = null,
               scroll = calcScroll(),
               styleHeader = null;
 
