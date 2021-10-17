@@ -13,6 +13,9 @@ use App\Http\Requests\LoginRequest;
 use App\Models\User;
 
 use App\Mail\RegisterMail;
+use App\Mail\ResetPasswordMail;
+use App\Models\PasswordReset;
+use Illuminate\Routing\Route;
 
 class AuthController extends Controller
 {
@@ -22,21 +25,19 @@ class AuthController extends Controller
 
         $request->password = $this->passwordGenerator();
 
-        if($user == null) {
+        if ($user == null) {
 
             $user = new User;
             $user->createNewUser($request);
-
-        }else if($user !== null && $user->verified_at === null) {
+        } else if ($user !== null && $user->verified_at === null) {
 
             //Check last generating password
             $diff = time() - $user->updated_at->getTimestamp();
 
-            if($diff >= config('auth.password_timeout')) {
+            if ($diff >= config('auth.password_timeout')) {
 
-                $user->updatePassword($request);
-
-            }else {
+                $user->updatePassword($request->password);
+            } else {
                 $json = [
                     'message' => '',
                     'errors' => [
@@ -45,8 +46,7 @@ class AuthController extends Controller
                 ];
                 return response()->json($json, 403);
             }
-
-        }else {
+        } else {
             $json = [
                 'message' => '',
                 'errors' => [
@@ -64,7 +64,7 @@ class AuthController extends Controller
     {
         $user = User::where('email', '=', $request->email)->first();
 
-        if(!password_verify($request->password, $user->password)) {
+        if (!password_verify($request->password, $user->password)) {
             $json = [
                 'message' => '',
                 'errors' => [
@@ -95,13 +95,13 @@ class AuthController extends Controller
         $cookieDevice   = Cookie::make('device', $device, config('auth.cookie_life'));
 
         return response('')
-                    ->withCookie($cookieAuth)
-                    ->withCookie($cookieDevice);
+            ->withCookie($cookieAuth)
+            ->withCookie($cookieDevice);
     }
 
     public function logout(Request $request)
     {
-        if(Cookie::get('auth') !== null && Cookie::get('device') !== null) {
+        if (Cookie::get('auth') !== null && Cookie::get('device') !== null) {
             $auth    = json_decode(Cookie::get('auth'), 1);
             $device  = Cookie::get('device');
 
@@ -115,17 +115,55 @@ class AuthController extends Controller
 
             $user->updateCookieHash($cookieHash);
         }
-        
+
         return redirect()
-                    ->back()
-                    ->withCookie(Cookie::forget('device'))
-                    ->withCookie(Cookie::forget('auth'));
+            ->back()
+            ->withCookie(Cookie::forget('device'))
+            ->withCookie(Cookie::forget('auth'));
     }
 
-    public function reset(RegisterRequest $request)
+    public function passwordReset(RegisterRequest $request)
     {
-        $email = $request->email;
+        $email  = $request->email;
+        $user   = User::where('email', $email)->first();
+
+        if ($user == null) {
+            $json = [
+                'message' => '',
+                'errors' => [
+                    'email' => trans('auth.failed'),
+                ]
+            ];
+            return response()->json($json, 403);
+        }
+
+        $hash   = password_hash($email, PASSWORD_BCRYPT);
+
+        $passwordReset = new PasswordReset;
+        $passwordReset->add($user, $hash);
+
+        $link   = Route('auth-reset-password-check', ['hash' => $hash]);
+
+        Mail::to($email)
+            ->send(new ResetPasswordMail($link));
+    }
+
+    public function passwordResetCheck(Request $request, $hash)
+    {
+        $passwordReset  = PasswordReset::where('hash', $hash)->first();
+
+        if ($passwordReset == null || $passwordReset->new_password != null) {
+            return redirect(Route('index'));
+        }
+
+        $user        = $passwordReset->user;
         
+        $newPassword = $this->passwordGenerator();
+
+        $user->updatePassword($newPassword);
+        $passwordReset->updateNewPassword($newPassword);
+
+        return view('auth.reset.password', ['password' => $newPassword]);
     }
 
     protected function passwordGenerator()
@@ -136,11 +174,11 @@ class AuthController extends Controller
         $numbersLength = strlen($numbers);
         $password   = "";
 
-        for ($i = 0; $i < 4; $i++) { 
+        for ($i = 0; $i < 4; $i++) {
             $password .= $numbers[mt_rand(0, $numbersLength - 1)];
         }
 
-        for ($i = 0; $i < 2; $i++) { 
+        for ($i = 0; $i < 2; $i++) {
             $password .= $alphabet[mt_rand(0, $alphabetLength - 1)];
         }
 

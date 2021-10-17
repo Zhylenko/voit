@@ -76,8 +76,13 @@ Route::get('/auth/logout', 'AuthController@logout')
     ->name('auth-logout');
 
 //Password reset
-Route::get('/auth/reset', 'AuthController@reset')
-    ->name('auth-reset');
+Route::post('/auth/reset/password', 'AuthController@passwordReset')
+    ->name('auth-reset-password');
+
+//Password reset from email
+Route::get('/auth/reset/password/check/{hash}', 'AuthController@passwordResetCheck')
+    ->where('hash', '.+')
+    ->name('auth-reset-password-check');
 
 
 /*
@@ -97,3 +102,8 @@ Route::get('/course/payment', 'CourseController@payment')
 //Course send
 Route::post('/course/handler', 'CourseController@handler')
     ->name('course-handler');
+
+//Course send
+Route::match(['post', 'get'], '/course/{path}', 'CourseController@resources')
+    ->where('path', '.+')
+    ->name('course-resources');

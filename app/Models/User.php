@@ -29,9 +29,9 @@ class User extends Model
         $this->save();
     }
 
-    public function updatePassword(RegisterRequest $request)
+    public function updatePassword($password = '')
     {
-        $this->password     = password_hash($request->password, PASSWORD_BCRYPT);
+        $this->password     = password_hash($password, PASSWORD_BCRYPT);
 
         $this->save();
     }

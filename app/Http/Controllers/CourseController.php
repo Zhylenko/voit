@@ -101,6 +101,11 @@ class CourseController extends Controller
         });
     }
 
+    public function resources($path)
+    {
+        //return File::get(public_path(ltrim($_SERVER['REQUEST_URI'],'/')));
+    }
+
     protected function generatePurchaseForm($orderId, WayForPayClient $client, ProductCollection $products, $amount = 1)
     {
         $data   = WayForPay::purchase($orderId, $amount, $client, $products, 'UAH', null, 'RU', null, null, Route('course-handler'))->getAsString('', '');
