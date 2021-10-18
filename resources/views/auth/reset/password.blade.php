@@ -15,7 +15,7 @@
 
                 <div class="popup__reg-top modal-top">
                     <img class="form__rect register__rect" src="{{ asset('img/login-rect.svg') }}" alt="">
-                    <h1 class="popup__reg-title">Ваш новий пароль</h1>
+                    <h1 class="popup__reg-title">Ваш новый пароль</h1>
                 </div>
 
                 <div class="popup__reg-content" id="recover-form">
@@ -25,7 +25,7 @@
                             {{ $password }}
                         </div>
 
-                        <a href="{{ Route('index') }}" class="popup__reg-btn but-init reg-btn register" style="display: block; display: flex; justify-content: center; align-items: center;">На головну</a>
+                        <a href="{{ Route('index') }}" class="popup__reg-btn but-init reg-btn register" style="display: block; display: flex; justify-content: center; align-items: center;">На главную</a>
                     </div>
 
                 </div>
