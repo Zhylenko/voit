@@ -39,9 +39,6 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
                 }
             }
 
-            console.log(isFirst);
-            console.log(input);
-
             let dataForm = new FormData();
             dataForm.set('answer', input);
            
@@ -60,12 +57,12 @@ function postTestFormRequests(modalOverlayClass, radioGroupClass, answerGroupCla
             if(response.ok) {
 
                     let result = await response.json();
-                    submitBtn.disabled = true;
+                    submitBtn.disabled = false;
 
                     if(Object.keys(result).includes('result')) {
                         group.innerHTML = '';
                         question.textContent = result.result;
-                        submitBtn.disabled = true;
+                        submitBtn.disabled = false;
 
                         setTimeout(() => {
                             location.reload();
