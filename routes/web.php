@@ -103,7 +103,8 @@ Route::get('/course/payment', 'CourseController@payment')
 Route::post('/course/handler', 'CourseController@handler')
     ->name('course-handler');
 
-//Course send
-Route::match(['post', 'get'], '/course/{path}', 'CourseController@resources')
+//Course's file
+Route::get('/course/file/{path}', 'CourseController@file')
     ->where('path', '.+')
-    ->name('course-resources');
+    ->middleware('auth')
+    ->name('course-file');

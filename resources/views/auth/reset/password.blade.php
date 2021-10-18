@@ -21,7 +21,7 @@
                 <div class="popup__reg-content" id="recover-form">
 
                     <div class="form__group reg__group">
-                        <div class="about__left-title" style="padding-bottom: 0;">
+                        <div class="about__left-title" style="padding-bottom: 0; text-transform: lowercase;">
                             {{ $password }}
                         </div>
 

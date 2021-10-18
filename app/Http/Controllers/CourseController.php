@@ -12,7 +12,8 @@ use App\Models\Course;
 use App\Models\Purchase;
 use App\Models\User;
 use App\Models\UsersCourse;
-
+use Facade\FlareClient\Http\Response;
+use Illuminate\Support\Facades\Storage;
 use \Maksa988\WayForPay\Domain\Client as WayForPayClient;
 use \Maksa988\WayForPay\Collection\ProductCollection;
 use \WayForPay\SDK\Domain\Product;
@@ -29,7 +30,7 @@ class CourseController extends Controller
             $json = [
                 'message' => '',
                 'errors' => [
-                    'answer' => trans('challenge.not.auth'),
+                    'answer' => trans('course.not.auth'),
                 ]
             ];
             return response()->json($json, 403);
@@ -101,9 +102,25 @@ class CourseController extends Controller
         });
     }
 
-    public function resources($path)
+    public function file(Request $request, $path)
     {
-        //return File::get(public_path(ltrim($_SERVER['REQUEST_URI'],'/')));
+        if ($request->auth === true) {
+            $userId         = json_decode(Cookie::get('auth'), 1)['id'];
+            $user           = User::where('id', $userId)->with('courses')->first();
+
+            foreach ($user->courses as $course) {
+                foreach ($course->links as $courseLink) {
+                    if (Route('course-file', ['path' => $path]) == $courseLink->url) {
+                        $file       = Storage::get('public/' . $path);
+                        $mimeType   = Storage::mimeType('public/' . $path);
+                        
+                        return response($file)->header('Content-Type', $mimeType);
+                    }
+                }
+            }
+        }
+
+        return redirect(Route('account'));
     }
 
     protected function generatePurchaseForm($orderId, WayForPayClient $client, ProductCollection $products, $amount = 1)

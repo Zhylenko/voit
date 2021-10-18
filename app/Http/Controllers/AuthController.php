@@ -62,7 +62,7 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $user = User::where('email', '=', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
         if (!password_verify($request->password, $user->password)) {
             $json = [
