@@ -23,7 +23,14 @@ Route::get('/', 'HomeController@index')
 //Offer page
 Route::get('/offer', 'OfferController@index')
     ->middleware('auth')
+    ->middleware('challenge.passed')
     ->name('offer');
+
+//Regulation page
+Route::get('/regulation', 'RegulationController@index')
+    ->middleware('auth')
+    ->middleware('challenge.passed')
+    ->name('regulation');
 
 //Account page
 Route::get('/account', 'AccountController@index')

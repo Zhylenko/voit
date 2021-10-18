@@ -59,7 +59,7 @@
                                         <span class="form-checkstyle"></span>
                                         <p class="check-text">
                                             Нажимая на эту кнопку я соглашаюсь с
-                                            <span><a href="./offer.html">договором публичной оферты</a></span>
+                                            <span><a href="{{ Route('offer') }}">договором публичной оферты</a></span>
                                         </p>
                                     </label>
 
@@ -113,7 +113,7 @@
 
                                     <ul class="footer__help">
                                         <li class="menu__help-item"><a class="menu__f-link" href="#">Поддержка</a></li>
-                                        <li class="menu__help-item"><a class="menu__f-link" href="{{ Route('offer') }}">Тех. положение</a></li>
+                                        <li class="menu__help-item"><a class="menu__f-link" href="{{ Route('regulation') }}">Тех. положение</a></li>
                                     </ul>
                                 </div>
                             </div>

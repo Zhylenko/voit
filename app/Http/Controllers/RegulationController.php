@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class OfferController extends Controller
+class RegulationController extends Controller
 {
     public function index(Request $request)
     {
-        return view('offer.index', [
+        return view('regulation.index', [
             'auth'      => $request->auth,
             'passed'    => $request->passed,
         ]);

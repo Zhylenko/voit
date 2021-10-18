@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Войти в айти | Договор публичной оферты')
+@section('title', 'Войти в айти | Техническое положение')
 
 @section('styles')
 @endsection
@@ -12,7 +12,7 @@
                 <div class="offer__content">
 
                     <h1 class="offer__title">
-                        Договор публичной оферты
+                        Техническое положение
                     </h1>
 
                     <p class="offer__text">
